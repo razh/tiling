@@ -6,13 +6,15 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 
-public class MeshActor extends Actor {
+public class MeshActor extends Actor3D {
 	private Mesh mMesh;
 
 	private ShaderProgram mShaderProgram;
 
 	private float mRotationAngle;
 	private float mOrientation;
+	
+	private Entity mEntity;
 
 	public MeshActor() {
 		super();
@@ -20,6 +22,9 @@ public class MeshActor extends Actor {
 
 	public void act(float delta) {
 		super.act(delta);
+		if (mEntity != null) {
+			mEntity.act(delta);
+		}
 	}
 
 	public void draw(ShaderProgram shaderProgram, float parentAlpha) {
@@ -30,8 +35,8 @@ public class MeshActor extends Actor {
 
 	public void draw(float parentAlpha) {
 		mShaderProgram.setUniformf("rotation", getRotation());
-		mShaderProgram.setUniformf("translate", getX(), getY());
-		mShaderProgram.setUniformf("scale", getWidth(), getHeight());
+		mShaderProgram.setUniformf("translate", getX(), getY(), getZ());
+		mShaderProgram.setUniformf("scale", getWidth(), getHeight(), getDepth());
 		mShaderProgram.setUniformf("v_color", getColor());
 	}
 
@@ -73,5 +78,13 @@ public class MeshActor extends Actor {
 
 	public void setMesh(Mesh mesh) {
 		mMesh = mesh;
+	}
+	
+	public Entity getEntity() {
+		return mEntity;
+	}
+	
+	public void setEntity(Entity entity) {
+		mEntity = entity;
 	}
 }
