@@ -9,6 +9,7 @@ public class GwtLauncher extends GwtApplication {
 	@Override
 	public GwtApplicationConfiguration getConfig () {
 		GwtApplicationConfiguration cfg = new GwtApplicationConfiguration(480, 320);
+		cfg.antialiasing = true;
 		return cfg;
 	}
 
