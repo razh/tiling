@@ -1,11 +1,14 @@
 package com.razh.tiling;
 
+import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 
 public class MeshActor extends Actor {
+	private Mesh mMesh;
+
 	private ShaderProgram mShaderProgram;
 
 	private float mRotationAngle;
@@ -20,7 +23,7 @@ public class MeshActor extends Actor {
 	}
 
 	public void draw(ShaderProgram shaderProgram, float parentAlpha) {
-		this.mShaderProgram = shaderProgram;
+		mShaderProgram = shaderProgram;
 
 		draw(parentAlpha);
 	}
@@ -34,7 +37,7 @@ public class MeshActor extends Actor {
 
 	@Override
 	public Actor hit(float x, float y, boolean touchable) {
-		if (touchable && this.getTouchable() != Touchable.enabled)
+		if (touchable && getTouchable() != Touchable.enabled)
 			return null;
 
 		if (x == getX() && y == getY())
@@ -62,5 +65,13 @@ public class MeshActor extends Actor {
 
 	public void setOrientation(float orientation) {
 		mOrientation = orientation;
+	}
+
+	public Mesh getMesh() {
+		return mMesh;
+	}
+
+	public void setMesh(Mesh mesh) {
+		mMesh = mesh;
 	}
 }
