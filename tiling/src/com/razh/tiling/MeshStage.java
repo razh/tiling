@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.SnapshotArray;
 
 public class MeshStage extends Stage {
 	private MeshGroup mRoot;
@@ -61,6 +62,11 @@ public class MeshStage extends Stage {
 	
 		mShaderProgram.begin();
 		mShaderProgram.setUniformMatrix("projection", getCamera().combined);
+
+		if (mLightsNeedUpdate) {
+			setupLights();
+		}
+
 		mRoot.draw(mShaderProgram, 1.0f);
 	
 		mShaderProgram.end();
@@ -73,10 +79,12 @@ public class MeshStage extends Stage {
 	
 	public void addLight(Light light) {
 		mLights.addActor(light);
+		mLightsNeedUpdate = true;
 	}
 
 	public void act(float delta) {
 		mRoot.act(delta);
+		mLights.act(delta);
 	
 		mColorActor.act(delta);
 	}
@@ -97,10 +105,28 @@ public class MeshStage extends Stage {
 		return mLights;
 	}
 	
-	public void updateLights() {
+	public void setupLights() {
 		if (mShaderProgram == null) {
 			return;
 		}
+
+		SnapshotArray<Actor> lightActors = mLights.getChildren();
+		Light[] lights = (Light[]) lightActors.begin();
+		for (int i = 0, n = lightActors.size; i < n; i++) {
+			Light light = lights[i];
+
+			if (!light.isVisible()) {
+				continue;
+			}
+
+			if (light instanceof AmbientLight) {
+				
+			} else if (light instanceof PointLight) {
+				
+			}
+		}
+
+		lightActors.end();		
 	}
 
 	public void addAction(Action action) {
