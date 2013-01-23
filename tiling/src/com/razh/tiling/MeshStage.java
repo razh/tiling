@@ -1,10 +1,13 @@
 package com.razh.tiling;
 
+import java.util.ArrayList;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -13,8 +16,9 @@ import com.badlogic.gdx.utils.SnapshotArray;
 public class MeshStage extends Stage {
 	private MeshGroup mRoot;
 	private ShaderProgram mShaderProgram;
+	private Uniforms mUniforms;
 	
-	private MeshGroup mLights;
+	private SnapshotArray<Light> mLights;
 	private boolean mLightsNeedUpdate;
 	
 	// Allows us to set colors and stuff with actions.
@@ -34,8 +38,7 @@ public class MeshStage extends Stage {
 		mRoot = new MeshGroup();
 		mRoot.setStage(this);
 		
-		mLights = new MeshGroup();
-		mLights.setStage(this);
+		mLights = new SnapshotArray(Light.class);
 		mLightsNeedUpdate = false;
 		
 		mColorActor = new Actor();
@@ -52,6 +55,7 @@ public class MeshStage extends Stage {
 		draw();
 	}
 
+	public boolean done = false;
 	@Override
 	public void draw() {
 		if (mShaderProgram == null) {
@@ -61,10 +65,9 @@ public class MeshStage extends Stage {
 		getCamera().update();
 	
 		mShaderProgram.begin();
+		if (!done) {
 		mShaderProgram.setUniformMatrix("projection", getCamera().combined);
-
-		if (mLightsNeedUpdate) {
-			setupLights();
+		done = true;
 		}
 
 		mRoot.draw(mShaderProgram, 1.0f);
@@ -78,13 +81,20 @@ public class MeshStage extends Stage {
 	}
 	
 	public void addLight(Light light) {
-		mLights.addActor(light);
+		mLights.add(light);
 		mLightsNeedUpdate = true;
 	}
 
 	public void act(float delta) {
 		mRoot.act(delta);
-		mLights.act(delta);
+
+		Light[] lights = mLights.begin();
+		for (int i = 0, n = mLights.size; i < n; i++) {
+			Light light = lights[i];
+
+			light.act(delta);
+		}
+		mLights.end();
 	
 		mColorActor.act(delta);
 	}
@@ -101,32 +111,8 @@ public class MeshStage extends Stage {
 		mColorActor.setColor(color);
 	}
 	
-	public MeshGroup getLights() {
+	public SnapshotArray<Light> getLights() {
 		return mLights;
-	}
-	
-	public void setupLights() {
-		if (mShaderProgram == null) {
-			return;
-		}
-
-		SnapshotArray<Actor> lightActors = mLights.getChildren();
-		Light[] lights = (Light[]) lightActors.begin();
-		for (int i = 0, n = lightActors.size; i < n; i++) {
-			Light light = lights[i];
-
-			if (!light.isVisible()) {
-				continue;
-			}
-
-			if (light instanceof AmbientLight) {
-				
-			} else if (light instanceof PointLight) {
-				
-			}
-		}
-
-		lightActors.end();		
 	}
 
 	public void addAction(Action action) {

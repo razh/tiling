@@ -1,5 +1,7 @@
 package com.razh.tiling;
 
+import java.util.ArrayList;
+
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -7,6 +9,8 @@ import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.SnapshotArray;
 
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
 
@@ -15,41 +19,8 @@ public class Game implements ApplicationListener {
 	private FPSLogger mFPSLogger;
 	private boolean mGL20;
 
-	private String mVertexShader =
-		"uniform mat4 projection;\n" +
-		"uniform float rotation;\n" +
-		"uniform vec3 translate;\n" +
-		"uniform vec3 scale;\n" +
-		"attribute vec3 a_position;\n" +
-		"\n" +
-		"void main()\n" +
-		"{\n" +
-//		 "  vec3 position = vec3(0.0);\n" +
-//		"  if (rotation != 0.0) {\n" +
-//		"    float r_cos = cos(radians(rotation));\n" +
-//		"    float r_sin = sin(radians(rotation));\n" +
-//		"    mat2 rotationMatrix = mat2(r_cos, r_sin, -r_sin, r_cos);\n" +
-//		"    position = rotationMatrix * (scale * a_position) + translate;\n" +
-//		"  }\n" +
-//		"  else {\n" +
-//		"    position = scale * a_position + translate;\n" +
-//		"  }\n" +
-		"  vec3 position = scale * a_position + translate;\n" +
-		"  gl_Position = projection * vec4(position, 1.0);\n" +
-		"}";
-
-	private String mFragmentShader =
-		"#ifdef GL_ES\n" +
-		"precision mediump float;\n" +
-		"#endif\n" +
-		"uniform vec4 v_color;\n" +
-		"\n" +
-		"void main()\n" +
-		"{\n" +
-		"  gl_FragColor = v_color;\n" +
-		"}";
-
 	private ShaderProgram mShaderProgram;
+	private Uniforms mUniforms;
 
 	@Override
 	public void create() {
@@ -65,6 +36,7 @@ public class Game implements ApplicationListener {
 
 		mShaderProgram = new ShaderProgram(mVertexShader, mFragmentShader);
 		System.out.println("Compiled: " + mShaderProgram.isCompiled());
+		mUniforms = new Uniforms();
 
 		mStage.setShaderProgram(mShaderProgram);
 		
@@ -82,6 +54,47 @@ public class Game implements ApplicationListener {
 			)
 		);
 		mStage.addActor(meshActor);
+	}
+
+	public void setupLights() {
+		if (mShaderProgram == null) {
+			return;
+		}
+		
+		Color ambientLightColor = Color.CLEAR;
+		ArrayList<Color> pointLightColors = new ArrayList<Color>();
+		ArrayList<Vector3> pointLightPositions = new ArrayList<Vector3>();
+		ArrayList<Float> pointLightDistances = new ArrayList<Float>();
+		int pointLightCount = 0;
+		
+		SnapshotArray<Light> children = mStage.getLights();
+		Light[] lights = (Light[]) children.begin();
+		for (int i = 0, n = lights.length; i < n; i++) {
+			Light light = lights[i];
+
+			if (!light.isVisible()) {
+				continue;
+			}
+
+			// Ambient light color is sum of all ambient lights.
+			if (light instanceof AmbientLight) {
+				ambientLightColor.add(light.getColor());
+			} else if (light instanceof PointLight) {
+				pointLightCount++;
+				
+				if (!light.isVisible()) {
+					continue;
+				}
+
+				pointLightColors.add(light.getColor());
+				pointLightPositions.add(light.getPosition());
+				pointLightDistances.add(((PointLight) light).getDistance());
+			}
+		}
+		children.end();
+
+		mUniforms.ambientLightColor = ambientLightColor;
+		
 	}
 
 	@Override
