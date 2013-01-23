@@ -20,6 +20,7 @@ public class Game implements ApplicationListener {
 	private boolean mGL20;
 
 	private ShaderProgram mShaderProgram;
+	private boolean mShaderProgramNeedsUpdate = false;
 	private Uniforms mUniforms;
 
 	@Override
@@ -34,12 +35,12 @@ public class Game implements ApplicationListener {
 			Gdx.app.exit();
 		}
 
-		mShaderProgram = new ShaderProgram(mVertexShader, mFragmentShader);
+		mShaderProgram = Shader.createShaderProgram();
 		System.out.println("Compiled: " + mShaderProgram.isCompiled());
 		mUniforms = new Uniforms();
 
 		mStage.setShaderProgram(mShaderProgram);
-		
+
 		MeshActor meshActor = new MeshActor();
 		meshActor.setWidth(100.0f);
 		meshActor.setHeight(100.0f);
@@ -60,15 +61,15 @@ public class Game implements ApplicationListener {
 		if (mShaderProgram == null) {
 			return;
 		}
-		
+
 		Color ambientLightColor = Color.CLEAR;
 		ArrayList<Color> pointLightColors = new ArrayList<Color>();
 		ArrayList<Vector3> pointLightPositions = new ArrayList<Vector3>();
 		ArrayList<Float> pointLightDistances = new ArrayList<Float>();
 		int pointLightCount = 0;
-		
+
 		SnapshotArray<Light> children = mStage.getLights();
-		Light[] lights = (Light[]) children.begin();
+		Light[] lights = children.begin();
 		for (int i = 0, n = lights.length; i < n; i++) {
 			Light light = lights[i];
 
@@ -81,7 +82,7 @@ public class Game implements ApplicationListener {
 				ambientLightColor.add(light.getColor());
 			} else if (light instanceof PointLight) {
 				pointLightCount++;
-				
+
 				if (!light.isVisible()) {
 					continue;
 				}
@@ -93,8 +94,11 @@ public class Game implements ApplicationListener {
 		}
 		children.end();
 
-		mUniforms.ambientLightColor = ambientLightColor;
-		
+		Shader.MAX_POINT_LIGHTS = pointLightCount;
+		mUniforms.setAmbientLightColor(ambientLightColor);
+		mUniforms.setPointLightColors((Color[]) pointLightColors.toArray());
+		mUniforms.setPointLightPositions((Float[]) pointLightPositions.toArray());
+		mUniforms.setPointLightDistances((Float[]) pointLightDistances.toArray());
 	}
 
 	@Override
@@ -118,6 +122,9 @@ public class Game implements ApplicationListener {
 	public void update() {
 		float delta = Math.min(Gdx.graphics.getDeltaTime(), 1 / 30.0f);
 		mStage.act(delta);
+		if (mStage.lightsNeedUpdate()) {
+			setupLights();
+		}
 	}
 
 	@Override
