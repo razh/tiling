@@ -13,6 +13,9 @@ public class MeshStage extends Stage {
 	private MeshGroup mRoot;
 	private ShaderProgram mShaderProgram;
 	
+	private MeshGroup mLights;
+	private boolean mLightsNeedUpdate;
+	
 	// Allows us to set colors and stuff with actions.
 	private Actor mColorActor;
 
@@ -29,6 +32,10 @@ public class MeshStage extends Stage {
 
 		mRoot = new MeshGroup();
 		mRoot.setStage(this);
+		
+		mLights = new MeshGroup();
+		mLights.setStage(this);
+		mLightsNeedUpdate = false;
 		
 		mColorActor = new Actor();
 		mColorActor.setColor(Color.BLACK);
@@ -63,6 +70,10 @@ public class MeshStage extends Stage {
 	public void addActor(Actor actor) {
 		mRoot.addActor(actor);
 	}
+	
+	public void addLight(Light light) {
+		mLights.addActor(light);
+	}
 
 	public void act(float delta) {
 		mRoot.act(delta);
@@ -82,6 +93,16 @@ public class MeshStage extends Stage {
 		mColorActor.setColor(color);
 	}
 	
+	public MeshGroup getLights() {
+		return mLights;
+	}
+	
+	public void updateLights() {
+		if (mShaderProgram == null) {
+			return;
+		}
+	}
+
 	public void addAction(Action action) {
 		mColorActor.addAction(action);
 	}

@@ -34,7 +34,7 @@ public class Game implements ApplicationListener {
 //		"  else {\n" +
 //		"    position = scale * a_position + translate;\n" +
 //		"  }\n" +
-		"  vec3 position = a_position + translate;\n" +
+		"  vec3 position = scale * a_position + translate;\n" +
 		"  gl_Position = projection * vec4(position, 1.0);\n" +
 		"}";
 
@@ -69,10 +69,10 @@ public class Game implements ApplicationListener {
 		mStage.setShaderProgram(mShaderProgram);
 		
 		MeshActor meshActor = new MeshActor();
-		meshActor.setPosition(0.0f, 0.0f);
-		meshActor.setWidth(20.0f);
-		meshActor.setHeight(20.0f);
+		meshActor.setWidth(100.0f);
+		meshActor.setHeight(100.0f);
 		meshActor.setDepth(20.0f);
+		meshActor.setPosition(0.0f, 0.0f, -meshActor.getDepth());
 		meshActor.setColor(Color.BLUE);
 		meshActor.setMesh(Geometry.createTriangularBipyramid());
 		meshActor.addAction(
@@ -93,7 +93,6 @@ public class Game implements ApplicationListener {
 		update();
 
 		Color backgroundColor = mStage.getColor();
-		System.out.println( backgroundColor);
 
 		Gdx.gl.glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
