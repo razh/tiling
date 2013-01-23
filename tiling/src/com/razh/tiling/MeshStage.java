@@ -31,6 +31,7 @@ public class MeshStage extends Stage {
 		mRoot.setStage(this);
 		
 		mColorActor = new Actor();
+		mColorActor.setColor(Color.BLACK);
 	}
 
 	public void setShaderProgram(ShaderProgram shaderProgram) {

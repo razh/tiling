@@ -1,5 +1,6 @@
 package com.razh.tiling;
 
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector2;
@@ -28,16 +29,19 @@ public class MeshActor extends Actor3D {
 	}
 
 	public void draw(ShaderProgram shaderProgram, float parentAlpha) {
-		mShaderProgram = shaderProgram;
+		setShaderProgram(shaderProgram);
 
 		draw(parentAlpha);
 	}
 
 	public void draw(float parentAlpha) {
-		mShaderProgram.setUniformf("rotation", getRotation());
+//		mShaderProgram.setUniformf("rotation", getRotation());
 		mShaderProgram.setUniformf("translate", getX(), getY(), getZ());
-		mShaderProgram.setUniformf("scale", getWidth(), getHeight(), getDepth());
+//		mShaderProgram.setUniformf("scale", getWidth(), getHeight(), getDepth());
 		mShaderProgram.setUniformf("v_color", getColor());
+		if (hasMesh()) {
+			getMesh().render(getShaderProgram(), GL20.GL_TRIANGLES);		
+		}
 	}
 
 	@Override
@@ -80,11 +84,23 @@ public class MeshActor extends Actor3D {
 		mMesh = mesh;
 	}
 	
+	public boolean hasMesh() {
+		return getMesh() != null;
+	}
+	
 	public Entity getEntity() {
 		return mEntity;
 	}
 	
 	public void setEntity(Entity entity) {
 		mEntity = entity;
+	}
+
+	public ShaderProgram getShaderProgram() {
+		return mShaderProgram;
+	}
+
+	public void setShaderProgram(ShaderProgram shaderProgram) {
+		mShaderProgram = shaderProgram;
 	}
 }

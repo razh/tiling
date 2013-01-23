@@ -1,17 +1,21 @@
 package com.razh.tiling;
 
-import com.badlogic.gdx.scenes.scene2d.Actor;
-
 public abstract class Entity {
-	private Actor mActor;
+	private MeshActor mActor;
 
 	public abstract void act(float delta);
 	
-	public Actor getActor() {
+	public Entity() {}
+	
+	public Entity(MeshActor actor) {
+		setActor(actor);
+	}
+	
+	public MeshActor getActor() {
 		return mActor;
 	}
 	
-	public void setActor(Actor actor) {
+	public void setActor(MeshActor actor) {
 		mActor = actor;
 	}
 }
