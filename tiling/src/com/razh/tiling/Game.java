@@ -50,7 +50,7 @@ private PointLight pLight;
 		meshActor.setHeight(100.0f);
 		meshActor.setDepth(20.0f);
 		meshActor.setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2 - 200, -100);
-		meshActor.setColor(Color.BLUE);
+		meshActor.setColor(new Color(Color.BLUE));
 		meshActor.setMesh(Geometry.createTriangularBipyramid());
 		meshActor.addAction(
 			forever(
@@ -64,12 +64,20 @@ private PointLight pLight;
 		);
 		mStage.addActor(meshActor);
 
+		MeshActor meshActor2 = new MeshActor();
+		meshActor2.setWidth(100.0f);
+		meshActor2.setHeight(100.0f);
+		meshActor2.setPosition(200, 200);
+		meshActor2.setColor(new Color(Color.RED));
+		meshActor2.setMesh(Geometry.createOctagonalBipyramid());
+		mStage.addActor(meshActor2);
+
 		AmbientLight aLight = new AmbientLight();
 		aLight.setColor(0.25f, 0.25f, 0.25f, 1.0f);
 		mStage.addLight(aLight);
 
 		pLight = new PointLight();
-		pLight.setColor(Color.WHITE);
+		pLight.setColor(new Color(Color.WHITE));
 		pLight.setPosition(200, Gdx.graphics.getHeight() / 2 + 50, -10);
 		pLight.addAction(
 			forever(
@@ -86,7 +94,7 @@ private PointLight pLight;
 	}
 
 	public void setupLights() {
-		Color ambientLightColor = Color.CLEAR;
+		Color ambientLightColor = new Color();
 		ArrayList<Color> pointLightColors = new ArrayList<Color>();
 		ArrayList<Float> pointLightPositions = new ArrayList<Float>();
 		ArrayList<Float> pointLightDistances = new ArrayList<Float>();
@@ -166,7 +174,7 @@ private PointLight pLight;
 			setupLights();
 		}
 
-//		setupLights();
+		setupLights();
 
 		if (mShaderProgramNeedsUpdate) {
 			mShaderProgramNeedsUpdate = false;

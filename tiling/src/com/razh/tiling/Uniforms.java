@@ -14,7 +14,7 @@ public class Uniforms {
 	private float[] mPointLightDistances;
 
 	public Uniforms() {
-		setAmbientLightColor(Color.CLEAR);
+		setAmbientLightColor(new Color());
 		setPointLightColors(new float[]{});
 		setPointLightPositions(new float[]{});
 		setPointLightDistances(new float[]{});
