@@ -78,7 +78,7 @@ public class MeshStage extends Stage {
 
 		mViewMatrix.translate(getCamera().position);
 		mShaderProgram.setUniformMatrix("viewMatrix", mViewMatrix.inv());
-		mNormalMatrix.set(getCamera().view.inv());
+		mNormalMatrix.set(getCamera().view.cpy().inv());
 		mShaderProgram.setUniformMatrix("normalMatrix", mNormalMatrix.transpose());
 
 		mRoot.draw(mShaderProgram, 1.0f);
