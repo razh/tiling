@@ -1,12 +1,11 @@
 package com.razh.tiling;
 
-import java.util.ArrayList;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Matrix3;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Action;
@@ -18,8 +17,8 @@ public class MeshStage extends Stage {
 	private MeshGroup mRoot;
 	private ShaderProgram mShaderProgram;
 	private ShaderProgram mPointLightShaderProgram;
-	private Uniforms mUniforms;
-	private Matrix3 mNormalMatrix = new Matrix3();
+	private Matrix3 mNormalMatrix;
+	private Matrix4 mViewMatrix;
 
 	private SnapshotArray<Light> mLights;
 	private boolean mLightsNeedUpdate;
@@ -46,6 +45,9 @@ public class MeshStage extends Stage {
 
 		mColorActor = new Actor();
 		mColorActor.setColor(Color.BLACK);
+
+		mNormalMatrix = new Matrix3();
+		mViewMatrix = new Matrix4();
 	}
 
 	public void setShaderProgram(ShaderProgram shaderProgram) {
@@ -74,8 +76,10 @@ public class MeshStage extends Stage {
 		mShaderProgram.setUniformMatrix("projectionMatrix", getCamera().projection);
 		mShaderProgram.setUniformMatrix("modelViewMatrix", getCamera().view);
 
-		mNormalMatrix.set(getCamera().view.inv().tra());
-		mShaderProgram.setUniformMatrix("normalMatrix", mNormalMatrix);
+		mViewMatrix.translate(getCamera().position);
+		mShaderProgram.setUniformMatrix("viewMatrix", mViewMatrix.inv());
+		mNormalMatrix.set(getCamera().view.inv());
+		mShaderProgram.setUniformMatrix("normalMatrix", mNormalMatrix.transpose());
 
 		mRoot.draw(mShaderProgram, 1.0f);
 

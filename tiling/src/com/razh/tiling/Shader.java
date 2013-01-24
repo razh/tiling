@@ -16,7 +16,7 @@ public class Shader {
 			"#endif\n" +
 			"uniform mat4 projectionMatrix;\n" +
 			"uniform mat4 modelViewMatrix;\n" +
-//			"uniform mat4 viewMatrix;\n" +
+			"uniform mat4 viewMatrix;\n" +
 			"uniform mat3 normalMatrix;\n" +
 			"uniform float rotation;\n" +
 			"uniform vec3 translate;\n" +
@@ -33,7 +33,7 @@ public class Shader {
 			"  v_lightFront = vec3(0.0);\n" +
 			"  #if MAX_POINT_LIGHTS > 0\n" +
 			"    for (int i = 0; i < MAX_POINT_LIGHTS; i++) {\n" +
-			"      vec4 lightPosition = modelViewMatrix * vec4(pointLightPosition[i], 1.0);\n" +
+			"      vec4 lightPosition = viewMatrix * vec4(pointLightPosition[i], 1.0);\n" +
 			"      vec3 lightVector = lightPosition.xyz - mvPosition.xyz;\n" +
 			"      float lightDistance = 1.0;\n" +
 			"      if (pointLightDistance[i] > 0.0) {\n" +
@@ -77,6 +77,7 @@ public class Shader {
 			"\n" +
 			"void main()\n" +
 			"{\n" +
+			"  gl_PointSize = 5.0;\n" +
 			"  gl_Position = modelViewProjectionMatrix * vec4(a_position + translate, 1.0);\n" +
 			"}";
 

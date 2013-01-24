@@ -24,7 +24,7 @@ public class Game implements ApplicationListener {
 
 	private boolean mShaderProgramNeedsUpdate;
 	private boolean mLightUniformsNeedRefresh;
-
+private PointLight pLight;
 	@Override
 	public void create() {
 		Gdx.graphics.setVSync(true);
@@ -49,13 +49,17 @@ public class Game implements ApplicationListener {
 		meshActor.setWidth(100.0f);
 		meshActor.setHeight(100.0f);
 		meshActor.setDepth(20.0f);
-		meshActor.setPosition(0.0f, 0.0f, -100);
+		meshActor.setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2 - 200, -100);
 		meshActor.setColor(Color.BLUE);
 		meshActor.setMesh(Geometry.createTriangularBipyramid());
 		meshActor.addAction(
-			sequence(
-				moveBy(200, 100, 2.0f, Interpolation.pow2),
-				moveBy(-100, 100, 2.0f, Interpolation.pow2)
+			forever(
+				sequence(
+					moveBy(200, 200, 2.0f, Interpolation.pow2),
+					moveBy(-200, 200, 2.0f, Interpolation.pow2),
+					moveBy(-200, -200, 2.0f, Interpolation.pow2),
+					moveBy(200, -200, 2.0f, Interpolation.pow2)
+				)
 			)
 		);
 		mStage.addActor(meshActor);
@@ -64,11 +68,21 @@ public class Game implements ApplicationListener {
 		aLight.setColor(0.25f, 0.25f, 0.25f, 1.0f);
 		mStage.addLight(aLight);
 
-		PointLight pLight = new PointLight();
+		pLight = new PointLight();
 		pLight.setColor(Color.WHITE);
-		pLight.setPosition(200, 100, -10);
+		pLight.setPosition(200, Gdx.graphics.getHeight() / 2 + 50, -10);
+		pLight.addAction(
+			forever(
+				sequence(
+					moveBy(600, 0, 3.0f, Interpolation.pow2),
+					moveBy(-600, 0, 3.0f, Interpolation.pow2)
+				)
+			)
+		);
 //		pLight.setDistance(200);
 		mStage.addLight(pLight);
+		mShaderProgramNeedsUpdate = true;
+//		setupLights();
 	}
 
 	public void setupLights() {
@@ -92,11 +106,11 @@ public class Game implements ApplicationListener {
 			if (light instanceof AmbientLight) {
 				ambientLightColor.add(light.getColor());
 			} else if (light instanceof PointLight) {
-				pointLightCount++;
-
 				if (!light.isVisible()) {
 					continue;
 				}
+
+				pointLightCount++;
 
 				pointLightColors.add(light.getColor());
 
@@ -110,8 +124,10 @@ public class Game implements ApplicationListener {
 		}
 		children.end();
 
-		Shader.MAX_POINT_LIGHTS = pointLightCount;
-		mShaderProgramNeedsUpdate = true;
+		if (Shader.MAX_POINT_LIGHTS != pointLightCount) {
+			mShaderProgramNeedsUpdate = true;
+			Shader.MAX_POINT_LIGHTS = pointLightCount;
+		}
 
 		mUniforms.setAmbientLightColor(ambientLightColor);
 		if (pointLightCount > 0) {
@@ -143,14 +159,18 @@ public class Game implements ApplicationListener {
 	public void update() {
 		float delta = Math.min(Gdx.graphics.getDeltaTime(), 1 / 30.0f);
 		mStage.act(delta);
+		pLight.setPosition(Gdx.input.getX(), -Gdx.input.getY() + Gdx.graphics.getHeight() + 100, -10);
 
 		if (mStage.lightsNeedUpdate()) {
 			mStage.setLightsNeedUpdate(false);
 			setupLights();
 		}
 
+//		setupLights();
+
 		if (mShaderProgramNeedsUpdate) {
 			mShaderProgramNeedsUpdate = false;
+			mShaderProgram.dispose();
 			mShaderProgram = Shader.createShaderProgram();
 			mStage.setShaderProgram(mShaderProgram);
 		}

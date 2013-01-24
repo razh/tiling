@@ -1,8 +1,10 @@
 package com.razh.tiling;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
@@ -37,6 +39,9 @@ public class MeshActor extends Actor3D {
 
 	public void draw(float parentAlpha) {
 //		mShaderProgram.setUniformf("rotation", getRotation());
+//		Matrix4 viewMatrix = new Matrix4();
+//		viewMatrix.translate(getPosition());
+//		mShaderProgram.setUniformMatrix("viewMatrix", viewMatrix.inv());
 		mShaderProgram.setUniformf("translate", getPosition());
 		mShaderProgram.setUniformf("scale", getWidth(), getHeight(), getDepth());
 		mShaderProgram.setUniformf("color", getColor());

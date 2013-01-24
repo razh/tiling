@@ -13,6 +13,13 @@ public class Uniforms {
 	private float[] mPointLightPositions;
 	private float[] mPointLightDistances;
 
+	public Uniforms() {
+		setAmbientLightColor(Color.CLEAR);
+		setPointLightColors(new float[]{});
+		setPointLightPositions(new float[]{});
+		setPointLightDistances(new float[]{});
+	}
+
 	public Color getAmbientLightColor() {
 		return mAmbientLightColor;
 	}
@@ -87,10 +94,10 @@ public class Uniforms {
 		shaderProgram.setUniformf("ambientLightColor", ambient.r, ambient.g, ambient.b);
 
 		float[] array = getPointLightColors();
-		shaderProgram.setUniform3fv("pointLightColor", array, 0, array.length / 3);
+		shaderProgram.setUniform3fv("pointLightColor", array, 0, array.length);
 
 		array = getPointLightPositions();
-		shaderProgram.setUniform3fv("pointLightPosition", array, 0, array.length / 3);
+		shaderProgram.setUniform3fv("pointLightPosition", array, 0, array.length);
 
 		array = getPointLightDistances();
 		shaderProgram.setUniform1fv("pointLightDistance", array, 0, array.length);
