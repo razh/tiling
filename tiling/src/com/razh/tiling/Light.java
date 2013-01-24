@@ -1,3 +1,7 @@
 package com.razh.tiling;
 
-public abstract class Light extends Actor3D {};
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+
+public abstract class Light extends Actor3D {
+	public abstract void draw(ShaderProgram shaderProgram, float parentAlpha);
+};

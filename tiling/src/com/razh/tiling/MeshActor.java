@@ -14,13 +14,14 @@ public class MeshActor extends Actor3D {
 
 	private float mRotationAngle;
 	private float mOrientation;
-	
+
 	private Entity mEntity;
 
 	public MeshActor() {
 		super();
 	}
 
+	@Override
 	public void act(float delta) {
 		super.act(delta);
 		if (mEntity != null) {
@@ -36,11 +37,11 @@ public class MeshActor extends Actor3D {
 
 	public void draw(float parentAlpha) {
 //		mShaderProgram.setUniformf("rotation", getRotation());
-		mShaderProgram.setUniformf("translate", getX(), getY(), getZ());
+		mShaderProgram.setUniformf("translate", getPosition());
 		mShaderProgram.setUniformf("scale", getWidth(), getHeight(), getDepth());
 		mShaderProgram.setUniformf("color", getColor());
 		if (hasMesh()) {
-			getMesh().render(getShaderProgram(), GL20.GL_TRIANGLES);		
+			getMesh().render(getShaderProgram(), GL20.GL_TRIANGLES);
 		}
 	}
 
@@ -83,15 +84,15 @@ public class MeshActor extends Actor3D {
 	public void setMesh(Mesh mesh) {
 		mMesh = mesh;
 	}
-	
+
 	public boolean hasMesh() {
 		return getMesh() != null;
 	}
-	
+
 	public Entity getEntity() {
 		return mEntity;
 	}
-	
+
 	public void setEntity(Entity entity) {
 		mEntity = entity;
 	}

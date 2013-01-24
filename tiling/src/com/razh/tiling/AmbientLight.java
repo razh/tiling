@@ -1,3 +1,9 @@
 package com.razh.tiling;
 
-public class AmbientLight extends Light {}
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+
+public class AmbientLight extends Light {
+
+	@Override
+	public void draw(ShaderProgram shaderProgram, float parentAlpha) {}
+}

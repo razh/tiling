@@ -20,8 +20,10 @@ public class Game implements ApplicationListener {
 	private boolean mGL20;
 
 	private ShaderProgram mShaderProgram;
-	private boolean mShaderProgramNeedsUpdate;
 	private Uniforms mUniforms;
+
+	private boolean mShaderProgramNeedsUpdate;
+	private boolean mLightUniformsNeedRefresh;
 
 	@Override
 	public void create() {
@@ -36,17 +38,18 @@ public class Game implements ApplicationListener {
 		}
 
 		mShaderProgramNeedsUpdate = false;
+		mLightUniformsNeedRefresh = false;
 		mShaderProgram = Shader.createShaderProgram();
-		System.out.println("Compiled: " + mShaderProgram.isCompiled());
 		mUniforms = new Uniforms();
 
 		mStage.setShaderProgram(mShaderProgram);
+		mStage.setPointLightShaderProgram(Shader.createPointLightShaderProgram());
 
 		MeshActor meshActor = new MeshActor();
 		meshActor.setWidth(100.0f);
 		meshActor.setHeight(100.0f);
 		meshActor.setDepth(20.0f);
-		meshActor.setPosition(0.0f, 0.0f, -meshActor.getDepth());
+		meshActor.setPosition(0.0f, 0.0f, -100);
 		meshActor.setColor(Color.BLUE);
 		meshActor.setMesh(Geometry.createTriangularBipyramid());
 		meshActor.addAction(
@@ -56,13 +59,19 @@ public class Game implements ApplicationListener {
 			)
 		);
 		mStage.addActor(meshActor);
+
+		AmbientLight aLight = new AmbientLight();
+		aLight.setColor(0.25f, 0.25f, 0.25f, 1.0f);
+		mStage.addLight(aLight);
+
+		PointLight pLight = new PointLight();
+		pLight.setColor(Color.WHITE);
+		pLight.setPosition(200, 100, -10);
+//		pLight.setDistance(200);
+		mStage.addLight(pLight);
 	}
 
 	public void setupLights() {
-		if (mShaderProgram == null) {
-			return;
-		}
-
 		Color ambientLightColor = Color.CLEAR;
 		ArrayList<Color> pointLightColors = new ArrayList<Color>();
 		ArrayList<Float> pointLightPositions = new ArrayList<Float>();
@@ -105,9 +114,12 @@ public class Game implements ApplicationListener {
 		mShaderProgramNeedsUpdate = true;
 
 		mUniforms.setAmbientLightColor(ambientLightColor);
-		mUniforms.setPointLightColors(pointLightColors);
-		mUniforms.setPointLightPositions(pointLightPositions);
-		mUniforms.setPointLightDistances(pointLightDistances);
+		if (pointLightCount > 0) {
+			mUniforms.setPointLightColors(pointLightColors);
+			mUniforms.setPointLightPositions(pointLightPositions);
+			mUniforms.setPointLightDistances(pointLightDistances);
+			mLightUniformsNeedRefresh = true;
+		}
 	}
 
 	@Override
@@ -141,6 +153,11 @@ public class Game implements ApplicationListener {
 			mShaderProgramNeedsUpdate = false;
 			mShaderProgram = Shader.createShaderProgram();
 			mStage.setShaderProgram(mShaderProgram);
+		}
+
+		if (mLightUniformsNeedRefresh) {
+			mLightUniformsNeedRefresh = false;
+			mUniforms.setUniforms(mShaderProgram);
 		}
 	}
 

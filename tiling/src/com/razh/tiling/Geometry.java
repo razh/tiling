@@ -33,8 +33,7 @@ public class Geometry {
 
 		// For normals to work, each face must have its own separate set of vertices.
 		// Two sets of faces with three vertices each (first 6).
-		// Three vertex components and three normal components (second 6).
-		int numVertices = (subdivisions * 6) * 6;
+		int numVertices = subdivisions * 6;
 		// Three vertices per face. Two faces per side (bipyramid).
 		int numIndices = subdivisions * 6;
 		Mesh mesh = new Mesh(Mesh.VertexDataType.VertexBufferObject,
@@ -46,7 +45,8 @@ public class Geometry {
 
 		// Array of unique vertices, with the top vertex at 0, and bottom vertex at end.
 		float[] shapeVertices = new float[(subdivisions + 2) * 3];
-		float[] vertices = new float[numVertices];
+		// Three vertex components and three normal components.
+		float[] vertices = new float[numVertices * 6];
 		short[] indices = new short[numIndices];
 
 		int vtxIndex = 0;

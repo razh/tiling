@@ -6,6 +6,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Action;
@@ -16,7 +17,9 @@ import com.badlogic.gdx.utils.SnapshotArray;
 public class MeshStage extends Stage {
 	private MeshGroup mRoot;
 	private ShaderProgram mShaderProgram;
+	private ShaderProgram mPointLightShaderProgram;
 	private Uniforms mUniforms;
+	private Matrix3 mNormalMatrix = new Matrix3();
 
 	private SnapshotArray<Light> mLights;
 	private boolean mLightsNeedUpdate;
@@ -49,6 +52,10 @@ public class MeshStage extends Stage {
 		mShaderProgram = shaderProgram;
 	}
 
+	public void setPointLightShaderProgram(ShaderProgram shaderProgram) {
+		mPointLightShaderProgram = shaderProgram;
+	}
+
 	public void draw(ShaderProgram shaderProgram) {
 		mShaderProgram = shaderProgram;
 
@@ -64,11 +71,32 @@ public class MeshStage extends Stage {
 		getCamera().update();
 
 		mShaderProgram.begin();
-		mShaderProgram.setUniformMatrix("projection", getCamera().combined);
+		mShaderProgram.setUniformMatrix("projectionMatrix", getCamera().projection);
+		mShaderProgram.setUniformMatrix("modelViewMatrix", getCamera().view);
+
+		mNormalMatrix.set(getCamera().view.inv().tra());
+		mShaderProgram.setUniformMatrix("normalMatrix", mNormalMatrix);
 
 		mRoot.draw(mShaderProgram, 1.0f);
 
 		mShaderProgram.end();
+
+		mPointLightShaderProgram.begin();
+		mPointLightShaderProgram.setUniformMatrix("modelViewProjectionMatrix", getCamera().combined);
+		Light[] lights = mLights.begin();
+		for (int i = 0, n = mLights.size; i < n; i++) {
+			Light light = lights[i];
+
+			if (!light.isVisible()) {
+				continue;
+			}
+
+			if (light instanceof PointLight) {
+				light.draw(mPointLightShaderProgram, 1.0f);
+			}
+		}
+		mLights.end();
+		mPointLightShaderProgram.end();
 	}
 
 	@Override
