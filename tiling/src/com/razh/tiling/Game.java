@@ -67,17 +67,25 @@ private PointLight pLight;
 		MeshActor meshActor2 = new MeshActor();
 		meshActor2.setWidth(100.0f);
 		meshActor2.setHeight(100.0f);
-		meshActor2.setPosition(200, 200);
+		meshActor2.setPosition(200, 200, -100);
 		meshActor2.setColor(new Color(Color.RED));
 		meshActor2.setMesh(Geometry.createOctagonalBipyramid());
 		mStage.addActor(meshActor2);
+
+		MeshActor meshActor3 = new MeshActor();
+		meshActor3.setWidth(100.0f);
+		meshActor3.setHeight(100.0f);
+		meshActor3.setPosition(800, 200, -100);
+		meshActor3.setColor(new Color(Color.WHITE));
+		meshActor3.setMesh(Geometry.createOctagonalBipyramid());
+		mStage.addActor(meshActor3);
 
 		AmbientLight aLight = new AmbientLight();
 		aLight.setColor(0.25f, 0.25f, 0.25f, 1.0f);
 		mStage.addLight(aLight);
 
 		pLight = new PointLight();
-		pLight.setColor(new Color(Color.WHITE));
+		pLight.setColor(new Color(Color.RED));
 		pLight.setPosition(200, Gdx.graphics.getHeight() / 2 + 50, -10);
 		pLight.addAction(
 			forever(
@@ -87,8 +95,15 @@ private PointLight pLight;
 				)
 			)
 		);
-//		pLight.setDistance(200);
+//		pLight.setDistance(2000);
 		mStage.addLight(pLight);
+
+		PointLight pLight2 = new PointLight();
+		pLight2 = new PointLight();
+		pLight2.setColor(new Color(Color.BLUE));
+		pLight2.setPosition(800, Gdx.graphics.getHeight() / 2, -10);
+//		pLight2.setDistance(200);
+		mStage.addLight(pLight2);
 		mShaderProgramNeedsUpdate = true;
 //		setupLights();
 	}
@@ -167,7 +182,8 @@ private PointLight pLight;
 	public void update() {
 		float delta = Math.min(Gdx.graphics.getDeltaTime(), 1 / 30.0f);
 		mStage.act(delta);
-		pLight.setPosition(Gdx.input.getX(), -Gdx.input.getY() + Gdx.graphics.getHeight() + 100, -10);
+//		pLight.setPosition(Gdx.input.getX(), -Gdx.input.getY() + Gdx.graphics.getHeight() + 100, -10);
+		pLight.setPosition(Gdx.input.getX(), -Gdx.input.getY() + Gdx.graphics.getHeight(), 0);
 
 		if (mStage.lightsNeedUpdate()) {
 			mStage.setLightsNeedUpdate(false);

@@ -52,7 +52,8 @@ public class Geometry {
 		int vtxIndex = 0;
 		int idxIndex = 0;
 
-		float subdivAngle = (float) (Math.PI * 2 / subdivisions);
+		// Generate vertices in reverse order (as counterclockwise is front-facing).
+		float subdivAngle = (float) -(Math.PI * 2 / subdivisions);
 
 		// Generate the vertices which comprise the shape.
 		// Top vertex.
@@ -192,8 +193,14 @@ public class Geometry {
 	                                          float bx, float by, float bz,
 	                                          float cx, float cy, float cz) {
 		// Cross the vector from CB with that of AB and normalize.
-		return new Vector3(cx - bx, cy - by, cz - bz)
-		              .crs(ax - bx, ay - by, az - bz)
-		              .nor();
+//		return new Vector3(cx - bx, cy - by, cz - bz)
+//		              .crs(ax - bx, ay - by, az - bz)
+//		              .nor();
+		Vector3 test = new Vector3(cx - bx, cy - by, cz - bz);
+//		System.out.println("cb: " + test);
+		Vector3 ab = new Vector3(ax - bx, ay - by, az - bz);
+//		System.out.println("ab: " + ab);
+//		System.out.println("cross: " + test.crs(ab));
+		return test.crs(ab).nor();
 	}
 }

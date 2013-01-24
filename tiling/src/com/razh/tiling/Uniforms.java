@@ -94,6 +94,10 @@ public class Uniforms {
 		shaderProgram.setUniformf("ambientLightColor", ambient.r, ambient.g, ambient.b);
 
 		float[] array = getPointLightColors();
+//		for(int i = 0; i < array.length;i++) {
+//			System.out.print(array[i] + " ");
+//		}
+//		System.out.println();
 		shaderProgram.setUniform3fv("pointLightColor", array, 0, array.length);
 
 		array = getPointLightPositions();
