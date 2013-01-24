@@ -17,7 +17,7 @@ public class MeshStage extends Stage {
 	private MeshGroup mRoot;
 	private ShaderProgram mShaderProgram;
 	private Uniforms mUniforms;
-	
+
 	private SnapshotArray<Light> mLights;
 	private boolean mLightsNeedUpdate;
 
@@ -40,7 +40,7 @@ public class MeshStage extends Stage {
 
 		mLights = new SnapshotArray<Light>(Light.class);
 		mLightsNeedUpdate = false;
-		
+
 		mColorActor = new Actor();
 		mColorActor.setColor(Color.BLACK);
 	}
@@ -55,20 +55,19 @@ public class MeshStage extends Stage {
 		draw();
 	}
 
-	public boolean done = false;
 	@Override
 	public void draw() {
 		if (mShaderProgram == null) {
 			return;
 		}
-	
+
 		getCamera().update();
-	
+
 		mShaderProgram.begin();
 		mShaderProgram.setUniformMatrix("projection", getCamera().combined);
 
 		mRoot.draw(mShaderProgram, 1.0f);
-	
+
 		mShaderProgram.end();
 	}
 
@@ -76,12 +75,13 @@ public class MeshStage extends Stage {
 	public void addActor(Actor actor) {
 		mRoot.addActor(actor);
 	}
-	
+
 	public void addLight(Light light) {
 		mLights.add(light);
 		mLightsNeedUpdate = true;
 	}
 
+	@Override
 	public void act(float delta) {
 		mRoot.act(delta);
 
@@ -92,14 +92,15 @@ public class MeshStage extends Stage {
 			light.act(delta);
 		}
 		mLights.end();
-	
+
 		mColorActor.act(delta);
 	}
 
+	@Override
 	public MeshGroup getRoot() {
 		return mRoot;
 	}
-	
+
 	public Color getColor() {
 		return mColorActor.getColor();
 	}
@@ -107,7 +108,7 @@ public class MeshStage extends Stage {
 	public void setColor(Color color) {
 		mColorActor.setColor(color);
 	}
-	
+
 	public SnapshotArray<Light> getLights() {
 		return mLights;
 	}
@@ -116,6 +117,11 @@ public class MeshStage extends Stage {
 		return mLightsNeedUpdate;
 	}
 
+	public void setLightsNeedUpdate(boolean needsUpdate) {
+		mLightsNeedUpdate = needsUpdate;
+	}
+
+	@Override
 	public void addAction(Action action) {
 		mColorActor.addAction(action);
 	}
@@ -126,7 +132,7 @@ public class MeshStage extends Stage {
 		getRoot().parentToLocalCoordinates(actorCoords.set(stageX, stageY));
 		return getRoot().hit(actorCoords.x, actorCoords.y, touchable);
 	}
-	
+
 	public void clearActors() {
 		mRoot.clear();
 	}

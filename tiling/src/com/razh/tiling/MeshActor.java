@@ -38,7 +38,7 @@ public class MeshActor extends Actor3D {
 //		mShaderProgram.setUniformf("rotation", getRotation());
 		mShaderProgram.setUniformf("translate", getX(), getY(), getZ());
 		mShaderProgram.setUniformf("scale", getWidth(), getHeight(), getDepth());
-		mShaderProgram.setUniformf("v_color", getColor());
+		mShaderProgram.setUniformf("color", getColor());
 		if (hasMesh()) {
 			getMesh().render(getShaderProgram(), GL20.GL_TRIANGLES);		
 		}

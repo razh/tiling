@@ -20,7 +20,7 @@ public class Game implements ApplicationListener {
 	private boolean mGL20;
 
 	private ShaderProgram mShaderProgram;
-	private boolean mShaderProgramNeedsUpdate = false;
+	private boolean mShaderProgramNeedsUpdate;
 	private Uniforms mUniforms;
 
 	@Override
@@ -35,6 +35,7 @@ public class Game implements ApplicationListener {
 			Gdx.app.exit();
 		}
 
+		mShaderProgramNeedsUpdate = false;
 		mShaderProgram = Shader.createShaderProgram();
 		System.out.println("Compiled: " + mShaderProgram.isCompiled());
 		mUniforms = new Uniforms();
@@ -64,13 +65,14 @@ public class Game implements ApplicationListener {
 
 		Color ambientLightColor = Color.CLEAR;
 		ArrayList<Color> pointLightColors = new ArrayList<Color>();
-		ArrayList<Vector3> pointLightPositions = new ArrayList<Vector3>();
+		ArrayList<Float> pointLightPositions = new ArrayList<Float>();
 		ArrayList<Float> pointLightDistances = new ArrayList<Float>();
 		int pointLightCount = 0;
 
 		SnapshotArray<Light> children = mStage.getLights();
 		Light[] lights = children.begin();
-		for (int i = 0, n = lights.length; i < n; i++) {
+		Vector3 position;
+		for (int i = 0, n = children.size; i < n; i++) {
 			Light light = lights[i];
 
 			if (!light.isVisible()) {
@@ -88,17 +90,24 @@ public class Game implements ApplicationListener {
 				}
 
 				pointLightColors.add(light.getColor());
-				pointLightPositions.add(light.getPosition());
+
+				position = light.getPosition();
+				pointLightPositions.add(position.x);
+				pointLightPositions.add(position.y);
+				pointLightPositions.add(position.z);
+
 				pointLightDistances.add(((PointLight) light).getDistance());
 			}
 		}
 		children.end();
 
 		Shader.MAX_POINT_LIGHTS = pointLightCount;
+		mShaderProgramNeedsUpdate = true;
+
 		mUniforms.setAmbientLightColor(ambientLightColor);
-		mUniforms.setPointLightColors((Color[]) pointLightColors.toArray());
-		mUniforms.setPointLightPositions((Float[]) pointLightPositions.toArray());
-		mUniforms.setPointLightDistances((Float[]) pointLightDistances.toArray());
+		mUniforms.setPointLightColors(pointLightColors);
+		mUniforms.setPointLightPositions(pointLightPositions);
+		mUniforms.setPointLightDistances(pointLightDistances);
 	}
 
 	@Override
@@ -122,8 +131,16 @@ public class Game implements ApplicationListener {
 	public void update() {
 		float delta = Math.min(Gdx.graphics.getDeltaTime(), 1 / 30.0f);
 		mStage.act(delta);
+
 		if (mStage.lightsNeedUpdate()) {
+			mStage.setLightsNeedUpdate(false);
 			setupLights();
+		}
+
+		if (mShaderProgramNeedsUpdate) {
+			mShaderProgramNeedsUpdate = false;
+			mShaderProgram = Shader.createShaderProgram();
+			mStage.setShaderProgram(mShaderProgram);
 		}
 	}
 

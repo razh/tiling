@@ -20,11 +20,12 @@ public class Shader {
 			"uniform vec3 scale;\n" +
 			"attribute vec3 a_position;\n" +
 			"attribute vec3 a_normal;\n" +
+			"varying vec3 v_normal;\n" +
 			"\n" +
 			"void main()\n" +
 			"{\n" +
-//			"  if"
 			"  vec3 position = scale * a_position + translate;\n" +
+			"  v_normal = a_normal;\n" +
 			"  gl_Position = projection * vec4(position, 1.0);\n" +
 			"}";
 
@@ -32,13 +33,15 @@ public class Shader {
 			"#ifdef GL_ES\n" +
 			"precision mediump float;\n" +
 			"#endif\n" +
-			"uniform vec4 v_color;\n" +
+			"uniform vec4 color;\n" +
+			"varying vec3 v_normal;\n" +
 			"\n" +
 			"void main()\n" +
 			"{\n" +
-			"  gl_FragColor = v_color;\n" +
+			"  gl_FragColor = vec4(v_normal, 1.0) + color;\n" +
 			"}";
 		System.out.println(vertex);
+		System.out.println(fragment);
 
 		ShaderProgram shaderProgram = new ShaderProgram(vertex, fragment);
 		return shaderProgram;

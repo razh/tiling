@@ -1,61 +1,79 @@
 package com.razh.tiling;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 
 public class Uniforms {
-	public Color ambientLightColor;
+	private Color mAmbientLightColor;
 
-	public Color[] pointLightColors;
-	public float[] pointLightPositions;
-	public float[] pointLightDistances;
+	private float[] mPointLightColors;
+	private float[] mPointLightPositions;
+	private float[] mPointLightDistances;
 
 	public Color getAmbientLightColor() {
-		return ambientLightColor;
+		return mAmbientLightColor;
 	}
 
 	public void setAmbientLightColor(Color ambientLightColor) {
-		this.ambientLightColor = ambientLightColor;
+		mAmbientLightColor = ambientLightColor;
 	}
 
-	public Color[] getPointLightColors() {
-		return pointLightColors;
+	public float[] getPointLightColors() {
+		return mPointLightColors;
 	}
 
-	public void setPointLightColors(Color[] pointLightColors) {
-		this.pointLightColors = pointLightColors;
+	public void setPointLightColors(ArrayList<Color> pointLightColors) {
+		float[] colorsArray = new float[pointLightColors.size()];
+		int index = 0;
+
+		Color color;
+		for (int i = 0, n = pointLightColors.size(); i < n; i++ ) {
+			color = pointLightColors.get(i);
+			colorsArray[index++] = color.r;
+			colorsArray[index++] = color.g;
+			colorsArray[index++] = color.b;
+		}
+
+		setPointLightColors(colorsArray);
+	}
+
+	public void setPointLightColors(float[] pointLightColors) {
+		mPointLightColors = pointLightColors;
 	}
 
 	public float[] getPointLightPositions() {
-		return pointLightPositions;
+		return mPointLightPositions;
 	}
 
-	public void setPointLightPositions(Float[] pointLightPositions) {
-		setPointLightPositions(toPrimitiveFloatArray(pointLightPositions));
+	public void setPointLightPositions(ArrayList<Float> pointLightPositions) {
+		setPointLightPositions(ListToPrimitiveFloatArray(pointLightPositions));
 	}
 
 	public void setPointLightPositions(float[] pointLightPositions) {
-		this.pointLightPositions = pointLightPositions;
+		mPointLightPositions = pointLightPositions;
 	}
 
 	public float[] getPointLightDistances() {
-		return pointLightDistances;
+		return mPointLightDistances;
 	}
 
-	public void setPointLightDistances(Float[] pointLightDistances) {
-		setPointLightDistances(toPrimitiveFloatArray(pointLightDistances));
+	public void setPointLightDistances(ArrayList<Float> pointLightDistances) {
+		setPointLightDistances(ListToPrimitiveFloatArray(pointLightDistances));
 	}
 
 	public void setPointLightDistances(float[] pointLightDistances) {
-		this.pointLightDistances = pointLightDistances;
+		mPointLightDistances = pointLightDistances;
 	}
 
-	private float[] toPrimitiveFloatArray(Float[] array) {
-		float[] floatArray = new float[array.length];
+	private float[] ListToPrimitiveFloatArray(List<Float> list) {
+		float[] floatArray = new float[list.size()];
 
 		Float f;
-		for (int i = 0; i < array.length; i++) {
-			f = array[i];
+		for (int i = 0, n = list.size(); i < n; i++) {
+			f = list.get(i);
 			floatArray[i] = (f != null ? f : Float.NaN);
 		}
 
@@ -63,8 +81,16 @@ public class Uniforms {
 	}
 
 	public void setUniforms(ShaderProgram shaderProgram) {
-		shaderProgram.setUniformf("ambientLightColor", ambientLightColor);
-		shaderProgram.setUniform3fv("pointLightColor", pointLightColors, offset, length)
+		Color ambient = getAmbientLightColor();
+		shaderProgram.setUniformf("ambientLightColor", ambient.r, ambient.g, ambient.b);
 
+		float[] array = getPointLightColors();
+		shaderProgram.setUniform3fv("pointLightColor", array, 0, array.length / 3);
+
+		array = getPointLightPositions();
+		shaderProgram.setUniform3fv("pointLightPositions", array, 0, array.length / 3);
+
+		array = getPointLightDistances();
+		shaderProgram.setUniform1fv("pointLightDistances", array, 0, array.length);
 	}
 }
