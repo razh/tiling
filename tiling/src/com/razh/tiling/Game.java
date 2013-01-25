@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
@@ -15,6 +17,8 @@ import com.badlogic.gdx.utils.SnapshotArray;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
 
 public class Game implements ApplicationListener {
+	private InputProcessor mInputProcessor;
+	private Player mPlayer;
 	private MeshStage mStage;
 	private FPSLogger mFPSLogger;
 	private boolean mGL20;
@@ -47,12 +51,14 @@ public class Game implements ApplicationListener {
 
 		mStage.setShaderProgram(mShaderProgram);
 		mStage.setPointLightShaderProgram(Shader.createPointLightShaderProgram());
+		mStage.getCamera().position.z = 100.0f;
+		mStage.getCamera().far = 500.0f;
 
 		meshActor = new MeshActor();
 		meshActor.setWidth(100.0f);
 		meshActor.setHeight(100.0f);
 		meshActor.setDepth(10.0f);
-		meshActor.setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2 - 200, -100);
+		meshActor.setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2 - 200);
 		meshActor.setColor(new Color(Color.BLUE).add(new Color(0.25f,0.0f,0.0f,0.0f)));
 		meshActor.setMesh(Geometry.createTriangularBipyramid());
 		meshActor.addAction(
@@ -71,7 +77,7 @@ public class Game implements ApplicationListener {
 		meshActor2.setWidth(100.0f);
 		meshActor2.setHeight(100.0f);
 		meshActor2.setDepth(10.0f);
-		meshActor2.setPosition(200, 200, -100);
+		meshActor2.setPosition(200, 200);
 		meshActor2.setColor(new Color(Color.RED));
 		meshActor2.setMesh(Geometry.createOctagonalBipyramid());
 		mStage.addActor(meshActor2);
@@ -80,7 +86,7 @@ public class Game implements ApplicationListener {
 		meshActor3.setWidth(100.0f);
 		meshActor3.setHeight(100.0f);
 		meshActor3.setDepth(10.0f);
-		meshActor3.setPosition(800, 200, -100);
+		meshActor3.setPosition(800, 200);
 		meshActor3.setColor(new Color(Color.WHITE));
 		meshActor3.setMesh(Geometry.createOctagonalBipyramid());
 		mStage.addActor(meshActor3);
@@ -91,7 +97,7 @@ public class Game implements ApplicationListener {
 
 		pLight = new PointLight();
 		pLight.setColor(new Color(Color.RED));
-		pLight.setPosition(200, Gdx.graphics.getHeight() / 2 + 50, -10);
+		pLight.setPosition(200, Gdx.graphics.getHeight() / 2 + 50, -20);
 		pLight.setWidth(3);
 		pLight.setHeight(3);
 		pLight.addAction(
@@ -108,13 +114,20 @@ public class Game implements ApplicationListener {
 		PointLight pLight2 = new PointLight();
 		pLight2 = new PointLight();
 		pLight2.setColor(new Color(Color.BLUE));
-		pLight2.setPosition(800, Gdx.graphics.getHeight() / 2, -10);
+		pLight2.setPosition(800, Gdx.graphics.getHeight() / 2, -20);
 		pLight2.setWidth(3);
 		pLight2.setHeight(3);
 		pLight2.setDistance(800);
 		mStage.addLight(pLight2);
 		mShaderProgramNeedsUpdate = true;
 //		setupLights();
+
+		mPlayer = new Player();
+
+		mInputProcessor = new GameInputProcessor();
+		((GameInputProcessor) mInputProcessor).setPlayer(mPlayer);
+		((GameInputProcessor) mInputProcessor).setStage(mStage);
+		Gdx.input.setInputProcessor(mInputProcessor);
 	}
 
 	public void setupLights() {

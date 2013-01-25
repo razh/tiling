@@ -52,11 +52,13 @@ public class MeshActor extends Actor3D {
 
 	@Override
 	public Actor hit(float x, float y, boolean touchable) {
-		if (touchable && getTouchable() != Touchable.enabled)
+		if (touchable && getTouchable() != Touchable.enabled) {
 			return null;
+		}
 
-		if (x == getX() && y == getY())
+		if (Math.abs(x - getX()) <= getWidth() && Math.abs(y - getY()) <= getHeight()) {
 			return this;
+		}
 
 		return null;
 	}

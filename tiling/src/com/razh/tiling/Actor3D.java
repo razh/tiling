@@ -27,7 +27,6 @@ public class Actor3D extends Actor {
 	@Override
 	public void setPosition(float x, float y) {
 		super.setPosition(x, y);
-		setZ(0.0f);
 	}
 
 	public void setPosition(float x, float y, float z) {
