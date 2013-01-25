@@ -9,6 +9,13 @@ public class GameInputProcessor implements InputProcessor {
 	private MeshStage mStage;
 	private Player mPlayer;
 
+	// Offsets from touch position to object position.
+	private Vector2 mOffset;
+
+	public GameInputProcessor() {
+		mOffset = new Vector2();
+	}
+
 	public MeshStage getStage() {
 		return mStage;
 	}
@@ -51,6 +58,7 @@ public class GameInputProcessor implements InputProcessor {
 		Actor hit = mStage.getRoot().hit(point.x, point.y, true);
 		if (hit != null) {
 			mPlayer.setSelected(hit);
+			mOffset.set(point).sub(hit.getX(), hit.getY());
 		}
 
 		return true;
@@ -79,7 +87,7 @@ public class GameInputProcessor implements InputProcessor {
 
 		Actor selected = mPlayer.getSelected();
 		if (selected != null) {
-			selected.setPosition(point.x, point.y);
+			selected.setPosition(point.x - mOffset.x, point.y - mOffset.y);
 		}
 
 		return false;
