@@ -207,6 +207,10 @@ public class Game implements ApplicationListener {
 //		pLight.setPosition(Gdx.input.getX(), -Gdx.input.getY() + Gdx.graphics.getHeight() + 100, -10);
 //		pLight.setPosition(Gdx.input.getX(), -Gdx.input.getY() + Gdx.graphics.getHeight(), 0);
 
+		if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+
+		}
+
 		if (mStage.lightsNeedUpdate()) {
 			mStage.setLightsNeedUpdate(false);
 			setupLights();
