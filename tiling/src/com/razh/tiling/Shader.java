@@ -15,33 +15,21 @@ public class Shader {
 			"  uniform float pointLightDistance[MAX_POINT_LIGHTS];\n" +
 			"#endif\n" +
 			"uniform mat4 projectionMatrix;\n" +
-			"uniform mat4 modelViewMatrix;\n" +
+			"uniform mat4 viewMatrix;\n" +
+			"uniform mat4 modelMatrix;\n" +
 			"uniform mat3 normalMatrix;\n" +
-			"uniform float rotation;\n" +
-			"uniform vec3 translate;\n" +
-			"uniform vec3 scale;\n" +
 			"attribute vec3 a_position;\n" +
 			"attribute vec3 a_normal;\n" +
 			"varying vec3 v_lightFront;\n" +
 			"\n" +
 			"void main()\n" +
 			"{\n" +
-			"  mat3 rotationMatrix = mat3(1.0);\n" +
-			"  if (rotation != 0.0) {\n" +
-			"    float r_cos = cos(radians(rotation));\n" +
-			"    float r_sin = sin(radians(rotation));\n" +
-			"    rotationMatrix[0][0] = r_cos;\n" +
-			"    rotationMatrix[0][2] = -r_sin;\n" +
-			"    rotationMatrix[2][0] = r_sin;\n" +
-			"    rotationMatrix[2][2] = r_cos;\n" +
-			"  }\n" +
-			"  vec3 position = rotationMatrix * (scale * a_position) + translate;\n" +
-			"  vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);\n" +
+			"  vec4 mvPosition = viewMatrix * modelMatrix * vec4(a_position, 1.0);\n" +
 			"  vec3 transformedNormal = normalize(normalMatrix * a_normal);\n" +
 			"  v_lightFront = vec3(0.0);\n" +
 			"  #if MAX_POINT_LIGHTS > 0\n" +
 			"    for (int i = 0; i < MAX_POINT_LIGHTS; i++) {\n" +
-			"      vec4 lightPosition = modelViewMatrix * vec4(pointLightPosition[i], 1.0);\n" +
+			"      vec4 lightPosition = viewMatrix * vec4(pointLightPosition[i], 1.0);\n" +
 			"      vec3 lightVector = lightPosition.xyz - mvPosition.xyz;\n" +
 			"      float lightDistance = 1.0;\n" +
 			"      if (pointLightDistance[i] > 0.0) {\n" +

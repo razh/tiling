@@ -3,12 +3,17 @@ package com.razh.tiling;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.math.Matrix3;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 
 public class MeshActor extends Actor3D {
 	private Mesh mMesh;
+	private Matrix4 mModelMatrix;
+	private Matrix3 mNormalMatrix;
 
 	private ShaderProgram mShaderProgram;
 
@@ -19,6 +24,9 @@ public class MeshActor extends Actor3D {
 
 	public MeshActor() {
 		super();
+
+		mModelMatrix = new Matrix4();
+		mNormalMatrix = new Matrix3();
 	}
 
 	@Override
@@ -36,9 +44,15 @@ public class MeshActor extends Actor3D {
 	}
 
 	public void draw(float parentAlpha) {
-		mShaderProgram.setUniformf("rotation", getRotation());
-		mShaderProgram.setUniformf("translate", getPosition());
-		mShaderProgram.setUniformf("scale", getWidth(), getHeight(), getDepth());
+		mModelMatrix.idt()
+		            .translate(getPosition())
+		            .scale(getWidth(), getHeight(), getDepth())
+		            .rotate(new Vector3(0.0f, 1.0f, 0.0f), getRotation());
+		mShaderProgram.setUniformMatrix("modelMatrix", mModelMatrix);
+
+		mNormalMatrix.set(mModelMatrix.cpy().inv()).transpose();
+		mShaderProgram.setUniformMatrix("normalMatrix", mNormalMatrix);
+
 		mShaderProgram.setUniformf("color", getColor());
 		if (hasMesh()) {
 			getMesh().render(getShaderProgram(), GL20.GL_TRIANGLES);

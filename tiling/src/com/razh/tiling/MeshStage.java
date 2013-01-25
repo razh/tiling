@@ -15,7 +15,6 @@ public class MeshStage extends Stage {
 	private MeshGroup mRoot;
 	private ShaderProgram mShaderProgram;
 	private ShaderProgram mPointLightShaderProgram;
-	private Matrix3 mNormalMatrix;
 
 	private SnapshotArray<Light> mLights;
 
@@ -40,8 +39,6 @@ public class MeshStage extends Stage {
 
 		mColorActor = new Actor();
 		mColorActor.setColor(Color.BLACK);
-
-		mNormalMatrix = new Matrix3();
 	}
 
 	public void setShaderProgram(ShaderProgram shaderProgram) {
@@ -68,10 +65,7 @@ public class MeshStage extends Stage {
 
 		mShaderProgram.begin();
 		mShaderProgram.setUniformMatrix("projectionMatrix", getCamera().projection);
-		mShaderProgram.setUniformMatrix("modelViewMatrix", getCamera().view);
-
-		mNormalMatrix.set(getCamera().view.cpy().inv()).transpose();
-		mShaderProgram.setUniformMatrix("normalMatrix", mNormalMatrix);
+		mShaderProgram.setUniformMatrix("viewMatrix", getCamera().view);
 
 		mRoot.draw(mShaderProgram, 1.0f);
 

@@ -60,17 +60,22 @@ public class Game implements ApplicationListener {
 		meshActor = new MeshActor();
 		meshActor.setWidth(100.0f);
 		meshActor.setHeight(100.0f);
-		meshActor.setDepth(10.0f);
+		meshActor.setDepth(50.0f);
 		meshActor.setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2 - 200);
 		meshActor.setColor(new Color(Color.BLUE).add(new Color(0.25f,0.0f,0.0f,0.0f)));
 		meshActor.setMesh(Geometry.createTriangularBipyramid());
 		meshActor.addAction(
-			forever(
-				sequence(
-					moveBy(200, 200, 2.0f, Interpolation.pow2),
-					moveBy(-200, 200, 2.0f, Interpolation.pow2),
-					moveBy(-200, -200, 2.0f, Interpolation.pow2),
-					moveBy(200, -200, 2.0f, Interpolation.pow2)
+			parallel(
+				forever(
+					sequence(
+						moveBy(200, 200, 2.0f, Interpolation.pow2),
+						moveBy(-200, 200, 2.0f, Interpolation.pow2),
+						moveBy(-200, -200, 2.0f, Interpolation.pow2),
+						moveBy(200, -200, 2.0f, Interpolation.pow2)
+					)
+				),
+				forever(
+					rotateBy(360, 4.0f)
 				)
 			)
 		);
@@ -119,7 +124,7 @@ public class Game implements ApplicationListener {
 
 		pLight = new PointLight();
 		pLight.setColor(new Color(Color.RED));
-		pLight.setPosition(200, Gdx.graphics.getHeight() / 2 + 50, -20);
+		pLight.setPosition(200, Gdx.graphics.getHeight() / 2 + 50, 100);
 		pLight.setWidth(3);
 		pLight.setHeight(3);
 		pLight.addAction(
@@ -136,7 +141,7 @@ public class Game implements ApplicationListener {
 		PointLight pLight2 = new PointLight();
 		pLight2 = new PointLight();
 		pLight2.setColor(new Color(Color.BLUE));
-		pLight2.setPosition(800, Gdx.graphics.getHeight() / 2, -20);
+		pLight2.setPosition(800, Gdx.graphics.getHeight() / 2, 100);
 		pLight2.setWidth(3);
 		pLight2.setHeight(3);
 		pLight2.setDistance(800);
