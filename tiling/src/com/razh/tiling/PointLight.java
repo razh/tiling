@@ -8,19 +8,24 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 
 public class PointLight extends Light {
 	private float mDistance;
-	private Mesh mesh;
+	private static Mesh sMesh;
 
 	public PointLight() {
 		super();
 
 		setDistance(0.0f);
-		mesh = new Mesh(Mesh.VertexDataType.VertexBufferObject,
-		                true, 1, 1,
-		                new VertexAttribute(Usage.Position, 3,
-                                            ShaderProgram.POSITION_ATTRIBUTE));
+		if (sMesh == null) {
+			sMesh = new Mesh(Mesh.VertexDataType.VertexBufferObject,
+			                true, 4, 4,
+			                new VertexAttribute(Usage.Position, 3,
+	                                            ShaderProgram.POSITION_ATTRIBUTE));
 
-		mesh.setVertices(new float[]{0.0f, 0.0f, 0.0f});
-		mesh.setIndices(new short[]{0});
+			sMesh.setVertices(new float[]{ 1.0f,  1.0f, 0.0f,
+			                              1.0f, -1.0f, 0.0f,
+			                             -1.0f,  1.0f, 0.0f,
+			                             -1.0f, -1.0f, 0.0f});
+			sMesh.setIndices(new short[]{0, 1, 2, 3});
+		}
 	}
 
 	public float getDistance() {
@@ -33,8 +38,9 @@ public class PointLight extends Light {
 
 	@Override
 	public void draw(ShaderProgram shaderProgram, float parentAlpha) {
+		shaderProgram.setUniformf("color", getColor());
 		shaderProgram.setUniformf("translate", getPosition());
-		mesh.render(shaderProgram, GL20.GL_POINTS);
+		shaderProgram.setUniformf("scale", getWidth(), getHeight(), getDepth());
+		sMesh.render(shaderProgram, GL20.GL_TRIANGLE_STRIP);
 	}
-
 }

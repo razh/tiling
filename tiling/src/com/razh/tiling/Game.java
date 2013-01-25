@@ -92,6 +92,8 @@ public class Game implements ApplicationListener {
 		pLight = new PointLight();
 		pLight.setColor(new Color(Color.RED));
 		pLight.setPosition(200, Gdx.graphics.getHeight() / 2 + 50, -10);
+		pLight.setWidth(3);
+		pLight.setHeight(3);
 		pLight.addAction(
 			forever(
 				sequence(
@@ -107,6 +109,8 @@ public class Game implements ApplicationListener {
 		pLight2 = new PointLight();
 		pLight2.setColor(new Color(Color.BLUE));
 		pLight2.setPosition(800, Gdx.graphics.getHeight() / 2, -10);
+		pLight2.setWidth(3);
+		pLight2.setHeight(3);
 		pLight2.setDistance(800);
 		mStage.addLight(pLight2);
 		mShaderProgramNeedsUpdate = true;

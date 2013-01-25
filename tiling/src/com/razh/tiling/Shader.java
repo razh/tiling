@@ -72,22 +72,24 @@ public class Shader {
 		String vertex =
 			"uniform mat4 modelViewProjectionMatrix;\n" +
 			"uniform vec3 translate;\n" +
+			"uniform vec3 scale;\n" +
 			"attribute vec3 a_position;\n" +
 			"\n" +
 			"void main()\n" +
 			"{\n" +
 			"  gl_PointSize = 5.0;\n" +
-			"  gl_Position = modelViewProjectionMatrix * vec4(a_position + translate, 1.0);\n" +
+			"  gl_Position = modelViewProjectionMatrix * vec4(scale * a_position + translate, 1.0);\n" +
 			"}";
 
 		String fragment =
 			"#ifdef GL_ES\n" +
 			"precision mediump float;\n" +
 			"#endif\n" +
+			"uniform vec4 color;\n" +
 			"\n" +
 			"void main()\n" +
 			"{\n" +
-			"  gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);\n" +
+			"  gl_FragColor = color;\n" +
 			"}";
 
 		ShaderProgram shaderProgram = new ShaderProgram(vertex, fragment);
