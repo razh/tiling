@@ -20,10 +20,10 @@ public class PointLight extends Light {
 			                new VertexAttribute(Usage.Position, 3,
 	                                            ShaderProgram.POSITION_ATTRIBUTE));
 
-			sMesh.setVertices(new float[]{ 1.0f,  1.0f, 0.0f,
-			                              1.0f, -1.0f, 0.0f,
-			                             -1.0f,  1.0f, 0.0f,
-			                             -1.0f, -1.0f, 0.0f});
+			sMesh.setVertices(new float[]{-1.0f, -1.0f, 0.0f,
+			                               1.0f, -1.0f, 0.0f,
+			                              -1.0f,  1.0f, 0.0f,
+			                               1.0f,  1.0f, 0.0f});
 			sMesh.setIndices(new short[]{0, 1, 2, 3});
 		}
 	}

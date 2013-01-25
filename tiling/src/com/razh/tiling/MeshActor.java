@@ -36,10 +36,7 @@ public class MeshActor extends Actor3D {
 	}
 
 	public void draw(float parentAlpha) {
-//		mShaderProgram.setUniformf("rotation", getRotation());
-//		Matrix4 viewMatrix = new Matrix4();
-//		viewMatrix.translate(getPosition());
-//		mShaderProgram.setUniformMatrix("viewMatrix", viewMatrix.inv());
+		mShaderProgram.setUniformf("rotation", getRotation());
 		mShaderProgram.setUniformf("translate", getPosition());
 		mShaderProgram.setUniformf("scale", getWidth(), getHeight(), getDepth());
 		mShaderProgram.setUniformf("color", getColor());

@@ -26,7 +26,16 @@ public class Shader {
 			"\n" +
 			"void main()\n" +
 			"{\n" +
-			"  vec3 position = scale * a_position + translate;\n" +
+			"  mat3 rotationMatrix = mat3(1.0);\n" +
+			"  if (rotation != 0.0) {\n" +
+			"    float r_cos = cos(radians(rotation));\n" +
+			"    float r_sin = sin(radians(rotation));\n" +
+			"    rotationMatrix[0][0] = r_cos;\n" +
+			"    rotationMatrix[0][2] = -r_sin;\n" +
+			"    rotationMatrix[2][0] = r_sin;\n" +
+			"    rotationMatrix[2][2] = r_cos;\n" +
+			"  }\n" +
+			"  vec3 position = rotationMatrix * (scale * a_position) + translate;\n" +
 			"  vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);\n" +
 			"  vec3 transformedNormal = normalize(normalMatrix * a_normal);\n" +
 			"  v_lightFront = vec3(0.0);\n" +

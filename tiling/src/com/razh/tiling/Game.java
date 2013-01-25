@@ -44,6 +44,9 @@ public class Game implements ApplicationListener {
 			Gdx.app.exit();
 		}
 
+		Gdx.gl20.glEnable(GL20.GL_CULL_FACE);
+		Gdx.gl20.glCullFace(GL20.GL_BACK);
+
 		mShaderProgramNeedsUpdate = false;
 		mLightUniformsNeedRefresh = false;
 		mShaderProgram = Shader.createShaderProgram();
@@ -76,10 +79,15 @@ public class Game implements ApplicationListener {
 		MeshActor meshActor2 = new MeshActor();
 		meshActor2.setWidth(100.0f);
 		meshActor2.setHeight(100.0f);
-		meshActor2.setDepth(10.0f);
+		meshActor2.setDepth(50.0f);
 		meshActor2.setPosition(200, 200);
 		meshActor2.setColor(new Color(Color.RED));
 		meshActor2.setMesh(Geometry.createOctagonalBipyramid());
+		meshActor2.addAction(
+			forever(
+				rotateBy(360, 4.0f)
+			)
+		);
 		mStage.addActor(meshActor2);
 
 		MeshActor meshActor3 = new MeshActor();
