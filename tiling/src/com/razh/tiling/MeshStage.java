@@ -18,7 +18,6 @@ public class MeshStage extends Stage {
 	private Matrix3 mNormalMatrix;
 
 	private SnapshotArray<Light> mLights;
-	private boolean mLightsNeedUpdate;
 
 	// Allows us to set colors and stuff with actions.
 	private Actor mColorActor;
@@ -38,7 +37,6 @@ public class MeshStage extends Stage {
 		mRoot.setStage(this);
 
 		mLights = new SnapshotArray<Light>(Light.class);
-		mLightsNeedUpdate = false;
 
 		mColorActor = new Actor();
 		mColorActor.setColor(Color.BLACK);
@@ -104,7 +102,6 @@ public class MeshStage extends Stage {
 
 	public void addLight(Light light) {
 		mLights.add(light);
-		mLightsNeedUpdate = true;
 	}
 
 	@Override
@@ -137,14 +134,6 @@ public class MeshStage extends Stage {
 
 	public SnapshotArray<Light> getLights() {
 		return mLights;
-	}
-
-	public boolean lightsNeedUpdate() {
-		return mLightsNeedUpdate;
-	}
-
-	public void setLightsNeedUpdate(boolean needsUpdate) {
-		mLightsNeedUpdate = needsUpdate;
 	}
 
 	@Override

@@ -99,6 +99,20 @@ public class Game implements ApplicationListener {
 		meshActor3.setMesh(Geometry.createOctagonalBipyramid());
 		mStage.addActor(meshActor3);
 
+		MeshActor meshActor4 = new MeshActor();
+		meshActor4.setWidth(100.0f);
+		meshActor4.setHeight(100.0f);
+		meshActor4.setDepth(50.0f);
+		meshActor4.setPosition(800, 600);
+		meshActor4.setColor(new Color(Color.WHITE));
+		meshActor4.setMesh(Geometry.createOctahedron());
+		meshActor4.addAction(
+				forever(
+					rotateBy(360, 4.0f)
+				)
+			);
+		mStage.addActor(meshActor4);
+
 		AmbientLight aLight = new AmbientLight();
 		aLight.setColor(0.25f, 0.25f, 0.25f, 1.0f);
 		mStage.addLight(aLight);
@@ -217,11 +231,6 @@ public class Game implements ApplicationListener {
 
 		if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
 
-		}
-
-		if (mStage.lightsNeedUpdate()) {
-			mStage.setLightsNeedUpdate(false);
-			setupLights();
 		}
 
 		setupLights();
