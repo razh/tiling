@@ -49,7 +49,8 @@ public class Game implements ApplicationListener {
 
 		mShaderProgramNeedsUpdate = false;
 		mLightUniformsNeedRefresh = false;
-		mShaderProgram = Shader.createShaderProgram();
+//		mShaderProgram = Shader.createPhongShaderProgram();
+		mShaderProgram = Shader.createLambertShaderProgram();
 		mUniforms = new Uniforms();
 
 		mStage.setShaderProgram(mShaderProgram);
@@ -57,12 +58,15 @@ public class Game implements ApplicationListener {
 		mStage.getCamera().position.z = 100.0f;
 		mStage.getCamera().far = 500.0f;
 
+		MeshMaterial material = new MeshMaterial(new Color(0.33f, 0.33f, 0.33f, 1.0f), new Color(Color.WHITE), new Color(Color.BLACK), 50);
+
 		meshActor = new MeshActor();
 		meshActor.setWidth(100.0f);
 		meshActor.setHeight(100.0f);
 		meshActor.setDepth(50.0f);
 		meshActor.setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2 - 200);
 		meshActor.setColor(new Color(Color.BLUE).add(new Color(0.25f,0.0f,0.0f,0.0f)));
+		meshActor.setMaterial(material);
 		meshActor.setMesh(Geometry.createTriangularBipyramid());
 		meshActor.addAction(
 			parallel(
@@ -86,8 +90,9 @@ public class Game implements ApplicationListener {
 		meshActor2.setHeight(100.0f);
 		meshActor2.setDepth(50.0f);
 		meshActor2.setPosition(200, 200);
-		meshActor2.setColor(new Color(Color.RED));
+		meshActor2.setColor(new Color(Color.RED).add(new Color(0.0f, 0.0f, 0.25f, 0.0f)));
 		meshActor2.setMesh(Geometry.createOctagonalBipyramid());
+		meshActor2.setMaterial(material);
 		meshActor2.addAction(
 			forever(
 				rotateBy(360, 4.0f)
@@ -98,10 +103,11 @@ public class Game implements ApplicationListener {
 		MeshActor meshActor3 = new MeshActor();
 		meshActor3.setWidth(100.0f);
 		meshActor3.setHeight(100.0f);
-		meshActor3.setDepth(10.0f);
+		meshActor3.setDepth(25.0f);
 		meshActor3.setPosition(800, 200);
 		meshActor3.setColor(new Color(Color.WHITE));
 		meshActor3.setMesh(Geometry.createOctagonalBipyramid());
+		meshActor3.setMaterial(material);
 		mStage.addActor(meshActor3);
 
 		MeshActor meshActor4 = new MeshActor();
@@ -109,8 +115,9 @@ public class Game implements ApplicationListener {
 		meshActor4.setHeight(100.0f);
 		meshActor4.setDepth(50.0f);
 		meshActor4.setPosition(800, 600);
-		meshActor4.setColor(new Color(Color.WHITE));
+		meshActor4.setColor(new Color(Color.GRAY));
 		meshActor4.setMesh(Geometry.createOctahedron());
+		meshActor4.setMaterial(material);
 		meshActor4.addAction(
 				forever(
 					rotateBy(360, 4.0f)
@@ -146,6 +153,15 @@ public class Game implements ApplicationListener {
 		pLight2.setHeight(3);
 		pLight2.setDistance(800);
 		mStage.addLight(pLight2);
+
+		PointLight pLight3 = new PointLight();
+		pLight3 = new PointLight();
+		pLight3.setColor(new Color(Color.GREEN));
+		pLight3.setPosition(500, Gdx.graphics.getHeight() / 2 - 200, 100);
+		pLight3.setWidth(3);
+		pLight3.setHeight(3);
+		pLight3.setDistance(8000);
+		mStage.addLight(pLight3);
 		mShaderProgramNeedsUpdate = true;
 //		setupLights();
 
@@ -243,7 +259,8 @@ public class Game implements ApplicationListener {
 		if (mShaderProgramNeedsUpdate) {
 			mShaderProgramNeedsUpdate = false;
 			mShaderProgram.dispose();
-			mShaderProgram = Shader.createShaderProgram();
+			mShaderProgram = Shader.createPhongShaderProgram();
+//			mShaderProgram = Shader.createLambertShaderProgram();
 			mStage.setShaderProgram(mShaderProgram);
 		}
 

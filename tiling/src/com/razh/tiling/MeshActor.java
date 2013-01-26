@@ -2,6 +2,7 @@ package com.razh.tiling;
 
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Mesh;
+import com.badlogic.gdx.graphics.g3d.materials.Material;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Matrix4;
@@ -12,6 +13,8 @@ import com.badlogic.gdx.scenes.scene2d.Touchable;
 
 public class MeshActor extends Actor3D {
 	private Mesh mMesh;
+	private Material mMaterial;
+
 	private Matrix4 mModelMatrix;
 	private Matrix3 mNormalMatrix;
 
@@ -53,9 +56,14 @@ public class MeshActor extends Actor3D {
 		mNormalMatrix.set(mModelMatrix.cpy().inv()).transpose();
 		mShaderProgram.setUniformMatrix("normalMatrix", mNormalMatrix);
 
-		mShaderProgram.setUniformf("color", getColor());
+		mShaderProgram.setUniformf("diffuse", getColor().r, getColor().g, getColor().b);
+
+		if (hasMaterial()) {
+			mMaterial.bind(mShaderProgram);
+		}
+
 		if (hasMesh()) {
-			getMesh().render(getShaderProgram(), GL20.GL_TRIANGLES);
+			getMesh().render(mShaderProgram, GL20.GL_TRIANGLES);
 		}
 	}
 
@@ -103,6 +111,18 @@ public class MeshActor extends Actor3D {
 
 	public boolean hasMesh() {
 		return getMesh() != null;
+	}
+
+	public Material getMaterial() {
+		return mMaterial;
+	}
+
+	public void setMaterial(Material material) {
+		mMaterial = material;
+	}
+
+	public boolean hasMaterial() {
+		return getMaterial() != null;
 	}
 
 	public Entity getEntity() {
