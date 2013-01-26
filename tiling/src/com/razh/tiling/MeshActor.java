@@ -51,9 +51,9 @@ public class MeshActor extends Actor3D {
 	public void draw(float parentAlpha) {
 		mModelMatrix.idt()
 		            .translate(getPosition())
-		            .scale(getWidth(), getHeight(), getDepth())
 		            .rotate(getRotationAxis(), getRotation())
-		            .rotate(Vector3.Z, getOrientation());
+		            .rotate(Vector3.Z, getOrientation())
+		            .scale(getWidth(), getHeight(), getDepth());
 		mShaderProgram.setUniformMatrix("modelMatrix", mModelMatrix);
 
 		mNormalMatrix.set(mModelMatrix.cpy().inv()).transpose();

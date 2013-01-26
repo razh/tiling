@@ -70,7 +70,7 @@ public class Game implements ApplicationListener {
 		meshActor = new MeshActor();
 		meshActor.setWidth(100.0f);
 		meshActor.setHeight(100.0f);
-		meshActor.setDepth(25.0f);
+		meshActor.setDepth(50.0f);
 		meshActor.setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2 - 200);
 		meshActor.setColor(new Color(Color.BLUE).add(new Color(0.25f,0.0f,0.0f,0.0f)));
 		meshActor.setMaterial(material);
@@ -111,7 +111,7 @@ public class Game implements ApplicationListener {
 		MeshActor meshActor3 = new MeshActor();
 		meshActor3.setWidth(100.0f);
 		meshActor3.setHeight(100.0f);
-		meshActor3.setDepth(25.0f);
+		meshActor3.setDepth(50.0f);
 		meshActor3.setPosition(800, 200);
 		meshActor3.setColor(new Color(Color.WHITE));
 		meshActor3.setMesh(Geometry.createOctagonalBipyramid());
