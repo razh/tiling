@@ -55,8 +55,8 @@ public class Game implements ApplicationListener {
 
 		mStage.setShaderProgram(mShaderProgram);
 		mStage.setPointLightShaderProgram(Shader.createPointLightShaderProgram());
-		mStage.getCamera().position.z = 100.0f;
-		mStage.getCamera().far = 500.0f;
+		mStage.getCamera().position.z = 10000.0f;
+		mStage.getCamera().far = 15000.0f;
 
 		MeshMaterial material = new MeshMaterial(new Color(0.33f, 0.33f, 0.33f, 1.0f), new Color(Color.WHITE), new Color(Color.BLACK), 50);
 
