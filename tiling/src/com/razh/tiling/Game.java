@@ -9,6 +9,8 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector3;
@@ -31,6 +33,9 @@ public class Game implements ApplicationListener {
 
 	private PointLight pLight;
 	private MeshActor meshActor;
+
+	private BitmapFont mFont;
+	private SpriteBatch mSpriteBatch;
 
 	@Override
 	public void create() {
@@ -58,15 +63,18 @@ public class Game implements ApplicationListener {
 		mStage.getCamera().position.z = 10000.0f;
 		mStage.getCamera().far = 15000.0f;
 
+		mFont = new BitmapFont();
+
 		MeshMaterial material = new MeshMaterial(new Color(0.33f, 0.33f, 0.33f, 1.0f), new Color(Color.WHITE), new Color(Color.BLACK), 50);
 
 		meshActor = new MeshActor();
 		meshActor.setWidth(100.0f);
 		meshActor.setHeight(100.0f);
-		meshActor.setDepth(50.0f);
+		meshActor.setDepth(25.0f);
 		meshActor.setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2 - 200);
 		meshActor.setColor(new Color(Color.BLUE).add(new Color(0.25f,0.0f,0.0f,0.0f)));
 		meshActor.setMaterial(material);
+		meshActor.setOrientation(180);
 		meshActor.setMesh(Geometry.createTriangularBipyramid());
 		meshActor.addAction(
 			parallel(

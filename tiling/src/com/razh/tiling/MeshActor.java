@@ -21,6 +21,7 @@ public class MeshActor extends Actor3D {
 	private ShaderProgram mShaderProgram;
 
 	private Vector3 mRotationAxis;
+	private float mOrientation;
 
 	private Entity mEntity;
 
@@ -30,6 +31,7 @@ public class MeshActor extends Actor3D {
 		mModelMatrix = new Matrix4();
 		mNormalMatrix = new Matrix3();
 		setRotationAxis(new Vector3(0.0f, 1.0f, 0.0f));
+		setOrientation(0.0f);
 	}
 
 	@Override
@@ -50,7 +52,8 @@ public class MeshActor extends Actor3D {
 		mModelMatrix.idt()
 		            .translate(getPosition())
 		            .scale(getWidth(), getHeight(), getDepth())
-		            .rotate(getRotationAxis(), getRotation());
+		            .rotate(getRotationAxis(), getRotation())
+		            .rotate(Vector3.Z, getOrientation());
 		mShaderProgram.setUniformMatrix("modelMatrix", mModelMatrix);
 
 		mNormalMatrix.set(mModelMatrix.cpy().inv()).transpose();
@@ -91,6 +94,14 @@ public class MeshActor extends Actor3D {
 
 	public void setRotationAxis(Vector3 rotationAxis) {
 		mRotationAxis = rotationAxis;
+	}
+
+	public float getOrientation() {
+		return mOrientation;
+	}
+
+	public void setOrientation(float orientation) {
+		mOrientation = orientation;
 	}
 
 	public Mesh getMesh() {
