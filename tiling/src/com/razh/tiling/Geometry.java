@@ -1,5 +1,6 @@
 package com.razh.tiling;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.VertexAttribute;
 import com.badlogic.gdx.graphics.VertexAttributes.Usage;
@@ -10,20 +11,41 @@ import com.badlogic.gdx.math.Vector3;
  * Factory class for generating geometry for various MeshActors.
  */
 public class Geometry {
+	private static Mesh mTriangularBipyramid;
+	private static Mesh mOctahedron;
+	private static Mesh mHexagonalBipyramid;
+	private static Mesh mOctagonalBipyramid;
+
 	public static Mesh createTriangularBipyramid() {
-		return createBipyramid(3);
+		if (mTriangularBipyramid == null) {
+			mTriangularBipyramid = createBipyramid(3);
+		}
+
+		return mTriangularBipyramid;
 	}
 
 	public static Mesh createOctahedron() {
-		return createBipyramid(4);
+		if (mOctahedron == null) {
+			mOctahedron = createBipyramid(4);
+		}
+
+		return mOctahedron;
 	}
 
 	public static Mesh createHexagonalBipyramid() {
-		return createBipyramid(6);
+		if (mHexagonalBipyramid == null) {
+			mHexagonalBipyramid = createBipyramid(6);
+		}
+
+		return mHexagonalBipyramid;
 	}
 
 	public static Mesh createOctagonalBipyramid() {
-		return createBipyramid(8);
+		if (mOctagonalBipyramid == null) {
+			mOctagonalBipyramid = createBipyramid(8);
+		}
+
+		return mOctagonalBipyramid;
 	}
 
 	public static Mesh createBipyramid(int subdivisions) {
@@ -42,34 +64,13 @@ public class Geometry {
                              VertexAttribute.Normal());
 
 		// Array of unique vertices, with the top vertex at 0, and bottom vertex at end.
-		float[] shapeVertices = new float[(subdivisions + 2) * 3];
+		float[] shapeVertices = getShapeVertices(subdivisions);
 		// Three vertex components and three normal components.
 		float[] vertices = new float[numVertices * 6];
 		short[] indices = new short[numIndices];
 
 		int vtxIndex = 0;
 		int idxIndex = 0;
-
-		// Generate vertices in reverse order (as counterclockwise is front-facing).
-		float subdivAngle = (float) -(Math.PI * 2 / subdivisions);
-
-		// Generate the vertices which comprise the shape.
-		// Top vertex.
-		shapeVertices[vtxIndex++] = 0.0f;
-		shapeVertices[vtxIndex++] = 0.0f;
-		shapeVertices[vtxIndex++] = 1.0f;
-
-		// Side vertices.
-		for (int i = 0; i < subdivisions; i++) {
-			shapeVertices[vtxIndex++] = (float) Math.sin(i * subdivAngle);
-			shapeVertices[vtxIndex++] = (float) Math.cos(i * subdivAngle);
-			shapeVertices[vtxIndex++] = 0.0f;
-		}
-
-		// Bottom vertex.
-		shapeVertices[vtxIndex++] = 0.0f;
-		shapeVertices[vtxIndex++] = 0.0f;
-		shapeVertices[vtxIndex++] = -1.0f;
 
 		// Push the generated vertices such that each face has its own set of three
 		// vertices and each vertex has its own normal.
@@ -180,7 +181,7 @@ public class Geometry {
 		return mesh;
 	}
 
-	public static Mesh createBicolorBipyramid(int subdivisions) {
+	public static Mesh createBicolorBipyramid(int subdivisions, Color color0, Color color1) {
 		if (subdivisions < 3) {
 			return null;
 		}
@@ -194,37 +195,26 @@ public class Geometry {
                              true, numVertices, numIndices,
                              VertexAttribute.Position(),
                              VertexAttribute.Normal(),
-                             new VertexAttribute(Usage.Generic, 1, "a_colorIndex"));
+                             new VertexAttribute(Usage.Generic, 3,
+                                                 ShaderProgram.COLOR_ATTRIBUTE));
 
 		// Array of unique vertices, with the top vertex at 0, and bottom vertex at end.
-		float[] shapeVertices = new float[(subdivisions + 2) * 3];
-		// Three vertex components and three normal components and one color index.
-		float[] vertices = new float[numVertices * 7];
+		float[] shapeVertices = getShapeVertices(subdivisions);
+		// Three vertex components, three normal components, and three color components.
+		float[] vertices = new float[numVertices * 9];
 		short[] indices = new short[numIndices];
 
 		int vtxIndex = 0;
 		int idxIndex = 0;
 
-		// Generate vertices in reverse order (as counterclockwise is front-facing).
-		float subdivAngle = (float) -(Math.PI * 2 / subdivisions);
+		float r0, g0, b0, r1, g1, b1;
+		r0 = color0.r;
+		g0 = color0.g;
+		b0 = color0.b;
 
-		// Generate the vertices which comprise the shape.
-		// Top vertex.
-		shapeVertices[vtxIndex++] = 0.0f;
-		shapeVertices[vtxIndex++] = 0.0f;
-		shapeVertices[vtxIndex++] = 1.0f;
-
-		// Side vertices.
-		for (int i = 0; i < subdivisions; i++) {
-			shapeVertices[vtxIndex++] = (float) Math.sin(i * subdivAngle);
-			shapeVertices[vtxIndex++] = (float) Math.cos(i * subdivAngle);
-			shapeVertices[vtxIndex++] = 0.0f;
-		}
-
-		// Bottom vertex.
-		shapeVertices[vtxIndex++] = 0.0f;
-		shapeVertices[vtxIndex++] = 0.0f;
-		shapeVertices[vtxIndex++] = -1.0f;
+		r1 = color1.r;
+		g1 = color1.g;
+		b1 = color1.b;
 
 		// Push the generated vertices such that each face has its own set of three
 		// vertices and each vertex has its own normal.
@@ -265,7 +255,9 @@ public class Geometry {
 			vertices[vtxIndex++] = ny;
 			vertices[vtxIndex++] = nz;
 			// Color.
-			vertices[vtxIndex++] = 0;
+			vertices[vtxIndex++] = r0;
+			vertices[vtxIndex++] = g0;
+			vertices[vtxIndex++] = b0;
 
 			// Vertex 1.
 			vertices[vtxIndex++] = bx;
@@ -276,7 +268,9 @@ public class Geometry {
 			vertices[vtxIndex++] = ny;
 			vertices[vtxIndex++] = nz;
 			// Color.
-			vertices[vtxIndex++] = 0;
+			vertices[vtxIndex++] = r0;
+			vertices[vtxIndex++] = g0;
+			vertices[vtxIndex++] = b0;
 
 			// Vertex 2.
 			vertices[vtxIndex++] = cx;
@@ -287,7 +281,9 @@ public class Geometry {
 			vertices[vtxIndex++] = ny;
 			vertices[vtxIndex++] = nz;
 			// Color.
-			vertices[vtxIndex++] = 0;
+			vertices[vtxIndex++] = r0;
+			vertices[vtxIndex++] = g0;
+			vertices[vtxIndex++] = b0;
 
 			// Bottom face.
 			// Vertex 0.
@@ -312,7 +308,9 @@ public class Geometry {
 			vertices[vtxIndex++] = ny;
 			vertices[vtxIndex++] = nz;
 			// Color.
-			vertices[vtxIndex++] = 1;
+			vertices[vtxIndex++] = r1;
+			vertices[vtxIndex++] = g1;
+			vertices[vtxIndex++] = b1;
 
 			// Vertex 1.
 			vertices[vtxIndex++] = cx;
@@ -323,7 +321,9 @@ public class Geometry {
 			vertices[vtxIndex++] = ny;
 			vertices[vtxIndex++] = nz;
 			// Color.
-			vertices[vtxIndex++] = 1;
+			vertices[vtxIndex++] = r1;
+			vertices[vtxIndex++] = g1;
+			vertices[vtxIndex++] = b1;
 
 			// Vertex 2.
 			vertices[vtxIndex++] = bx;
@@ -334,7 +334,9 @@ public class Geometry {
 			vertices[vtxIndex++] = ny;
 			vertices[vtxIndex++] = nz;
 			// Color.
-			vertices[vtxIndex++] = 1;
+			vertices[vtxIndex++] = r1;
+			vertices[vtxIndex++] = g1;
+			vertices[vtxIndex++] = b1;
 		}
 
 		for (short i = 0; i < numIndices; i++) {
@@ -345,6 +347,41 @@ public class Geometry {
 		mesh.setIndices(indices);
 
 		return mesh;
+	}
+
+	/**
+	 * Returns the perimeter vertices which define the shape.
+	 */
+	public static float[] getShapeVertices(int subdivisions) {
+		if (subdivisions < 3) {
+			return null;
+		}
+
+		float[] shapeVertices = new float[(subdivisions + 2) * 3];
+
+		// Generate vertices in reverse order (as counterclockwise is front-facing).
+		float subdivAngle = (float) -(Math.PI * 2 / subdivisions);
+		int vtxIndex = 0;
+
+		// Generate the vertices which comprise the shape.
+		// Top vertex.
+		shapeVertices[vtxIndex++] = 0.0f;
+		shapeVertices[vtxIndex++] = 0.0f;
+		shapeVertices[vtxIndex++] = 1.0f;
+
+		// Side vertices.
+		for (int i = 0; i < subdivisions; i++) {
+			shapeVertices[vtxIndex++] = (float) Math.sin(i * subdivAngle);
+			shapeVertices[vtxIndex++] = (float) Math.cos(i * subdivAngle);
+			shapeVertices[vtxIndex++] = 0.0f;
+		}
+
+		// Bottom vertex.
+		shapeVertices[vtxIndex++] = 0.0f;
+		shapeVertices[vtxIndex++] = 0.0f;
+		shapeVertices[vtxIndex++] = -1.0f;
+
+		return shapeVertices;
 	}
 
 	public static Vector3 calculateFaceNormal(float ax, float ay, float az,

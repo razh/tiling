@@ -138,7 +138,7 @@ public class Shader {
 			return shaderProgram;
 	}
 
-	public static ShaderProgram createMultiColorPhongShaderProgram() {
+	public static ShaderProgram createColorPhongShaderProgram() {
 		String vertex =
 				"uniform mat4 projectionMatrix;\n" +
 				"uniform mat4 viewMatrix;\n" +
@@ -146,17 +146,17 @@ public class Shader {
 				"uniform mat3 normalMatrix;\n" +
 				"attribute vec3 a_position;\n" +
 				"attribute vec3 a_normal;\n" +
-				"attribute float a_colorIndex;\n" +
+				"attribute vec3 a_color;\n" +
 				"varying vec3 v_viewPosition;\n" +
 				"varying vec3 v_normal;\n" +
-				"varying float v_colorIndex;\n" +
+				"varying vec3 v_color;\n" +
 				"\n" +
 				"void main()\n" +
 				"{\n" +
 				"  vec4 mvPosition = viewMatrix * modelMatrix * vec4(a_position, 1.0);\n" +
 				"  v_viewPosition = -mvPosition.xyz;\n" +
 				"  v_normal = normalize(normalMatrix * a_normal);\n" +
-				"  v_colorIndex = a_colorIndex;\n" +
+				"  v_color = a_color;\n" +
 				"  gl_Position = projectionMatrix * mvPosition;\n" +
 				"}";
 
@@ -167,9 +167,6 @@ public class Shader {
 				"#endif\n" +
 				"uniform mat4 viewMatrix;\n" +
 				"uniform vec3 diffuse;\n" +
-				"uniform vec3 diffuseA;\n" +
-				"uniform vec3 diffuseB;\n" +
-				"uniform vec3 diffuseC;\n" +
 				"uniform vec3 ambient;\n" +
 				"uniform vec3 emissive;\n" +
 				"uniform vec3 specular;\n" +
@@ -182,20 +179,12 @@ public class Shader {
 				"#endif\n" +
 				"varying vec3 v_viewPosition;\n" +
 				"varying vec3 v_normal;\n" +
-				"varying float v_colorIndex;\n" +
+				"varying vec3 v_color;\n" +
 				"\n" +
 				"void main()\n" +
 				"{\n" +
-				"  vec3 finalDiffuse = diffuse;\n" +
-				"  if (v_colorIndex == 1.0) {\n" +
-				"    finalDiffuse = diffuseA;\n" +
-				"  }\n" +
-				"  else if (v_colorIndex == 2.0) {\n" +
-				"    finalDiffuse = diffuseB;\n" +
-				"  }\n" +
-				"  else if (v_colorIndex == 3.0) {\n" +
-				"    finalDiffuse = diffuseC;\n" +
-				"  }\n" +
+				"  vec3 finalDiffuse = diffuse + v_color;\n" +
+				"  finalDiffuse -= diffuse;\n" +
 				"  gl_FragColor = vec4(1.0);\n" +
 				"  float specularStrength = 1.0;\n" +
 				"  vec3 viewPosition = normalize(v_viewPosition);\n" +
@@ -211,7 +200,7 @@ public class Shader {
 				"    lightVector = normalize(lightVector);\n" +
 				"    float dotProduct = dot(v_normal, lightVector);\n" +
 				"    float pointDiffuseWeight = max(dotProduct, 0.0);\n" +
-				"    pointDiffuse += finalDiffuse * pointLightColor[i] * pointDiffuseWeight * lightDistance;\n" +
+				"    pointDiffuse += finalDiffuse  * pointLightColor[i] * pointDiffuseWeight * lightDistance;\n" +
 				"    vec3 pointHalfVector = normalize(lightVector + viewPosition);\n" +
 				"    float pointDotNormalHalf = max(dot(v_normal, pointHalfVector), 0.0);\n" +
 				"    float pointSpecularWeight = specularStrength * max(pow(pointDotNormalHalf, shininess), 0.0);\n" +

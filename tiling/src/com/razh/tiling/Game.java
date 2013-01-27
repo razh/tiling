@@ -27,7 +27,7 @@ public class Game implements ApplicationListener {
 	private boolean mGL20;
 
 	private ShaderProgram mShaderProgram;
-	private ShaderProgram mMultiColorShaderProgram;
+	private ShaderProgram mColorShaderProgram;
 	private Uniforms mUniforms;
 
 	private boolean mShaderProgramNeedsUpdate;
@@ -138,22 +138,26 @@ public class Game implements ApplicationListener {
 		meshActor4.setRotationAxis(new Vector3(Vector3.X).add(Vector3.Y).nor());
 		mStage.addActor(meshActor4);
 
-		MultiColorMeshActor mA5 = new MultiColorMeshActor();
-		mA5.setWidth(100.0f);
-		mA5.setHeight(100.0f);
+//		for (int i = 0; i < 50;i++) {
+		MeshActor mA5 = new MeshActor();
+		mA5.setWidth(50.0f);
+		mA5.setHeight(50.0f);
 		mA5.setDepth(50.0f);
-		mA5.setPosition(200, 500);
+//		mA5.setPosition(100 + 20 * i, 500);
+		mA5.setPosition(100, 500);
 		mA5.setColor(new Color(Color.GREEN));
-		mA5.setColorA(new Color(Color.RED));
-		mA5.setMesh(Geometry.createBicolorBipyramid(4));
+		mA5.setMesh(Geometry.createBicolorBipyramid(4, new Color(Color.ORANGE), new Color(Color.MAGENTA)));
+//		mA5.setMesh(Geometry.createOctahedron());
 		mA5.setMaterial(material);
 		mA5.addAction(
 			forever(
 				rotateBy(360, 2.0f)
 			)
 		);
-		mStage.addMultiColorActor(mA5);
-		mStage.setMultiColorShaderProgram(mMultiColorShaderProgram);
+		mStage.addColorActor(mA5);
+//		}
+		mColorShaderProgram = Shader.createColorPhongShaderProgram();
+		mStage.setColorShaderProgram(mColorShaderProgram);
 
 
 		AmbientLight aLight = new AmbientLight();
@@ -310,16 +314,17 @@ public class Game implements ApplicationListener {
 			mShaderProgramNeedsUpdate = false;
 			mShaderProgram.dispose();
 			mShaderProgram = Shader.createPhongShaderProgram();
-			mMultiColorShaderProgram = Shader.createMultiColorPhongShaderProgram();
+//			mColorShaderProgram = Shader.createPhongShaderProgram();
+			mColorShaderProgram = Shader.createColorPhongShaderProgram();
 //			mShaderProgram = Shader.createLambertShaderProgram();
 			mStage.setShaderProgram(mShaderProgram);
-			mStage.setMultiColorShaderProgram(mMultiColorShaderProgram);
+			mStage.setColorShaderProgram(mColorShaderProgram);
 		}
 
 		if (mLightUniformsNeedRefresh) {
 			mLightUniformsNeedRefresh = false;
 			mUniforms.setUniforms(mShaderProgram);
-			mUniforms.setUniforms(mMultiColorShaderProgram);
+			mUniforms.setUniforms(mColorShaderProgram);
 		}
 	}
 

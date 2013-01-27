@@ -12,9 +12,9 @@ import com.badlogic.gdx.utils.SnapshotArray;
 
 public class MeshStage extends Stage {
 	private MeshGroup mRoot;
-	private MeshGroup mMultiColorRoot;
+	private MeshGroup mColorRoot;
 	private ShaderProgram mShaderProgram;
-	private ShaderProgram mMultiColorShaderProgram;
+	private ShaderProgram mColorShaderProgram;
 	private ShaderProgram mPointLightShaderProgram;
 
 	private SnapshotArray<Light> mLights;
@@ -36,8 +36,8 @@ public class MeshStage extends Stage {
 		mRoot = new MeshGroup();
 		mRoot.setStage(this);
 
-		mMultiColorRoot = new MeshGroup();
-		mMultiColorRoot.setStage(this);
+		mColorRoot = new MeshGroup();
+		mColorRoot.setStage(this);
 
 		mLights = new SnapshotArray<Light>(Light.class);
 
@@ -49,8 +49,8 @@ public class MeshStage extends Stage {
 		mShaderProgram = shaderProgram;
 	}
 
-	public void setMultiColorShaderProgram(ShaderProgram shaderProgram) {
-		mMultiColorShaderProgram = shaderProgram;
+	public void setColorShaderProgram(ShaderProgram shaderProgram) {
+		mColorShaderProgram = shaderProgram;
 	}
 
 	public void setPointLightShaderProgram(ShaderProgram shaderProgram) {
@@ -79,15 +79,15 @@ public class MeshStage extends Stage {
 		}
 
 		// Render multi-color objects.
-		if (mMultiColorShaderProgram != null) {
-			mMultiColorShaderProgram.begin();
+		if (mColorShaderProgram != null) {
+			mColorShaderProgram.begin();
 
-			mMultiColorShaderProgram.setUniformMatrix("projectionMatrix", getCamera().projection);
-			mMultiColorShaderProgram.setUniformMatrix("viewMatrix", getCamera().view);
+			mColorShaderProgram.setUniformMatrix("projectionMatrix", getCamera().projection);
+			mColorShaderProgram.setUniformMatrix("viewMatrix", getCamera().view);
 
-			mMultiColorRoot.draw(mMultiColorShaderProgram, 1.0f);
+			mColorRoot.draw(mColorShaderProgram, 1.0f);
 
-			mMultiColorShaderProgram.end();
+			mColorShaderProgram.end();
 		}
 
 		// Render light positions.
@@ -116,8 +116,8 @@ public class MeshStage extends Stage {
 		mRoot.addActor(actor);
 	}
 
-	public void addMultiColorActor(MultiColorMeshActor actor) {
-		mMultiColorRoot.addActor(actor);
+	public void addColorActor(MeshActor actor) {
+		mColorRoot.addActor(actor);
 	}
 
 	public void addLight(Light light) {
@@ -127,7 +127,7 @@ public class MeshStage extends Stage {
 	@Override
 	public void act(float delta) {
 		mRoot.act(delta);
-		mMultiColorRoot.act(delta);
+		mColorRoot.act(delta);
 
 		Light[] lights = mLights.begin();
 		for (int i = 0, n = mLights.size; i < n; i++) {
@@ -145,8 +145,8 @@ public class MeshStage extends Stage {
 		return mRoot;
 	}
 
-	public MeshGroup getMultiColorRoot() {
-		return mMultiColorRoot;
+	public MeshGroup getColorRoot() {
+		return mColorRoot;
 	}
 
 	public Color getColor() {
@@ -172,7 +172,7 @@ public class MeshStage extends Stage {
 		getRoot().parentToLocalCoordinates(actorCoords.set(stageX, stageY));
 		Actor hit = getRoot().hit(actorCoords.x, actorCoords.y, touchable);
 		if (hit == null) {
-			return getMultiColorRoot().hit(actorCoords.x, actorCoords.y, touchable);
+			return getColorRoot().hit(actorCoords.x, actorCoords.y, touchable);
 		} else {
 			return hit;
 		}
@@ -180,6 +180,6 @@ public class MeshStage extends Stage {
 
 	public void clearActors() {
 		mRoot.clear();
-		mMultiColorRoot.clear();
+		mColorRoot.clear();
 	}
 }
