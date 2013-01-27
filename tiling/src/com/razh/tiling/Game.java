@@ -1,6 +1,5 @@
 package com.razh.tiling;
 
-import java.awt.Font;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.ApplicationListener;
@@ -28,6 +27,7 @@ public class Game implements ApplicationListener {
 	private boolean mGL20;
 
 	private ShaderProgram mShaderProgram;
+	private ShaderProgram mMultiColorShaderProgram;
 	private Uniforms mUniforms;
 
 	private boolean mShaderProgramNeedsUpdate;
@@ -138,6 +138,24 @@ public class Game implements ApplicationListener {
 		meshActor4.setRotationAxis(new Vector3(Vector3.X).add(Vector3.Y).nor());
 		mStage.addActor(meshActor4);
 
+		MultiColorMeshActor mA5 = new MultiColorMeshActor();
+		mA5.setWidth(100.0f);
+		mA5.setHeight(100.0f);
+		mA5.setDepth(50.0f);
+		mA5.setPosition(200, 500);
+		mA5.setColor(new Color(Color.GREEN));
+		mA5.setColorA(new Color(Color.RED));
+		mA5.setMesh(Geometry.createBicolorBipyramid(4));
+		mA5.setMaterial(material);
+		mA5.addAction(
+			forever(
+				rotateBy(360, 2.0f)
+			)
+		);
+		mStage.addMultiColorActor(mA5);
+		mStage.setMultiColorShaderProgram(mMultiColorShaderProgram);
+
+
 		AmbientLight aLight = new AmbientLight();
 		aLight.setColor(0.25f, 0.25f, 0.25f, 1.0f);
 		mStage.addLight(aLight);
@@ -175,8 +193,17 @@ public class Game implements ApplicationListener {
 		pLight3.setHeight(3);
 		pLight3.setDistance(8000);
 		mStage.addLight(pLight3);
+
+		PointLight pLight4 = new PointLight();
+		pLight4 = new PointLight();
+		pLight4.setColor(new Color(Color.WHITE));
+		pLight4.setPosition(500, Gdx.graphics.getHeight() / 2 + 200, 100);
+		pLight4.setWidth(3);
+		pLight4.setHeight(3);
+		pLight4.setDistance(2000);
+		mStage.addLight(pLight4);
+
 		mShaderProgramNeedsUpdate = true;
-//		setupLights();
 
 		mPlayer = new Player();
 
@@ -283,13 +310,16 @@ public class Game implements ApplicationListener {
 			mShaderProgramNeedsUpdate = false;
 			mShaderProgram.dispose();
 			mShaderProgram = Shader.createPhongShaderProgram();
+			mMultiColorShaderProgram = Shader.createMultiColorPhongShaderProgram();
 //			mShaderProgram = Shader.createLambertShaderProgram();
 			mStage.setShaderProgram(mShaderProgram);
+			mStage.setMultiColorShaderProgram(mMultiColorShaderProgram);
 		}
 
 		if (mLightUniformsNeedRefresh) {
 			mLightUniformsNeedRefresh = false;
 			mUniforms.setUniforms(mShaderProgram);
+			mUniforms.setUniforms(mMultiColorShaderProgram);
 		}
 	}
 

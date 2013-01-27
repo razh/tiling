@@ -55,7 +55,7 @@ public class GameInputProcessor implements InputProcessor {
 
 		Vector2 point = screenToStageCoordinates(screenX, screenY);
 
-		Actor hit = mStage.getRoot().hit(point.x, point.y, true);
+		Actor hit = mStage.hit(point.x, point.y, true);
 		if (hit != null) {
 			mPlayer.setSelected(hit);
 			mOffset.set(point).sub(hit.getX(), hit.getY());

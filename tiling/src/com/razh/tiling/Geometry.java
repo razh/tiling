@@ -38,10 +38,8 @@ public class Geometry {
 		int numIndices = subdivisions * 6;
 		Mesh mesh = new Mesh(Mesh.VertexDataType.VertexBufferObject,
                              true, numVertices, numIndices,
-                             new VertexAttribute(Usage.Position, 3,
-                                                 ShaderProgram.POSITION_ATTRIBUTE),
-                             new VertexAttribute(Usage.Normal, 3,
-                                                 ShaderProgram.NORMAL_ATTRIBUTE));
+                             VertexAttribute.Position(),
+                             VertexAttribute.Normal());
 
 		// Array of unique vertices, with the top vertex at 0, and bottom vertex at end.
 		float[] shapeVertices = new float[(subdivisions + 2) * 3];
@@ -176,12 +174,172 @@ public class Geometry {
 			indices[idxIndex++] = i;
 		}
 
-		// System.out.println(vtxIndex);
-		// for (int i = 0; i < vertices.length; i++) {
-		// 	System.out.print(vertices[i] + ", ");
-		// 	if ((i + 1) % 3 == 0)
-		// 		System.out.println();
-		// }
+		mesh.setVertices(vertices);
+		mesh.setIndices(indices);
+
+		return mesh;
+	}
+
+	public static Mesh createBicolorBipyramid(int subdivisions) {
+		if (subdivisions < 3) {
+			return null;
+		}
+
+		// For normals to work, each face must have its own separate set of vertices.
+		// Two sets of faces with three vertices each and one color index.
+		int numVertices = subdivisions * 6;
+		// Three vertices per face. Two faces per side (bipyramid).
+		int numIndices = subdivisions * 6;
+		Mesh mesh = new Mesh(Mesh.VertexDataType.VertexBufferObject,
+                             true, numVertices, numIndices,
+                             VertexAttribute.Position(),
+                             VertexAttribute.Normal(),
+                             new VertexAttribute(Usage.Generic, 1, "a_colorIndex"));
+
+		// Array of unique vertices, with the top vertex at 0, and bottom vertex at end.
+		float[] shapeVertices = new float[(subdivisions + 2) * 3];
+		// Three vertex components and three normal components and one color index.
+		float[] vertices = new float[numVertices * 7];
+		short[] indices = new short[numIndices];
+
+		int vtxIndex = 0;
+		int idxIndex = 0;
+
+		// Generate vertices in reverse order (as counterclockwise is front-facing).
+		float subdivAngle = (float) -(Math.PI * 2 / subdivisions);
+
+		// Generate the vertices which comprise the shape.
+		// Top vertex.
+		shapeVertices[vtxIndex++] = 0.0f;
+		shapeVertices[vtxIndex++] = 0.0f;
+		shapeVertices[vtxIndex++] = 1.0f;
+
+		// Side vertices.
+		for (int i = 0; i < subdivisions; i++) {
+			shapeVertices[vtxIndex++] = (float) Math.sin(i * subdivAngle);
+			shapeVertices[vtxIndex++] = (float) Math.cos(i * subdivAngle);
+			shapeVertices[vtxIndex++] = 0.0f;
+		}
+
+		// Bottom vertex.
+		shapeVertices[vtxIndex++] = 0.0f;
+		shapeVertices[vtxIndex++] = 0.0f;
+		shapeVertices[vtxIndex++] = -1.0f;
+
+		// Push the generated vertices such that each face has its own set of three
+		// vertices and each vertex has its own normal.
+		// Reset vtxIndex.
+		vtxIndex = 0;
+		float ax, ay, az, bx, by, bz, cx, cy, cz;
+		float nx, ny, nz;
+		Vector3 normal;
+		for (int i = 0; i < subdivisions; i++) {
+			// Top face.
+			// Vertex 0.
+			ax = shapeVertices[0];
+			ay = shapeVertices[1];
+			az = shapeVertices[2];
+			// Vertex 1.
+			bx = shapeVertices[3 * (i + 1)];
+			by = shapeVertices[3 * (i + 1) + 1];
+			bz = shapeVertices[3 * (i + 1) + 2];
+			// Vertex 2.
+			cx = shapeVertices[3 * ((i + 1) % subdivisions + 1)];
+			cy = shapeVertices[3 * ((i + 1) % subdivisions + 1) + 1];
+			cz = shapeVertices[3 * ((i + 1) % subdivisions + 1) + 2];
+
+			// Normals.
+			normal = calculateFaceNormal(ax, ay, az,
+			                             bx, by, bz,
+			                             cx, cy, cz);
+			nx = normal.x;
+			ny = normal.y;
+			nz = normal.z;
+
+			// Vertex 0.
+			vertices[vtxIndex++] = ax;
+			vertices[vtxIndex++] = ay;
+			vertices[vtxIndex++] = az;
+			// Normal.
+			vertices[vtxIndex++] = nx;
+			vertices[vtxIndex++] = ny;
+			vertices[vtxIndex++] = nz;
+			// Color.
+			vertices[vtxIndex++] = 0;
+
+			// Vertex 1.
+			vertices[vtxIndex++] = bx;
+			vertices[vtxIndex++] = by;
+			vertices[vtxIndex++] = bz;
+			// Normal.
+			vertices[vtxIndex++] = nx;
+			vertices[vtxIndex++] = ny;
+			vertices[vtxIndex++] = nz;
+			// Color.
+			vertices[vtxIndex++] = 0;
+
+			// Vertex 2.
+			vertices[vtxIndex++] = cx;
+			vertices[vtxIndex++] = cy;
+			vertices[vtxIndex++] = cz;
+			// Normal.
+			vertices[vtxIndex++] = nx;
+			vertices[vtxIndex++] = ny;
+			vertices[vtxIndex++] = nz;
+			// Color.
+			vertices[vtxIndex++] = 0;
+
+			// Bottom face.
+			// Vertex 0.
+			ax = shapeVertices[3 * (subdivisions + 1)];
+			ay = shapeVertices[3 * (subdivisions + 1) + 1];
+			az = shapeVertices[3 * (subdivisions + 1) + 2];
+
+			// Normals.
+			normal = calculateFaceNormal(ax, ay, az,
+			                             cx, cy, cz,
+			                             bx, by, bz);
+			nx = normal.x;
+			ny = normal.y;
+			nz = normal.z;
+
+			// Vertex 0.
+			vertices[vtxIndex++] = ax;
+			vertices[vtxIndex++] = ay;
+			vertices[vtxIndex++] = az;
+			// Normal.
+			vertices[vtxIndex++] = nx;
+			vertices[vtxIndex++] = ny;
+			vertices[vtxIndex++] = nz;
+			// Color.
+			vertices[vtxIndex++] = 1;
+
+			// Vertex 1.
+			vertices[vtxIndex++] = cx;
+			vertices[vtxIndex++] = cy;
+			vertices[vtxIndex++] = cz;
+			// Normal.
+			vertices[vtxIndex++] = nx;
+			vertices[vtxIndex++] = ny;
+			vertices[vtxIndex++] = nz;
+			// Color.
+			vertices[vtxIndex++] = 1;
+
+			// Vertex 2.
+			vertices[vtxIndex++] = bx;
+			vertices[vtxIndex++] = by;
+			vertices[vtxIndex++] = bz;
+			// Normal.
+			vertices[vtxIndex++] = nx;
+			vertices[vtxIndex++] = ny;
+			vertices[vtxIndex++] = nz;
+			// Color.
+			vertices[vtxIndex++] = 1;
+		}
+
+		for (short i = 0; i < numIndices; i++) {
+			indices[idxIndex++] = i;
+		}
 
 		mesh.setVertices(vertices);
 		mesh.setIndices(indices);
@@ -193,14 +351,8 @@ public class Geometry {
 	                                          float bx, float by, float bz,
 	                                          float cx, float cy, float cz) {
 		// Cross the vector from CB with that of AB and normalize.
-//		return new Vector3(cx - bx, cy - by, cz - bz)
-//		              .crs(ax - bx, ay - by, az - bz)
-//		              .nor();
-		Vector3 test = new Vector3(cx - bx, cy - by, cz - bz);
-//		System.out.println("cb: " + test);
-		Vector3 ab = new Vector3(ax - bx, ay - by, az - bz);
-//		System.out.println("ab: " + ab);
-//		System.out.println("cross: " + test.crs(ab));
-		return test.crs(ab).nor();
+		return new Vector3(cx - bx, cy - by, cz - bz)
+		              .crs(ax - bx, ay - by, az - bz)
+		              .nor();
 	}
 }

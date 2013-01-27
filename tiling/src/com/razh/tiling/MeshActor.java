@@ -43,7 +43,9 @@ public class MeshActor extends Actor3D {
 	}
 
 	public void draw(ShaderProgram shaderProgram, float parentAlpha) {
-		setShaderProgram(shaderProgram);
+		if (mShaderProgram != shaderProgram) {
+			setShaderProgram(shaderProgram);
+		}
 
 		draw(parentAlpha);
 	}
@@ -126,6 +128,14 @@ public class MeshActor extends Actor3D {
 
 	public boolean hasMaterial() {
 		return getMaterial() != null;
+	}
+
+	public Matrix4 getModelMatrix() {
+		return mModelMatrix;
+	}
+
+	public Matrix3 getNormalMatrix() {
+		return mNormalMatrix;
 	}
 
 	public Entity getEntity() {
