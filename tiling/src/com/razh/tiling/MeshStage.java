@@ -70,6 +70,10 @@ public class MeshStage extends Stage {
 
 		mShaderProgram.end();
 
+		if (mPointLightShaderProgram == null) {
+			return;
+		}
+
 		mPointLightShaderProgram.begin();
 		mPointLightShaderProgram.setUniformMatrix("modelViewProjectionMatrix", getCamera().combined);
 		Light[] lights = mLights.begin();

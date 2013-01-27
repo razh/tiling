@@ -1,5 +1,6 @@
 package com.razh.tiling;
 
+import java.awt.Font;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.ApplicationListener;
@@ -13,6 +14,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.SnapshotArray;
 
@@ -63,7 +65,9 @@ public class Game implements ApplicationListener {
 		mStage.getCamera().position.z = 10000.0f;
 		mStage.getCamera().far = 15000.0f;
 
+		mSpriteBatch = new SpriteBatch();
 		mFont = new BitmapFont();
+		mFont.setColor(Color.WHITE);
 
 		MeshMaterial material = new MeshMaterial(new Color(0.33f, 0.33f, 0.33f, 1.0f), new Color(Color.WHITE), new Color(Color.BLACK), 50);
 
@@ -127,10 +131,11 @@ public class Game implements ApplicationListener {
 		meshActor4.setMesh(Geometry.createOctahedron());
 		meshActor4.setMaterial(material);
 		meshActor4.addAction(
-				forever(
-					rotateBy(360, 4.0f)
-				)
-			);
+			forever(
+				rotateBy(360, 2.0f)
+			)
+		);
+		meshActor4.setRotationAxis(new Vector3(Vector3.X).add(Vector3.Y).nor());
 		mStage.addActor(meshActor4);
 
 		AmbientLight aLight = new AmbientLight();
@@ -236,6 +241,9 @@ public class Game implements ApplicationListener {
 
 	@Override
 	public void dispose() {
+		mSpriteBatch.dispose();
+		mFont.dispose();
+		mStage.dispose();
 	}
 
 	@Override
@@ -247,7 +255,14 @@ public class Game implements ApplicationListener {
 		Gdx.gl.glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+		Gdx.gl20.glEnable(GL20.GL_CULL_FACE);
 		mStage.draw();
+		Gdx.gl20.glDisable(GL20.GL_CULL_FACE);
+
+		mSpriteBatch.begin();
+		mSpriteBatch.enableBlending();
+		mFont.draw(mSpriteBatch, "get out of here", 100, 200);
+		mSpriteBatch.end();
 
 		mFPSLogger.log();
 	}
