@@ -39,6 +39,12 @@ public class Game implements ApplicationListener {
 	private BitmapFont mFont;
 	private SpriteBatch mSpriteBatch;
 
+	private enum LightingModel {
+		LAMBERT,
+		PHONG
+	};
+	private LightingModel mLightingModel = LightingModel.LAMBERT;
+
 	@Override
 	public void create() {
 		Gdx.graphics.setVSync(true);
@@ -56,8 +62,11 @@ public class Game implements ApplicationListener {
 
 		mShaderProgramNeedsUpdate = false;
 		mLightUniformsNeedRefresh = false;
-//		mShaderProgram = Shader.createPhongShaderProgram();
-		mShaderProgram = Shader.createLambertShaderProgram();
+		if (mLightingModel == LightingModel.PHONG) {
+			mShaderProgram = Shader.createPhongShaderProgram();
+		} else if (mLightingModel == LightingModel.LAMBERT) {
+			mShaderProgram = Shader.createLambertShaderProgram();
+		}
 		mUniforms = new Uniforms();
 
 		mStage.setShaderProgram(mShaderProgram);
@@ -69,7 +78,11 @@ public class Game implements ApplicationListener {
 		mFont = new BitmapFont();
 		mFont.setColor(Color.WHITE);
 
-		MeshMaterial material = new MeshMaterial(new Color(0.33f, 0.33f, 0.33f, 1.0f), new Color(Color.WHITE), new Color(Color.BLACK), 50);
+		MeshMaterial material = null;
+		if (mLightingModel == LightingModel.PHONG) {
+			material = new MeshMaterial(new Color(0.33f, 0.33f, 0.33f, 1.0f), new Color(Color.WHITE), new Color(Color.BLACK), 50);
+		}
+		MeshMaterial colorMaterial = new MeshMaterial(new Color(0.33f, 0.33f, 0.33f, 1.0f), new Color(Color.WHITE), new Color(Color.BLACK), 50);
 
 		meshActor = new MeshActor();
 		meshActor.setWidth(100.0f);
@@ -148,7 +161,7 @@ public class Game implements ApplicationListener {
 		mA5.setColor(new Color(Color.GREEN));
 		mA5.setMesh(Geometry.createBicolorBipyramid(4, new Color(Color.ORANGE), new Color(Color.MAGENTA)));
 //		mA5.setMesh(Geometry.createOctahedron());
-		mA5.setMaterial(material);
+		mA5.setMaterial(colorMaterial);
 		mA5.addAction(
 			forever(
 				rotateBy(360, 2.0f)
@@ -313,8 +326,12 @@ public class Game implements ApplicationListener {
 		if (mShaderProgramNeedsUpdate) {
 			mShaderProgramNeedsUpdate = false;
 			mShaderProgram.dispose();
-			mShaderProgram = Shader.createPhongShaderProgram();
-//			mColorShaderProgram = Shader.createPhongShaderProgram();
+			if (mLightingModel == LightingModel.PHONG) {
+				mShaderProgram = Shader.createPhongShaderProgram();
+			} else if (mLightingModel == LightingModel.LAMBERT) {
+				mShaderProgram = Shader.createLambertShaderProgram();
+			}
+			//			mColorShaderProgram = Shader.createPhongShaderProgram();
 			mColorShaderProgram = Shader.createColorPhongShaderProgram();
 //			mShaderProgram = Shader.createLambertShaderProgram();
 			mStage.setShaderProgram(mShaderProgram);
