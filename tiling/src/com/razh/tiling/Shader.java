@@ -92,7 +92,7 @@ public class Shader {
 			"{\n" +
 			"  vec4 mvPosition = viewMatrix * modelMatrix * vec4(a_position, 1.0);\n" +
 			"  vec3 transformedNormal = normalize(normalMatrix * a_normal);\n" +
-			"  v_lightFront = vec3(0.0);\n" +
+			"  v_lightFront = diffuse - diffuse;\n" +
 			"  #if MAX_POINT_LIGHTS > 0\n" +
 			"    for (int i = 0; i < MAX_POINT_LIGHTS; i++) {\n" +
 			"      vec4 lightPosition = viewMatrix * vec4(pointLightPosition[i], 1.0);\n" +
@@ -107,7 +107,7 @@ public class Shader {
 			"      v_lightFront += pointLightColor[i] * pointLightWeighting * lightDistance;\n" +
 			"    }\n" +
 			"  #endif\n" +
-			"  v_lightFront = v_lightFront * a_color + ambient * ambientLightColor + emissive + diffuse - diffuse;\n" +
+			"  v_lightFront = v_lightFront * a_color + ambient * ambientLightColor + emissive;\n" +
 			"  gl_Position = projectionMatrix * mvPosition;\n" +
 			"}";
 
