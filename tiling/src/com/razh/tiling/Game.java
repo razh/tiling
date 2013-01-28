@@ -308,7 +308,7 @@ public class Game implements ApplicationListener {
 
 		mSpriteBatch.begin();
 		mSpriteBatch.enableBlending();
-		mFont.draw(mSpriteBatch, "get out of here", 100, 200);
+		mFont.draw(mSpriteBatch, Integer.toString(Gdx.graphics.getFramesPerSecond()), Gdx.graphics.getWidth() * 0.1f, Gdx.graphics.getHeight() * 0.9f);
 		mSpriteBatch.end();
 
 		mFPSLogger.log();
