@@ -10,6 +10,8 @@ public class MeshMaterial extends Material {
 	private Color mEmissive;
 	private float mShininess;
 
+	private boolean mIsShiny;
+
 	public MeshMaterial() {
 		this(new Color(Color.WHITE),
 		     new Color(Color.DARK_GRAY),
@@ -24,14 +26,18 @@ public class MeshMaterial extends Material {
 		setSpecular(specular);
 		setEmissive(emissive);
 		setShininess(shininess);
+
+		setShiny(false);
 	}
 
 	@Override
 	public void bind(ShaderProgram shaderProgram) {
 		shaderProgram.setUniformf("ambient", mAmbient.r, mAmbient.g, mAmbient.b);
-		shaderProgram.setUniformf("specular", mSpecular.r, mSpecular.g, mSpecular.b);
 		shaderProgram.setUniformf("emissive", mEmissive.r, mEmissive.g, mEmissive.b);
-		shaderProgram.setUniformf("shininess", mShininess);
+		if (isShiny()) {
+			shaderProgram.setUniformf("specular", mSpecular.r, mSpecular.g, mSpecular.b);
+			shaderProgram.setUniformf("shininess", mShininess);
+		}
 	}
 
 	public Color getAmbient() {
@@ -64,5 +70,13 @@ public class MeshMaterial extends Material {
 
 	public void setShininess(float shininess) {
 		mShininess = shininess;
+	}
+
+	public boolean isShiny() {
+		return mIsShiny;
+	}
+
+	public void setShiny(boolean shiny) {
+		mIsShiny = shiny;
 	}
 }
