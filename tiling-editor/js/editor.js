@@ -17,12 +17,27 @@ var _editor;
 
 function init() {
   _editor = new Editor();
+
+  _editor._canvas.addEventListener( 'mousedown', onMouseDown, null );
+  _editor._canvas.addEventListener( 'mousemove', onMouseMove, null );
+  _editor._canvas.addEventListener( 'mouseup', onMouseUp, null );
+
+  document.addEventListener( 'keydown', onKeyDown, null );
+
   loop();
 }
 
 function loop() {
+  if ( !_editor.isRunning() ) {
+    return;
+  }
+
   _editor.tick();
   requestAnimFrame( loop );
+}
+
+function quit() {
+  _editor.stop();
 }
 
 var Editor = function() {
@@ -50,14 +65,24 @@ var Editor = function() {
 
   this._testShape = new Shape();
   var ve = PolygonFactory.createHexagon();
+  this._testShape.setWidth( 50 );
+  this._testShape.setHeight( 50 );
   this._testShape.setVertices( ve.vertices );
   this._testShape.setEdges( ve.edges );
   this._testShape.setPosition( 50, 100 );
-  this._testShape.setWidth( 50 );
-  this._testShape.setHeight( 50 );
-  this._testShape.setRotation( -10 * Math.PI / 180 );
+  this._testShape.setRotation( 10 * Math.PI / 180 );
   this._testShape.setColor( 0, 0, 120, 1.0 );
+  console.log( this._testShape.getRadius() );
   this._shapes.push( this._testShape );
+
+  this._running = true;
+
+  this._user = new User();
+
+  this._offset = {
+    x: 0,
+    y: 0
+  };
 };
 
 Editor.prototype.tick = function() {
@@ -86,3 +111,45 @@ Editor.prototype.draw = function() {
   this._ctx.restore();
 };
 
+Editor.prototype.hit = function( x, y ) {
+  var hit = null;
+  for ( var i = 0, n = this._shapes.length; i < n; i++ ) {
+    hit = this._shapes[i].hit( x, y );
+    if ( hit !== null ) {
+      return hit;
+    }
+  }
+
+  return null;
+};
+
+Editor.prototype.isRunning = function() {
+  return this._running;
+};
+
+Editor.prototype.stop = function() {
+  this._running = false;
+};
+
+Editor.prototype.getUser = function() {
+  return this._user;
+};
+
+/*
+  User.
+*/
+var User = function() {
+  this._selected = null;
+};
+
+User.prototype.getSelected = function() {
+  return this._selected;
+};
+
+User.prototype.setSelected = function( selected ) {
+  this._selected = selected;
+};
+
+User.prototype.hasSelected = function() {
+  return this._selected !== undefined && this._selected !== null;
+};

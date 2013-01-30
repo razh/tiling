@@ -45,6 +45,41 @@ Shape.prototype.draw = function( ctx ) {
   ctx.restore();
 };
 
+Shape.prototype.hit = function( x, y ) {
+  if ( this.contains( x, y ) ) {
+    return this;
+  }
+};
+
+Shape.prototype.contains = function( x, y ) {
+  // Translate and scale.
+  x = ( x - this.getX() ) / this.getWidth(),
+  y = ( y - this.getY() ) / this.getHeight();
+
+  var distance = x * x + y * y;
+  if ( distance > this.getRadius() ) {
+    return false;
+  }
+
+  var numVertices = this._vertices.length / 2;
+  var contains = false;
+  var xi, yi, xj, yj;
+  var i, j;
+  for ( i = 0, j = numVertices - 1; i < numVertices; j = i++ ) {
+    xi = this._vertices[ 2 * i ];
+    yi = this._vertices[ 2 * i + 1 ];
+    xj = this._vertices[ 2 * j ];
+    yj = this._vertices[ 2 * j + 1 ];
+
+    if ( ( ( yi > y ) != ( yj > y ) ) &&
+         ( x < ( xj - xi ) * ( y - yi ) / ( yj - yi ) + xi ) ) {
+      contains = !contains;
+    }
+  }
+
+  return contains;
+};
+
 Shape.prototype.getX = function() {
   return this.getPosition().x;
 };
@@ -104,6 +139,14 @@ Shape.prototype.rotate = function( angle ) {
   this._rotation -= angle;
 };
 
+Shape.prototype.getRadius = function() {
+  return this._radius;
+};
+
+Shape.prototype.setRadius = function( radius ) {
+  this._radius = radius;
+};
+
 Shape.prototype.getColor = function() {
   return this._color;
 };
@@ -126,6 +169,25 @@ Shape.prototype.getEdges = function() {
 
 Shape.prototype.setEdges = function( edges ) {
   this._edges = edges;
+
+  var max = {
+    x: 0,
+    y: 0
+  };
+
+  var width = this.getWidth(),
+      height = this.getHeight();
+  var x, y;
+  var distanceSquared = 0;
+
+  for ( var i = 0, n = edges.length; i < n; i++ ) {
+    x = width  * this._vertices[ 2 * this._edges[i] ];
+    y = height * this._vertices[ 2 * this._edges[i] + 1 ];
+
+    distanceSquared = Math.max( distanceSquared, x * x + y * y );
+  }
+
+  this.setRadius( Math.sqrt( distanceSquared ) );
 };
 
 /*
