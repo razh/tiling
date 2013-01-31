@@ -35,4 +35,8 @@ canvas {
   height: 8.33%;
 }
 
-
+.inspector {
+  float: right;
+  max-width: 350px;
+  overflow: auto;
+}

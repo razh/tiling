@@ -18,6 +18,8 @@ var Shape = function() {
   this._radius = 0;
 };
 
+Shape.prototype.update = function( elapsedTime ) {};
+
 Shape.prototype.draw = function( ctx ) {
   ctx.save();
   ctx.translate( this.getX(), this.getY() );
@@ -218,8 +220,80 @@ Shape.prototype.setEdges = function( edges ) {
   return this;
 };
 
-Shape.prototype.createInspector = function( id ) {
+Shape.prototype.createInspector = function( $id ) {
+  if ( $id.length !== 0 ) {
+    $id.empty();
+  }
 
+  // X.
+  Form.createIntegerForm({
+    $id:    $id,
+    object: this,
+    name:   'x',
+    getter: 'getX',
+    setter: 'setX',
+    min:    0,
+    max:    _editor.WIDTH,
+    step:   1
+  });
+
+  // Y.
+  Form.createIntegerForm({
+    $id:    $id,
+    object: this,
+    name:   'y',
+    getter: 'getY',
+    setter: 'setY',
+    min:    0,
+    max:    _editor.HEIGHT,
+    step:   1
+  });
+
+  // Width.
+  Form.createFloatForm({
+    $id:    $id,
+    object: this,
+    name:   'width',
+    getter: 'getWidth',
+    setter: 'setWidth',
+    min:    0,
+    max:    _editor.WIDTH,
+    step:   0.01
+  });
+
+  // Height.
+  Form.createFloatForm({
+    $id:    $id,
+    object: this,
+    name:   'height',
+    getter: 'getHeight',
+    setter: 'setHeight',
+    min:    0,
+    max:    _editor.HEIGHT,
+    step:   0.01
+  });
+
+
+
+  // Color.
+  Form.createColorForm({
+    $id:    $id,
+    object: this,
+    getter: 'getColor',
+  });
+
+  // Rotation.
+  Form.createFloatForm({
+    $id:    $id,
+    object: this,
+    name:   'rotation',
+    getter: 'getRotation',
+    setter: 'setRotation',
+    min:    -2 * Math.PI,
+    max:    2 * Math.PI,
+    step:   0.001,
+    digits: 3
+  });
 };
 
 /*
@@ -296,4 +370,7 @@ Color.prototype.toHexString = function() {
            ( ( ( 0.5 + this.getRed() )   << 0 ) << 16 ) +
            ( ( ( 0.5 + this.getGreen() ) << 0 ) << 8 ) +
            ( ( 0.5 + this.getBlue() )    << 0 ) ).toString( 16 ).slice(1);
+}
+
+Color.prototype.createInspector = function() {
 }

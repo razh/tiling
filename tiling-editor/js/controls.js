@@ -13,8 +13,11 @@ function onMouseMove( event ) {
   var input = transformCoords( event.pageX, event.pageY );
 
   if ( _editor.getUser().hasSelected() ) {
-    _editor.getUser().getSelected().setPosition( input.x + _editor._offset.x,
-                                                 input.y + _editor._offset.y );
+    var selected = _editor.getUser().getSelected();
+    selected.setPosition( input.x + _editor._offset.x,
+                          input.y + _editor._offset.y );
+    _editor._inspectorPane.find( '#x' ).val( selected.getX() );
+    _editor._inspectorPane.find( '#y' ).val( selected.getY() );
   }
 }
 
@@ -31,7 +34,6 @@ function onKeyDown( event ) {
 
     // Space.
     case 32:
-      testHit( _editor._ctx );
       break;
   }
 }
@@ -41,16 +43,4 @@ function transformCoords( x, y ) {
     x: x - _editor._canvas.offsetLeft,
     y: y - _editor._canvas.offsetTop
   };
-}
-
-
-function testHit( ctx ) {
-  ctx.fillStyle = 'rgba( 255, 0, 0, 1.0 )';
-  for ( var i = 0; i < _editor.WIDTH; i += 2 ) {
-    for ( var j = 0; j < _editor.HEIGHT; j += 2 ) {
-      if ( _editor.hit( i, j ) !== null ) {
-        ctx.fillRect( i, j, 1, 1 );
-      }
-    }
-  }
 }

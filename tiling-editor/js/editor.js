@@ -82,7 +82,7 @@ var Editor = function() {
     .setVertices( ve.vertices )
     .setEdges( ve.edges )
     .setPosition( 50, 100 )
-    .setRotation( 10 * Math.PI / 180 )
+    .setRotation( ( 10 * Math.PI / 180 ).toFixed(3) )
     .setColor( 0, 0, 120, 0.2 );
   console.log( this._testShape.getRadius() );
   this._shapes.push( this._testShape );
@@ -94,7 +94,7 @@ var Editor = function() {
     .setVertices( ve2.vertices )
     .setEdges( ve2.edges )
     .setPosition( 50, 100 )
-    .setRotation( 10 * Math.PI / 180 )
+    .setRotation( ( 10 * Math.PI / 180 ).toFixed(3) )
     .setColor( 0, 0, 120, 0.2 );
   this._shapes.push( this._testShape2 );
 
@@ -118,8 +118,9 @@ Editor.prototype.update = function() {
   var elapsedTime = this._currTime - this._prevTime;
   this._prevTime = this._currTime;
 
-  this._testShape.rotate( 3 * Math.PI / 180 );
-  this._testShape2.rotate( -3 * Math.PI / 180 );
+  for ( var i = 0, n = this._shapes.length; i < n; i++ ) {
+    this._shapes[i].update( elapsedTime );
+  }
 };
 
 Editor.prototype.draw = function() {
@@ -135,9 +136,6 @@ Editor.prototype.draw = function() {
   }
 
   this._ctx.restore();
-
-  this._backgroundCtx.clearRect( 0, 0, this.WIDTH, this.HEIGHT );
-  testHit( this._backgroundCtx );
 };
 
 Editor.prototype.hit = function( x, y ) {
@@ -167,13 +165,14 @@ Editor.prototype.getUser = function() {
 Editor.prototype.loadShapeInspector = function( shape ) {
   this._inspectorPane.empty();
 
-  this._inspectorPane.addClass
+  shape.createInspector( this._inspectorPane );
 };
 
 Editor.prototype.select = function( shape ) {
   this._user.setSelected( shape );
 
   if ( shape !== null ) {
+    this.loadShapeInspector( shape );
   }
 };
 
