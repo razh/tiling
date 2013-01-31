@@ -1,4 +1,38 @@
-.canvas-container {
+html, body {
   height: 100%;
-  overflow: hidden;
 }
+
+canvas {
+  position: absolute;
+}
+
+.border {
+  border: dotted;
+  border-width: 1px;
+}
+
+.height12 {
+  height: 100%;
+}
+
+.height9 {
+  height: 75%;
+}
+
+.height6 {
+  height: 50%;
+}
+
+.height3 {
+  height: 25%;
+}
+
+.height2 {
+  height: 16.67%;
+}
+
+.height1 {
+  height: 8.33%;
+}
+
+

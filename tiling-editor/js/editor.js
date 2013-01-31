@@ -41,17 +41,29 @@ function quit() {
 }
 
 var Editor = function() {
-  this._canvasContainer = $( '#canvas-container' );
-  this._canvas = document.createElement( 'canvas' );
-  this._ctx = this._canvas.getContext( '2d');
+  this._canvasContainer = $( '.canvas-container' );
 
+  this._backgroundCanvas = document.createElement( 'canvas' );
+  this._backgroundCtx = this._backgroundCanvas.getContext( '2d' );
+  this._canvasContainer.append( this._backgroundCanvas );
+
+  this._canvas = document.createElement( 'canvas' );
+  this._ctx = this._canvas.getContext( '2d' );
   this._canvasContainer.append( this._canvas );
 
   this.WIDTH = this._canvasContainer.width();
   this.HEIGHT = this._canvasContainer.height();
 
+  this._backgroundCanvas.width = this.WIDTH;
+  this._backgroundCanvas.height = this.HEIGHT;
+
   this._canvas.width = this.WIDTH;
   this._canvas.height = this.HEIGHT;
+
+  this._backgroundColor = new Color( 100, 100, 100, 1.0 );
+
+  this._inspectorPane = $( '#inspector-pane' );
+  this._patternPane = $( '#pattern-pane' );
 
   this._prevTime = Date.now();
   this._currTime = this._prevTime;
@@ -63,17 +75,28 @@ var Editor = function() {
     y: 0
   };
 
-  this._testShape = new Shape();
   var ve = PolygonFactory.createHexagon();
-  this._testShape.setWidth( 50 );
-  this._testShape.setHeight( 50 );
-  this._testShape.setVertices( ve.vertices );
-  this._testShape.setEdges( ve.edges );
-  this._testShape.setPosition( 50, 100 );
-  this._testShape.setRotation( 10 * Math.PI / 180 );
-  this._testShape.setColor( 0, 0, 120, 1.0 );
+  this._testShape = new Shape()
+    .setWidth( 50 )
+    .setHeight( 50 )
+    .setVertices( ve.vertices )
+    .setEdges( ve.edges )
+    .setPosition( 50, 100 )
+    .setRotation( 10 * Math.PI / 180 )
+    .setColor( 0, 0, 120, 0.2 );
   console.log( this._testShape.getRadius() );
   this._shapes.push( this._testShape );
+
+  var ve2 = PolygonFactory.createTriangle();
+  this._testShape2 = new Shape()
+    .setWidth( 50 )
+    .setHeight( 50 )
+    .setVertices( ve2.vertices )
+    .setEdges( ve2.edges )
+    .setPosition( 50, 100 )
+    .setRotation( 10 * Math.PI / 180 )
+    .setColor( 0, 0, 120, 0.2 );
+  this._shapes.push( this._testShape2 );
 
   this._running = true;
 
@@ -95,10 +118,13 @@ Editor.prototype.update = function() {
   var elapsedTime = this._currTime - this._prevTime;
   this._prevTime = this._currTime;
 
-  this._testShape.rotate( 2.0 );
+  this._testShape.rotate( 3 * Math.PI / 180 );
+  this._testShape2.rotate( -3 * Math.PI / 180 );
 };
 
 Editor.prototype.draw = function() {
+  this._canvas.style.backgroundColor = this._backgroundColor.toHexString();
+
   this._ctx.clearRect( 0, 0, this.WIDTH, this.HEIGHT );
 
   this._ctx.save();
@@ -109,6 +135,9 @@ Editor.prototype.draw = function() {
   }
 
   this._ctx.restore();
+
+  this._backgroundCtx.clearRect( 0, 0, this.WIDTH, this.HEIGHT );
+  testHit( this._backgroundCtx );
 };
 
 Editor.prototype.hit = function( x, y ) {
@@ -133,6 +162,19 @@ Editor.prototype.stop = function() {
 
 Editor.prototype.getUser = function() {
   return this._user;
+};
+
+Editor.prototype.loadShapeInspector = function( shape ) {
+  this._inspectorPane.empty();
+
+  this._inspectorPane.addClass
+};
+
+Editor.prototype.select = function( shape ) {
+  this._user.setSelected( shape );
+
+  if ( shape !== null ) {
+  }
 };
 
 /*

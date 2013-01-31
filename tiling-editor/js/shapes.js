@@ -49,16 +49,31 @@ Shape.prototype.hit = function( x, y ) {
   if ( this.contains( x, y ) ) {
     return this;
   }
+
+  return null;
 };
 
 Shape.prototype.contains = function( x, y ) {
   // Translate and scale.
-  x = ( x - this.getX() ) / this.getWidth(),
+  x = ( x - this.getX() ) / this.getWidth();
   y = ( y - this.getY() ) / this.getHeight();
 
   var distance = x * x + y * y;
   if ( distance > this.getRadius() ) {
     return false;
+  }
+
+  // Rotate.
+  var rotation = this.getRotation();
+  if ( rotation !== 0 ) {
+    var cos = Math.cos( rotation ),
+        sin = Math.sin( rotation );
+
+    var rx = cos * x - sin * y,
+        ry = sin * x + cos * y;
+
+    x = rx;
+    y = ry;
   }
 
   var numVertices = this._vertices.length / 2;
@@ -86,6 +101,7 @@ Shape.prototype.getX = function() {
 
 Shape.prototype.setX = function( x ) {
   this._position.x = x;
+  return this;
 };
 
 Shape.prototype.getY = function() {
@@ -94,6 +110,7 @@ Shape.prototype.getY = function() {
 
 Shape.prototype.setY = function( y ) {
   this._position.y = y;
+  return this;
 };
 
 Shape.prototype.getPosition = function() {
@@ -109,6 +126,8 @@ Shape.prototype.setPosition = function() {
     this.setX( arguments[0] );
     this.setY( arguments[1] );
   }
+  return this;
+
 };
 
 Shape.prototype.getWidth = function() {
@@ -117,6 +136,7 @@ Shape.prototype.getWidth = function() {
 
 Shape.prototype.setWidth = function( width ) {
   this._width = width;
+  return this;
 };
 
 Shape.prototype.getHeight = function() {
@@ -125,6 +145,7 @@ Shape.prototype.getHeight = function() {
 
 Shape.prototype.setHeight = function( height ) {
   this._height = height;
+  return this;
 };
 
 Shape.prototype.getRotation = function() {
@@ -133,10 +154,12 @@ Shape.prototype.getRotation = function() {
 
 Shape.prototype.setRotation = function( rotation ) {
   this._rotation = rotation;
+  return this;
 };
 
 Shape.prototype.rotate = function( angle ) {
   this._rotation -= angle;
+  return this;
 };
 
 Shape.prototype.getRadius = function() {
@@ -145,6 +168,7 @@ Shape.prototype.getRadius = function() {
 
 Shape.prototype.setRadius = function( radius ) {
   this._radius = radius;
+  return this;
 };
 
 Shape.prototype.getColor = function() {
@@ -153,6 +177,7 @@ Shape.prototype.getColor = function() {
 
 Shape.prototype.setColor = function() {
   this.getColor().set.apply( this.getColor(), arguments );
+  return this;
 };
 
 Shape.prototype.getVertices = function() {
@@ -161,6 +186,7 @@ Shape.prototype.getVertices = function() {
 
 Shape.prototype.setVertices = function( vertices ) {
   this._vertices = vertices;
+  return this;
 };
 
 Shape.prototype.getEdges = function() {
@@ -188,6 +214,12 @@ Shape.prototype.setEdges = function( edges ) {
   }
 
   this.setRadius( Math.sqrt( distanceSquared ) );
+
+  return this;
+};
+
+Shape.prototype.createInspector = function( id ) {
+
 };
 
 /*
@@ -254,6 +286,14 @@ Color.prototype.setAlpha = function( alpha ) {
 Color.prototype.toString = function() {
   return 'rgba( ' + ( ( 0.5 + this.getRed() )   << 0 ) +
          ', '     + ( ( 0.5 + this.getGreen() ) << 0 ) +
-         ','      + ( ( 0.5 + this.getBlue() )  << 0 ) +
-         ','      + this.getAlpha() + ' )';
+         ', '     + ( ( 0.5 + this.getBlue() )  << 0 ) +
+         ', '     + this.getAlpha() + ' )';
 };
+
+Color.prototype.toHexString = function() {
+    return "#" +
+           ( ( 1 << 24 ) +
+           ( ( ( 0.5 + this.getRed() )   << 0 ) << 16 ) +
+           ( ( ( 0.5 + this.getGreen() ) << 0 ) << 8 ) +
+           ( ( 0.5 + this.getBlue() )    << 0 ) ).toString( 16 ).slice(1);
+}

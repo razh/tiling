@@ -1,0 +1,65 @@
+{
+  "name": "Tetahexagonal metatiling",
+  "shapes": [
+    {
+      "name": "Hexagon",
+      "vertices": [
+        1,
+        -0.866,
+        0.5,
+        -0.866,
+        -0.5,
+        -0,
+        -1,
+        0.866,
+        -0.5,
+        0.866,
+        0.5
+      ],
+      "edges": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        0
+      ],
+      "color": {
+        "red": 255,
+        "green": 100,
+        "blue": 125,
+        "alpha": 1.0
+      },
+      "width": 50,
+      "height": 50,
+      "rotation": 2.4806
+    },
+    {
+      "name": "Triangle",
+      "vertices": [
+        0,
+        1,
+        -0.866,
+        -0.5,
+        0.866,
+        -0.5
+      ],
+      "edges": [
+        0,
+        1,
+        2,
+        0
+      ],
+      "color": {
+        "red": 255,
+        "green": 100,
+        "blue": 125,
+        "alpha": 1.0
+      },
+      "width": 50,
+      "height": 50,
+      "rotation": 0.577
+    }
+  ]
+}

@@ -1,7 +1,7 @@
 function onMouseDown( event ) {
   var input = transformCoords( event.pageX, event.pageY );
 
-  _editor.getUser().setSelected( _editor.hit( input.x, input.y ) );
+  _editor.select( _editor.hit( input.x, input.y ) );
   if ( _editor.getUser().hasSelected() ) {
     var selected = _editor.getUser().getSelected();
     _editor._offset.x = selected.getX() - input.x;
@@ -31,6 +31,7 @@ function onKeyDown( event ) {
 
     // Space.
     case 32:
+      testHit( _editor._ctx );
       break;
   }
 }
@@ -40,4 +41,16 @@ function transformCoords( x, y ) {
     x: x - _editor._canvas.offsetLeft,
     y: y - _editor._canvas.offsetTop
   };
+}
+
+
+function testHit( ctx ) {
+  ctx.fillStyle = 'rgba( 255, 0, 0, 1.0 )';
+  for ( var i = 0; i < _editor.WIDTH; i += 2 ) {
+    for ( var j = 0; j < _editor.HEIGHT; j += 2 ) {
+      if ( _editor.hit( i, j ) !== null ) {
+        ctx.fillRect( i, j, 1, 1 );
+      }
+    }
+  }
 }
