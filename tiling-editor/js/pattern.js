@@ -52,6 +52,19 @@ Pattern.prototype.createInspector = function( $id ) {
 
   this._canvasArray = $id.find( 'canvas' );
 
+  // On click, clear selection and select clicked brush.
+  var $canvasArray = this._canvasArray;
+  $canvasArray.click(function() {
+    $canvasArray.removeClass( 'selected' );
+
+    var $this = $( this );
+    var index = parseInt( $this.attr( 'id' )
+                               .replace( 'pattern', '' ), 10 );
+    _editor.setBrushByIndex( index );
+
+    $this.addClass( 'selected' );
+  });
+
   // Draw to all canvases.
   var canvas, ctx, shape = null;
   for ( i = 0, n = this._shapes.length; i < n; i++ ) {

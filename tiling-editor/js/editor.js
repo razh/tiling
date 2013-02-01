@@ -46,7 +46,7 @@ var EditorState = {
   DEFAULT: 0,
   ADDING_SHAPE: 1,
   REMOVING_SHAPE: 2,
-  DUPLICATING_SHAPE: 3
+  COPYING_SHAPE: 3
 };
 
 var Editor = function() {
@@ -115,15 +115,16 @@ var Editor = function() {
 
   this._running = true;
 
-  this._user = new User();
   this._pattern = new Pattern( './json/example.json' );
   this._pattern.createInspector( this._patternPane );
 
   // For adding shapes.
   this._brush = null;
-  this._state = EditorState.DEFAULT;
-
   this.setBrushByIndex(0);
+
+  this._state = EditorState.DEFAULT;
+  this._selected = null;
+  this._snapping = false;
 };
 
 Editor.prototype.tick = function() {
@@ -186,12 +187,8 @@ Editor.prototype.loadShapeInspector = function( shape ) {
   shape.createInspector( this._inspectorPane );
 };
 
-Editor.prototype.select = function( shape ) {
-  this._user.setSelected( shape );
+Editor.prototype.loadPatternInspector = function( pattern ) {
 
-  if ( shape !== null ) {
-    this.loadShapeInspector( shape );
-  }
 };
 
 Editor.prototype.getState = function() {
@@ -218,13 +215,31 @@ Editor.prototype.getOffsetX = function() {
   return this.getOffset().x;
 };
 
+Editor.prototype.setOffsetX = function( offsetX ) {
+  this._offset.x = offsetX;
+};
+
 Editor.prototype.getOffsetY = function() {
   return this.getOffset().y;
+};
+
+Editor.prototype.setOffsetY = function( offsetY ) {
+  this._offset.y = offsetY;
 };
 
 Editor.prototype.getOffset = function() {
   return this._offset;
 };
+
+Editor.prototype.setOffset = function() {
+  if ( arguments.length === 1 ) {
+    this.setOffsetX( arguments[0].x );
+    this.setOffsetY( arguments[0].y );
+  } else if ( arguments.length === 2 ) {
+    this.setOffsetX( arguments[0] );
+    this.setOffsetY( arguments[1] );
+  }
+}
 
 Editor.prototype.getBrush = function() {
   return this._brush;
@@ -234,22 +249,30 @@ Editor.prototype.setBrushByIndex = function( brushIndex ) {
   this._brush = this._pattern.getShapes()[ brushIndex ];
 };
 
-
-/*
-  User.
-*/
-var User = function() {
-  this._selected = null;
+Editor.prototype.isSnapping = function() {
+  return this._snapping;
 };
 
-User.prototype.getSelected = function() {
+Editor.prototype.setSnapping = function( snapping ) {
+  this._snapping = snapping;
+};
+
+Editor.prototype.toggleSnapping = function() {
+  this._snapping = !snapping;
+};
+
+Editor.prototype.getSelected = function() {
   return this._selected;
 };
 
-User.prototype.setSelected = function( selected ) {
+Editor.prototype.setSelected = function( selected ) {
   this._selected = selected;
+
+  if ( selected !== null ) {
+    this.loadShapeInspector( selected );
+  }
 };
 
-User.prototype.hasSelected = function() {
+Editor.prototype.hasSelected = function() {
   return this._selected !== undefined && this._selected !== null;
 };

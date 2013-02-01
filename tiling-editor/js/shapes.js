@@ -414,5 +414,4 @@ Color.prototype.fromJSON = function( json ) {
       .setGreen( jsonObject.green )
       .setBlue( jsonObject.blue )
       .setAlpha( jsonObject.alpha );
-
 };
