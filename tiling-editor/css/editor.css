@@ -43,6 +43,11 @@ html, body {
   overflow: auto;
 }
 
-.pattern-container canvas + canvas {
+.pattern-container canvas:not(.selected) + canvas:not(.selected) {
   border-left: 1px solid #e3e3e3;
+}
+
+.pattern-container canvas.selected {
+  outline: 2px solid #cccccc;
+  outline-style: dashed;
 }

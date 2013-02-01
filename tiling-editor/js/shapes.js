@@ -318,6 +318,16 @@ Shape.prototype.fromJSON = function( json ) {
              .setColor( color );
 };
 
+Shape.prototype.copy = function( shape ) {
+  return this.setPosition( shape.getPosition() )
+             .setWidth( shape.getWidth() )
+             .setHeight( shape.getHeight() )
+             .setRotation( shape.getRotation() )
+             .setVertices( shape.getVertices() )
+             .setEdges( shape.getEdges() )
+             .setColor( shape.getColor() );
+};
+
 /*
   Color
 */

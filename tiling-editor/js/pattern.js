@@ -57,6 +57,7 @@ Pattern.prototype.createInspector = function( $id ) {
   for ( i = 0, n = this._shapes.length; i < n; i++ ) {
     canvas = this._canvasArray[i];
     canvas.width = canvas.height;
+    canvas.setAttribute( 'id', 'pattern' + i );
 
     ctx = canvas.getContext( '2d' );
     this._ctxArray.push( ctx );
@@ -66,4 +67,8 @@ Pattern.prototype.createInspector = function( $id ) {
                    1.5 * shape.getHeight() - shape.getY() );
     shape.draw( ctx );
   }
+};
+
+Pattern.prototype.getShapes = function() {
+  return this._shapes;
 };

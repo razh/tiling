@@ -42,6 +42,13 @@ function quit() {
   _editor.stop();
 }
 
+var EditorState = {
+  DEFAULT: 0,
+  ADDING_SHAPE: 1,
+  REMOVING_SHAPE: 2,
+  DUPLICATING_SHAPE: 3
+};
+
 var Editor = function() {
   this._canvasContainer = $( '.canvas-container' );
 
@@ -77,6 +84,11 @@ var Editor = function() {
     y: 0
   };
 
+  this._offset = {
+    x: 0,
+    y: 0
+  };
+
   var ve = PolygonFactory.createHexagon();
   console.log( ve )
   this._testShape = new Shape()
@@ -92,7 +104,7 @@ var Editor = function() {
 
   var ve2 = PolygonFactory.createTriangle();
   this._testShape2 = new Shape()
-    .setPosition( 50, 100 )
+    .setPosition( 200, 120 )
     .setWidth( 50 )
     .setHeight( 50 )
     .setRotation( ( 10 * Math.PI / 180 ).toFixed(3) )
@@ -106,15 +118,11 @@ var Editor = function() {
   this._user = new User();
   this._pattern = new Pattern( './json/example.json' );
   this._pattern.createInspector( this._patternPane );
-  for ( var i = 0, n = this._pattern._shapes.length; i < n; i++ ) {
-    this._shapes.push( this._pattern._shapes[i] );
-  }
 
+  // For adding shapes.
+  this._brush = null;
 
-  this._offset = {
-    x: 0,
-    y: 0
-  };
+  this.setBrushByIndex(0);
 };
 
 Editor.prototype.tick = function() {
@@ -184,6 +192,47 @@ Editor.prototype.select = function( shape ) {
     this.loadShapeInspector( shape );
   }
 };
+
+Editor.prototype.getState = function() {
+  return this._state;
+};
+
+Editor.prototype.setState = function( state ) {
+  this._state = state;
+};
+
+Editor.prototype.getShapes = function() {
+  return this._shapes;
+};
+
+Editor.prototype.addShape = function( shape ) {
+  this._shapes.push( shape );
+};
+
+Editor.prototype.removeShape = function( shape ) {
+  this._shapes.splice( this._shapes.lastIndexOf( shape ), 1 );
+};
+
+Editor.prototype.getOffsetX = function() {
+  return this.getOffset().x;
+};
+
+Editor.prototype.getOffsetY = function() {
+  return this.getOffset().y;
+};
+
+Editor.prototype.getOffset = function() {
+  return this._offset;
+};
+
+Editor.prototype.getBrush = function() {
+  return this._brush;
+};
+
+Editor.prototype.setBrushByIndex = function( brushIndex ) {
+  this._brush = this._pattern.getShapes()[ brushIndex ];
+};
+
 
 /*
   User.
