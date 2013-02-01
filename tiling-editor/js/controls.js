@@ -69,11 +69,11 @@ function onMouseMove( event ) {
 
   switch ( _editor.getState() ) {
     case EditorState.DEFAULT:
-    case EditorState.ADDING_SHAPE:
-    case EditorState.REMOVING_SHAPE:
       onMouseMoveDefault( input );
       break;
 
+    case EditorState.ADDING_SHAPE:
+    case EditorState.REMOVING_SHAPE:
     case EditorState.COPYING_SHAPE:
       break;
   }
@@ -84,6 +84,11 @@ function onMouseMoveDefault( input ) {
     var selected = _editor.getSelected();
     selected.setPosition( input.x + _editor.getOffsetX(),
                           input.y + _editor.getOffsetY() );
+
+    if ( _editor.isSnapping() ) {
+      selected.snap( _editor.getShapes() );
+    }
+
     _editor._inspectorPane.find( '#x' ).val( selected.getX() );
     _editor._inspectorPane.find( '#y' ).val( selected.getY() );
   }
@@ -107,7 +112,6 @@ function onMouseUp( event ) {
 
 // Key down.
 function onKeyDown( event ) {
-  console.log( event.which );
   switch ( event.which ) {
     // ESC.
     case 27:
@@ -131,6 +135,15 @@ function onKeyDown( event ) {
     // C.
     case 67:
       _editor.setState( EditorState.COPYING_SHAPE );
+      break;
+
+    // S.
+    case 83:
+      _editor.toggleSnapping();
+      break;
+
+    default:
+      console.log( event.which );
       break;
   }
 }

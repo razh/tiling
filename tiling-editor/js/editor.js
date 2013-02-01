@@ -125,6 +125,7 @@ var Editor = function() {
   this._state = EditorState.DEFAULT;
   this._selected = null;
   this._snapping = false;
+  this._snappingRadius = 50;
 };
 
 Editor.prototype.tick = function() {
@@ -159,7 +160,7 @@ Editor.prototype.draw = function() {
 
 Editor.prototype.hit = function( x, y ) {
   var hit = null;
-  for ( var i = 0, n = this._shapes.length; i < n; i++ ) {
+  for ( var i = this._shapes.length - 1; i >= 0; i-- ) {
     hit = this._shapes[i].hit( x, y );
     if ( hit !== null ) {
       return hit;
@@ -258,7 +259,15 @@ Editor.prototype.setSnapping = function( snapping ) {
 };
 
 Editor.prototype.toggleSnapping = function() {
-  this._snapping = !snapping;
+  this._snapping = !this._snapping;
+};
+
+Editor.prototype.getSnappingRadius = function() {
+  return this._snappingRadius;
+};
+
+Editor.prototype.setSnappingRadius = function( snappingRadius ) {
+  this._snappingRadius = snappingRadius;
 };
 
 Editor.prototype.getSelected = function() {

@@ -56,27 +56,9 @@ Shape.prototype.hit = function( x, y ) {
 };
 
 Shape.prototype.contains = function( x, y ) {
-  // Translate and scale.
-  x = ( x - this.getX() ) / this.getWidth();
-  y = ( y - this.getY() ) / this.getHeight();
-
-  var distance = x * x + y * y;
-  if ( distance > this.getRadius() ) {
-    return false;
-  }
-
-  // Rotate.
-  var rotation = this.getRotation();
-  if ( rotation !== 0 ) {
-    var cos = Math.cos( rotation ),
-        sin = Math.sin( rotation );
-
-    var rx = cos * x - sin * y,
-        ry = sin * x + cos * y;
-
-    x = rx;
-    y = ry;
-  }
+  var point = this.worldToLocalCoordinates( x, y );
+  x = point.x;
+  y = point.y;
 
   var numVertices = this._vertices.length / 2;
   var contains = false;
@@ -123,13 +105,24 @@ Shape.prototype.setPosition = function() {
   if ( arguments.length === 1 ) {
     this.setX( arguments[0].x );
     this.setY( arguments[0].y );
-  }
-  else if ( arguments.length === 2 ) {
+  } else if ( arguments.length === 2 ) {
     this.setX( arguments[0] );
     this.setY( arguments[1] );
   }
-  return this;
 
+  return this;
+};
+
+Shape.prototype.translate = function() {
+  if ( arguments.length === 1 ) {
+    this.setX( this.getX() + arguments[0].x );
+    this.setY( this.getX() + arguments[0].y );
+  } else if ( arguments.length === 2 ) {
+    this.setX( this.getX() + arguments[0] );
+    this.setY( this.getY() + arguments[1] );
+  }
+
+  return this;
 };
 
 Shape.prototype.getWidth = function() {
@@ -147,6 +140,18 @@ Shape.prototype.getHeight = function() {
 
 Shape.prototype.setHeight = function( height ) {
   this._height = height;
+  return this;
+};
+
+Shape.prototype.scale = function() {
+  if ( arguments.length === 1 ) {
+    this.setWidth( this.getWidth() * arguments[0] );
+    this.setHeight( this.getHeight() * arguments[0] );
+  } else if ( arguments.length === 2 ) {
+    this.setWidth( this.getWidth() * arguments[0] );
+    this.setHeight( this.getHeight() * arguments[1] );
+  }
+
   return this;
 };
 
@@ -208,7 +213,7 @@ Shape.prototype.setEdges = function( edges ) {
   var x, y;
   var distanceSquared = 0;
 
-  for ( var i = 0, n = edges.length; i < n; i++ ) {
+  for ( var i = edges.length - 1; i >= 0; i-- ) {
     x = width  * this._vertices[ 2 * this._edges[i] ];
     y = height * this._vertices[ 2 * this._edges[i] + 1 ];
 
@@ -328,6 +333,143 @@ Shape.prototype.copy = function( shape ) {
              .setColor( shape.getColor() );
 };
 
+// May be optimized (calculate localToWorldCoordinates for self only once).
+Shape.prototype.snap = function( shapes ) {
+  var localVertices = this.getVertices(),
+      localNumVertices = localVertices.length / 2,
+      localVertex = null;
+
+  var vertices = [],
+      numVertices = 0,
+      transformedVertex = null;
+
+  var i, j, k;
+
+  // Transform vertices from local to world coordinates.
+  var transformedLocalVertices = [];
+  for ( k = 0; k < localNumVertices; k++ ) {
+    localVertex = this.localToWorldCoordinates( localVertices[ 2 * k ],
+                                                           localVertices[ 2 * k + 1 ] );
+    transformedLocalVertices.push( localVertex.x  );
+    transformedLocalVertices.push( localVertex.y );
+  }
+
+  // Indices of nearest shape, that shape's nearest vertex, and this shape's nearest vertex, respectively.
+  var imin, jmin, kmin;
+  var shape;
+
+  var minDistanceSquared = Number.MAX_VALUE;
+  var distanceSquared;
+  for ( i = shapes.length - 1; i >= 0; i-- ) {
+    shape = shapes[i];
+    if ( this === shape ) {
+      continue;
+    }
+
+    // Transform the shape's vertices to world coords.
+    vertices = shape.getVertices();
+    numVertices = vertices.length / 2;
+    for ( j = 0; j < numVertices; j++ ) {
+      transformedVertex = shape.localToWorldCoordinates( vertices[ 2 * j ],
+                                                         vertices[ 2 * j + 1 ] );
+      // Get distance to every local vertex.
+      for ( k = 0; k < localNumVertices; k++ ) {
+        localVertex = {
+          x: transformedLocalVertices[ 2 * k ],
+          y: transformedLocalVertices[ 2 * k + 1 ]
+        };
+        distanceSquared = ( transformedVertex.x - localVertex.x ) *
+                          ( transformedVertex.x - localVertex.x ) +
+                          ( transformedVertex.y - localVertex.y ) *
+                          ( transformedVertex.y - localVertex.y );
+
+        // Set new minDistance and indices of min.
+        if ( distanceSquared < minDistanceSquared ) {
+          imin = i;
+          jmin = j;
+          kmin = k;
+
+          minDistanceSquared = distanceSquared;
+        }
+      }
+    }
+  }
+
+  // Compare distance to snapping radius.
+  if ( minDistanceSquared < _editor.getSnappingRadius() ) {
+    var nearestShape = shapes[ imin ];
+    var nearestVertex = nearestShape.localToWorldCoordinates(
+      nearestShape.getVertices()[ 2 * jmin ],
+      nearestShape.getVertices()[ 2 * jmin + 1 ]
+    );
+    var localVertex = {
+      x: transformedLocalVertices[ 2 * kmin ],
+      y: transformedLocalVertices[ 2 * kmin + 1 ]
+    };
+
+    var dx = nearestVertex.x - localVertex.x,
+        dy = nearestVertex.y - localVertex.y;
+
+    this.translate( dx, dy );
+  }
+}
+
+Shape.prototype.worldToLocalCoordinates = function( x, y ) {
+  // Translate.
+  x -= this.getX();
+  y -= this.getY();
+
+  // Rotate.
+  var rotation = this.getRotation();
+  if ( rotation !== 0 ) {
+    var cos = Math.cos( rotation ),
+        sin = Math.sin( rotation );
+
+    var rx = cos * x - sin * y,
+        ry = sin * x + cos * y;
+
+    x = rx;
+    y = ry;
+  }
+
+  // Scale.
+  x /= this.getWidth();
+  y /= this.getHeight();
+
+  return {
+    x: x,
+    y: y
+  };
+};
+
+Shape.prototype.localToWorldCoordinates = function( x, y ) {
+  // Scale.
+  x *= this.getWidth();
+  y *= this.getHeight();
+
+  // Rotate.
+  var rotation = this.getRotation();
+  if ( rotation !== 0 ) {
+    var cos = Math.cos( rotation ),
+        sin = Math.sin( rotation );
+
+    var rx =  cos * x + sin * y,
+        ry = -sin * x + cos * y;
+
+    x = rx;
+    y = ry;
+  }
+
+  // Translate.
+  x += this.getX();
+  y += this.getY();
+
+  return {
+    x: x,
+    y: y
+  };
+};
+
 /*
   Color
 */
@@ -348,8 +490,7 @@ Color.prototype.set = function() {
     this.setGreen( arguments[0].getGreen() );
     this.setBlue( arguments[0].getBlue() );
     this.setAlpha( arguments[0].getAlpha() );
-  }
-  else if ( arguments.length === 4 ) {
+  } else if ( arguments.length === 4 ) {
     this.setRed( arguments[0] );
     this.setGreen( arguments[1] );
     this.setBlue( arguments[2] );
