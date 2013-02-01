@@ -273,8 +273,6 @@ Shape.prototype.createInspector = function( $id ) {
     step:   0.01
   });
 
-
-
   // Color.
   Form.createColorForm({
     $id:    $id,
@@ -294,6 +292,30 @@ Shape.prototype.createInspector = function( $id ) {
     step:   0.001,
     digits: 3
   });
+};
+
+Shape.prototype.fromJSON = function( json ) {
+  var jsonObject = JSON.parse( json );
+
+  var x        = jsonObject.x,
+      y        = jsonObject.y,
+      width    = jsonObject.width,
+      height   = jsonObject.height
+      rotation = jsonObject.rotation;
+
+  var vertices = jsonObject.vertices,
+      edges    = jsonObject.edges;
+
+  var color = new Color();
+  color.fromJSON( JSON.stringify( jsonObject.color ) );
+
+  return this.setPosition( x, y )
+             .setWidth( width )
+             .setHeight( height )
+             .setRotation( rotation )
+             .setVertices( vertices )
+             .setEdges( edges )
+             .setColor( color );
 };
 
 /*
@@ -331,6 +353,7 @@ Color.prototype.getRed = function() {
 
 Color.prototype.setRed = function( red ) {
   this._red = red;
+  return this;
 };
 
 Color.prototype.getGreen = function() {
@@ -339,6 +362,7 @@ Color.prototype.getGreen = function() {
 
 Color.prototype.setGreen = function( green ) {
   this._green = green;
+  return this;
 };
 
 Color.prototype.getBlue = function() {
@@ -347,6 +371,7 @@ Color.prototype.getBlue = function() {
 
 Color.prototype.setBlue = function( blue ) {
   this._blue = blue;
+  return this;
 };
 
 Color.prototype.getAlpha = function() {
@@ -355,6 +380,7 @@ Color.prototype.getAlpha = function() {
 
 Color.prototype.setAlpha = function( alpha ) {
   this._alpha = alpha;
+  return this;
 };
 
 Color.prototype.toString = function() {
@@ -372,5 +398,11 @@ Color.prototype.toHexString = function() {
            ( ( 0.5 + this.getBlue() )    << 0 ) ).toString( 16 ).slice(1);
 }
 
-Color.prototype.createInspector = function() {
-}
+Color.prototype.fromJSON = function( json ) {
+  var jsonObject = JSON.parse( json );
+  this.setRed( jsonObject.red )
+      .setGreen( jsonObject.green )
+      .setBlue( jsonObject.blue )
+      .setAlpha( jsonObject.alpha );
+
+};

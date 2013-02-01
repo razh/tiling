@@ -33,7 +33,7 @@ var Form = (function() {
       form += '</div></div>';
 
       $id.append( form );
-      $id.find( '#' + name ).change( function() {
+      $id.find( '#' + name ).change(function() {
         var $this = $( this );
         var temp = parseInt( $this.val(), 10 );
 
@@ -84,7 +84,7 @@ var Form = (function() {
 
 
       $id.append( form );
-      $id.find( '#' + name ).change( function() {
+      $id.find( '#' + name ).change(function() {
         var $this = $( this );
         var temp = parseFloat( $this.val() ).toFixed( digits );
 

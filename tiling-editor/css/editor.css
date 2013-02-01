@@ -2,7 +2,7 @@ html, body {
   height: 100%;
 }
 
-canvas {
+.canvas-container canvas {
   position: absolute;
 }
 
@@ -35,8 +35,14 @@ canvas {
   height: 8.33%;
 }
 
-.inspector {
-  float: right;
-  max-width: 350px;
+.inspector-container {
   overflow: auto;
+}
+
+.pattern-container {
+  overflow: auto;
+}
+
+.pattern-container canvas + canvas {
+  border-left: 1px solid #e3e3e3;
 }

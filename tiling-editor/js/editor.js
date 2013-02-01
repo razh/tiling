@@ -1,8 +1,10 @@
-$( function() {
-  init();
-});
+$(
+  function() {
+   init();
+  }
+);
 
-window.requestAnimFrame = ( function() {
+window.requestAnimFrame = (function() {
   return window.requestAnimationFrame       ||
          window.webkitRequestAnimationFrame ||
          window.mozRequestAnimationFrame    ||
@@ -11,7 +13,7 @@ window.requestAnimFrame = ( function() {
          function( callback ) {
             window.setTimeout( callback, 1000 / 60 );
          };
-})();
+}) ();
 
 var _editor;
 
@@ -76,31 +78,38 @@ var Editor = function() {
   };
 
   var ve = PolygonFactory.createHexagon();
+  console.log( ve )
   this._testShape = new Shape()
+    .setPosition( 50, 100 )
     .setWidth( 50 )
     .setHeight( 50 )
+    .setRotation( ( 10 * Math.PI / 180 ).toFixed(3) )
     .setVertices( ve.vertices )
     .setEdges( ve.edges )
-    .setPosition( 50, 100 )
-    .setRotation( ( 10 * Math.PI / 180 ).toFixed(3) )
     .setColor( 0, 0, 120, 0.2 );
   console.log( this._testShape.getRadius() );
   this._shapes.push( this._testShape );
 
   var ve2 = PolygonFactory.createTriangle();
   this._testShape2 = new Shape()
+    .setPosition( 50, 100 )
     .setWidth( 50 )
     .setHeight( 50 )
+    .setRotation( ( 10 * Math.PI / 180 ).toFixed(3) )
     .setVertices( ve2.vertices )
     .setEdges( ve2.edges )
-    .setPosition( 50, 100 )
-    .setRotation( ( 10 * Math.PI / 180 ).toFixed(3) )
     .setColor( 0, 0, 120, 0.2 );
   this._shapes.push( this._testShape2 );
 
   this._running = true;
 
   this._user = new User();
+  this._pattern = new Pattern( './json/example.json' );
+  this._pattern.createInspector( this._patternPane );
+  for ( var i = 0, n = this._pattern._shapes.length; i < n; i++ ) {
+    this._shapes.push( this._pattern._shapes[i] );
+  }
+
 
   this._offset = {
     x: 0,
