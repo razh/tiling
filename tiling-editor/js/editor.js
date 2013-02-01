@@ -121,6 +121,7 @@ var Editor = function() {
 
   // For adding shapes.
   this._brush = null;
+  this._state = EditorState.DEFAULT;
 
   this.setBrushByIndex(0);
 };
