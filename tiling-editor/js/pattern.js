@@ -35,8 +35,7 @@ Pattern.prototype.fromJSON = function( json ) {
   this._shapes = [];
   var shape = null;
   for ( var i = 0, n = jsonObject.shapes.length; i < n; i++ ) {
-    shape = new Shape();
-    shape.fromJSON( JSON.stringify( jsonObject.shapes[i] ) );
+    shape = new Shape().fromJSON( JSON.stringify( jsonObject.shapes[i] ) );
     this._shapes.push( shape );
   }
 };
@@ -45,6 +44,7 @@ Pattern.prototype.toJSON = function() {
   var object = {};
 
   object.name = this._name;
+  object.shapes = this._shapes;
 
   return object;
 };
@@ -90,6 +90,10 @@ Pattern.prototype.createInspector = function( $id ) {
     ctx.translate( 1.5 * shape.getWidth() - shape.getX(),
                    1.5 * shape.getHeight() - shape.getY() );
     shape.draw( ctx );
+  }
+
+  if ( this._shapes.length > 0 ) {
+    $( $canvasArray[0] ).addClass( 'selected' );
   }
 };
 

@@ -3,6 +3,11 @@
   "shapes": [
     {
       "name": "Hexagon",
+      "x": 0,
+      "y": 0,
+      "width": 50,
+      "height": 50,
+      "rotation": 2.4806,
       "vertices": [
         0,
         1,
@@ -26,20 +31,20 @@
         5,
         0
       ],
-      "x": 250,
-      "y": 150,
       "color": {
         "red": 255,
         "green": 100,
         "blue": 125,
         "alpha": 1.0
-      },
-      "width": 50,
-      "height": 50,
-      "rotation": 2.4806
+      }
     },
     {
       "name": "Triangle",
+      "x": 250,
+      "y": 250,
+      "width": 50,
+      "height": 50,
+      "rotation": 0.577,
       "vertices": [
         0,
         1,
@@ -54,17 +59,27 @@
         2,
         0
       ],
-      "x": 250,
-      "y": 250,
       "color": {
         "red": 255,
         "green": 200,
         "blue": 125,
         "alpha": 1.0
-      },
+      }
+    },
+    {
+      "name": "Heptagon",
+      "x": 250,
+      "y": 250,
       "width": 50,
       "height": 50,
-      "rotation": 0.577
+      "rotation": 0.577,
+      "sides": 7,
+      "color": {
+        "red": 255,
+        "green": 200,
+        "blue": 125,
+        "alpha": 1.0
+      }
     }
   ]
 }

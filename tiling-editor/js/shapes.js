@@ -4,6 +4,7 @@ var Shape = function() {
     y: 0
   };
 
+  this._numSides = 0;
   this._vertices = [];
   this._edges = [];
 
@@ -187,6 +188,15 @@ Shape.prototype.setColor = function() {
   return this;
 };
 
+Shape.prototype.getNumSides = function() {
+  return this._numSides;
+};
+
+Shape.prototype.setNumSides = function( numSides ) {
+  this._numSides = numSides;
+  return this;
+};
+
 Shape.prototype.getVertices = function() {
   return this._vertices;
 };
@@ -302,13 +312,21 @@ Shape.prototype.createInspector = function( $id ) {
 Shape.prototype.fromJSON = function( json ) {
   var jsonObject = JSON.parse( json );
 
-  var x        = jsonObject.x,
-      y        = jsonObject.y,
-      width    = jsonObject.width,
-      height   = jsonObject.height
-      rotation = jsonObject.rotation,
+  var x        = jsonObject.x        || 0,
+      y        = jsonObject.y        || 0,
+      width    = jsonObject.width    || 1,
+      height   = jsonObject.height   || 1
+      rotation = jsonObject.rotation || 0;
+
+  var sides    = jsonObject.sides || 0,
       vertices = jsonObject.vertices,
       edges    = jsonObject.edges;
+
+  if ( vertices === undefined || edges === undefined ) {
+    var geometry = PolygonFactory.createRegularPolygon( sides );
+    vertices = geometry.vertices;
+    edges = geometry.edges;
+  }
 
   var color = new Color();
   color.fromJSON( JSON.stringify( jsonObject.color ) );
@@ -317,6 +335,7 @@ Shape.prototype.fromJSON = function( json ) {
              .setWidth( width )
              .setHeight( height )
              .setRotation( rotation )
+             .setNumSides( sides )
              .setVertices( vertices )
              .setEdges( edges )
              .setColor( color );
@@ -330,8 +349,12 @@ Shape.prototype.toJSON = function() {
   object.width    = this.getWidth();
   object.height   = this.getHeight();
   object.rotation = this.getRotation();
-  object.vertices = this.getVertices();
-  object.edges    = this.getEdges();
+  if ( this.getNumSides() === 0 ) {
+    object.vertices = this.getVertices();
+    object.edges    = this.getEdges();
+  } else {
+    object.sides = this.getNumSides();
+  }
   object.color    = this.getColor().toJSON();
 
   return object;
@@ -565,10 +588,10 @@ Color.prototype.toHexString = function() {
 
 Color.prototype.fromJSON = function( json ) {
   var jsonObject = JSON.parse( json );
-  this.setRed( jsonObject.red )
-      .setGreen( jsonObject.green )
-      .setBlue( jsonObject.blue )
-      .setAlpha( jsonObject.alpha );
+  this.setRed(   jsonObject.red   || 0 )
+      .setGreen( jsonObject.green || 0 )
+      .setBlue(  jsonObject.blue  || 0 )
+      .setAlpha( jsonObject.alpha || 1.0 );
 };
 
 Color.prototype.toJSON = function() {
