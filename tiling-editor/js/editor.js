@@ -358,3 +358,8 @@ Editor.prototype.setSelected = function( selected ) {
 Editor.prototype.hasSelected = function() {
   return this._selected !== undefined && this._selected !== null;
 };
+
+// Levels.
+Editor.prototype.load = function( level ) {
+
+};

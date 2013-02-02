@@ -2,9 +2,11 @@
   "name": "Bird",
   "pattern": "./json/example_pattern.json",
   "patternShapes": [
-    "index": 0,
-    "x": 50,
-    "y": 60
+    {
+      "index": 0,
+      "x": 50,
+      "y": 60
+    }
   ],
   "shapes": [
     {

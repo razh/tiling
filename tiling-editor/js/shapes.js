@@ -4,16 +4,15 @@ var Shape = function() {
     y: 0
   };
 
+  this._width = 0;
+  this._height = 0;
+  this._rotation = 0.0;
+
   this._numSides = 0;
   this._vertices = [];
   this._edges = [];
 
   this._color = new Color();
-
-  this._width = 0;
-  this._height = 0;
-
-  this._rotation = 0.0;
 
   // For collision.
   this._radius = 0;
@@ -222,7 +221,10 @@ Shape.prototype.getEdges = function() {
 
 Shape.prototype.setEdges = function( edges ) {
   this._edges = edges;
+  return this;
+};
 
+Shape.prototype.calculateRadius = function() {
   var max = {
     x: 0,
     y: 0
@@ -233,17 +235,15 @@ Shape.prototype.setEdges = function( edges ) {
   var x, y;
   var distanceSquared = 0;
 
-  for ( var i = edges.length - 1; i >= 0; i-- ) {
+  for ( var i = this._edges.length - 1; i >= 0; i-- ) {
     x = width  * this._vertices[ 2 * this._edges[i] ];
     y = height * this._vertices[ 2 * this._edges[i] + 1 ];
 
     distanceSquared = Math.max( distanceSquared, x * x + y * y );
   }
 
-  this.setRadius( Math.sqrt( distanceSquared ) );
-
-  return this;
-};
+  return this.setRadius( Math.sqrt( distanceSquared ) );
+}
 
 Shape.prototype.createInspector = function( $id ) {
   if ( $id.length !== 0 ) {
@@ -322,12 +322,6 @@ Shape.prototype.createInspector = function( $id ) {
 Shape.prototype.fromJSON = function( json ) {
   var jsonObject = JSON.parse( json );
 
-  var x        = jsonObject.x        || 0,
-      y        = jsonObject.y        || 0,
-      width    = jsonObject.width    || 1,
-      height   = jsonObject.height   || 1
-      rotation = jsonObject.rotation || 0;
-
   var sides    = jsonObject.sides || 0,
       vertices = jsonObject.vertices,
       edges    = jsonObject.edges;
@@ -341,13 +335,15 @@ Shape.prototype.fromJSON = function( json ) {
   var color = new Color();
   color.fromJSON( JSON.stringify( jsonObject.color ) );
 
-  return this.setPosition( x, y )
-             .setWidth( width )
-             .setHeight( height )
-             .setRotation( rotation )
+  return this.setX( jsonObject.x || 0 )
+             .setY( jsonObject.y || 0 )
+             .setWidth( jsonObject.width || 1 )
+             .setHeight( jsonObject.height || 1 )
+             .setRotation( jsonObject.rotation || 0 )
              .setNumSides( sides )
              .setVertices( vertices )
              .setEdges( edges )
+             .calculateRadius()
              .setColor( color );
 };
 
@@ -359,13 +355,15 @@ Shape.prototype.toJSON = function() {
   object.width    = this.getWidth();
   object.height   = this.getHeight();
   object.rotation = this.getRotation();
-  if ( this.getNumSides() === 0 ) {
+
+  if ( this.getNumSides() <= 0 ) {
     object.vertices = this.getVertices();
     object.edges    = this.getEdges();
   } else {
     object.sides = this.getNumSides();
   }
-  object.color    = this.getColor().toJSON();
+
+  object.color = this.getColor().toJSON();
 
   return object;
 };
@@ -377,6 +375,7 @@ Shape.prototype.clone = function() {
                     .setRotation( this.getRotation() )
                     .setVertices( this.getVertices() )
                     .setEdges( this.getEdges() )
+                    .calculateRadius()
                     .setColor( this.getColor() );
 };
 

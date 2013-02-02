@@ -166,6 +166,11 @@ function onKeyDown( event ) {
       _editor.toggleSnapping();
       break;
 
+    // R.
+    case 82:
+      _editor.setTranslate( 0, 0 );
+      break;
+
     default:
       console.log( event.which );
       break;
