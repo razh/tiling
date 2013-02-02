@@ -1,6 +1,26 @@
+var MouseState = {
+  UP:   0,
+  DOWN: 1
+};
+
+var Input = (function() {
+  this._mouseState = MouseState.UP;
+
+  return {
+    getMouseState: function() {
+      return this._mouseState;
+    },
+
+    setMouseState: function( mouseState ) {
+      this._mouseState = mouseState;
+    }
+  };
+}) ();
+
 // Mouse down.
 function onMouseDown( event ) {
   var input = transformCoords( event.pageX, event.pageY );
+  Input.setMouseState( MouseState.DOWN );
 
   switch ( _editor.getState() ) {
     case EditorState.DEFAULT:
@@ -68,7 +88,8 @@ function onMouseMove( event ) {
 
   switch ( _editor.getState() ) {
     case EditorState.DEFAULT:
-      onMouseMoveDefault( input );
+      // Can only use these vars on webkit.
+      onMouseMoveDefault( input, event.webkitMovementX, event.webkitMovementY );
       break;
 
     case EditorState.ADDING_SHAPE:
@@ -78,7 +99,7 @@ function onMouseMove( event ) {
   }
 }
 
-function onMouseMoveDefault( input ) {
+function onMouseMoveDefault( input, dx, dy ) {
   if ( _editor.hasSelected() ) {
     var selected = _editor.getSelected();
     selected.setPosition( input.x + _editor.getOffsetX(),
@@ -90,12 +111,16 @@ function onMouseMoveDefault( input ) {
 
     _editor._inspectorPane.find( '#x' ).val( selected.getX() );
     _editor._inspectorPane.find( '#y' ).val( selected.getY() );
+  } else if ( Input.getMouseState() === MouseState.DOWN ) {
+    _editor.translate( dx, dy );
   }
 }
 
 
 // Mouse up.
 function onMouseUp( event ) {
+  Input.setMouseState( MouseState.UP );
+
   switch ( _editor.getState() ) {
     case EditorState.DEFAULT:
     case EditorState.ADDING_SHAPE:
@@ -149,7 +174,7 @@ function onKeyDown( event ) {
 
 function transformCoords( x, y ) {
   return {
-    x: x - _editor._canvas.offsetLeft,
-    y: y - _editor._canvas.offsetTop
+    x: x - _editor._canvas.offsetLeft - _editor.getTranslateX(),
+    y: y - _editor._canvas.offsetTop  - _editor.getTranslateY()
   };
 }

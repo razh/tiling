@@ -1,4 +1,4 @@
-var PolygonFactory = (function() {
+var Geometry = (function() {
   return {
     createRegularPolygon: function( sides ) {
       var subdivAngle = -( Math.PI * 2 / sides );
@@ -22,19 +22,19 @@ var PolygonFactory = (function() {
     },
 
     createTriangle: function() {
-      return PolygonFactory.createRegularPolygon(3);
+      return Geometry.createRegularPolygon(3);
     },
 
     createTetragon: function() {
-      return PolygonFactory.createRegularPolygon(4);
+      return Geometry.createRegularPolygon(4);
     },
 
     createHexagon: function() {
-      return PolygonFactory.createRegularPolygon(6);
+      return Geometry.createRegularPolygon(6);
     },
 
     createOctagon: function() {
-      return PolygonFactory.createRegularPolygon(8);
+      return Geometry.createRegularPolygon(8);
     }
   };
 }) ();

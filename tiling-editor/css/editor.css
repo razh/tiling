@@ -43,6 +43,11 @@ html, body {
   overflow: auto;
 }
 
+/* So we the pattern brushes do not move when changing selection. */
+.pattern-container canvas + canvas {
+  border-left: 1px solid transparent;
+}
+
 .pattern-container canvas:not(.selected) + canvas:not(.selected) {
   border-left: 1px solid #e3e3e3;
 }

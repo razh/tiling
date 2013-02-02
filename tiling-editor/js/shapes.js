@@ -114,13 +114,23 @@ Shape.prototype.setPosition = function() {
   return this;
 };
 
+Shape.prototype.translateX = function( translateX ) {
+  this.setX( this.getX() + translateX );
+  return this;
+};
+
+Shape.prototype.translateY = function( translateY ) {
+  this.setY( this.getY() + translateY );
+  return this;
+};
+
 Shape.prototype.translate = function() {
   if ( arguments.length === 1 ) {
-    this.setX( this.getX() + arguments[0].x );
-    this.setY( this.getX() + arguments[0].y );
+    this.translateX( arguments[0].x );
+    this.translateY( arguments[0].y );
   } else if ( arguments.length === 2 ) {
-    this.setX( this.getX() + arguments[0] );
-    this.setY( this.getY() + arguments[1] );
+    this.translateX( arguments[0] );
+    this.translateY( arguments[1] );
   }
 
   return this;
@@ -323,7 +333,7 @@ Shape.prototype.fromJSON = function( json ) {
       edges    = jsonObject.edges;
 
   if ( vertices === undefined || edges === undefined ) {
-    var geometry = PolygonFactory.createRegularPolygon( sides );
+    var geometry = Geometry.createRegularPolygon( sides );
     vertices = geometry.vertices;
     edges = geometry.edges;
   }

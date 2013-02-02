@@ -1,6 +1,5 @@
 var Pattern = function( jsonURL ) {
   jsonURL = jsonURL || '';
-  this._jsonURL = jsonURL;
 
   var jsonData = (function() {
     var json = null;
@@ -15,7 +14,6 @@ var Pattern = function( jsonURL ) {
     });
     return json;
   }) ();
-  console.log( jsonData );
 
   this._name = '';
   this._shapes = [];
@@ -30,14 +28,16 @@ var Pattern = function( jsonURL ) {
 
 Pattern.prototype.fromJSON = function( json ) {
   var jsonObject = JSON.parse( json );
-  this._name = jsonObject.name || '';
 
+  this.setName( jsonObject.name || '' );
   this._shapes = [];
   var shape = null;
   for ( var i = 0, n = jsonObject.shapes.length; i < n; i++ ) {
     shape = new Shape().fromJSON( JSON.stringify( jsonObject.shapes[i] ) );
     this._shapes.push( shape );
   }
+
+  return this;
 };
 
 Pattern.prototype.toJSON = function() {
@@ -93,7 +93,7 @@ Pattern.prototype.createInspector = function( $id ) {
   }
 
   if ( this._shapes.length > 0 ) {
-    $( $canvasArray[0] ).addClass( 'selected' );
+    $( this._canvasArray[0] ).addClass( 'selected' );
   }
 };
 

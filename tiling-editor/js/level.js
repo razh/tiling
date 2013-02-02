@@ -1,6 +1,12 @@
 var Level = function() {
+  this._name = '';
+
   this._backgroundColor = new Color();
   this._shapes = [];
+};
+
+Level.prototype.setName = function( name ) {
+  this._name = name;
 };
 
 Level.prototype.addShape = function( shape ) {

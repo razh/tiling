@@ -43,10 +43,10 @@ function quit() {
 }
 
 var EditorState = {
-  DEFAULT: 0,
-  ADDING_SHAPE: 1,
+  DEFAULT:        0,
+  ADDING_SHAPE:   1,
   REMOVING_SHAPE: 2,
-  COPYING_SHAPE: 3
+  COPYING_SHAPE:  3
 };
 
 var Editor = function() {
@@ -83,41 +83,20 @@ var Editor = function() {
     x: 0,
     y: 0
   };
+  this._rotation = 0;
 
   this._offset = {
     x: 0,
     y: 0
   };
 
-  var ve = PolygonFactory.createHexagon();
-  console.log( ve )
-  this._testShape = new Shape()
-    .setPosition( 50, 100 )
-    .setWidth( 50 )
-    .setHeight( 50 )
-    .setRotation( ( 10 * Math.PI / 180 ).toFixed(3) )
-    .setVertices( ve.vertices )
-    .setEdges( ve.edges )
-    .setColor( 0, 0, 120, 0.2 );
-  console.log( this._testShape.getRadius() );
-  this._shapes.push( this._testShape );
-
-  var ve2 = PolygonFactory.createTriangle();
-  this._testShape2 = new Shape()
-    .setPosition( 200, 120 )
-    .setWidth( 50 )
-    .setHeight( 50 )
-    .setRotation( ( 10 * Math.PI / 180 ).toFixed(3) )
-    .setVertices( ve2.vertices )
-    .setEdges( ve2.edges )
-    .setColor( 0, 0, 120, 0.2 );
-  this._shapes.push( this._testShape2 );
-
   this._running = true;
 
-  this._pattern = new Pattern( './json/example_pattern.json' );
-  this._pattern.createInspector( this._patternPane );
-  console.log( JSON.stringify( this._pattern ) );
+  this._patterns = [];
+  this._patterns.push( new Pattern( './json/example_pattern.json' ) );
+
+  this._patternIndex = 0;
+  this.loadPatternInspector( this._patterns[ this._patternIndex ] );
 
   // For adding shapes.
   this._brush = null;
@@ -150,7 +129,8 @@ Editor.prototype.draw = function() {
   this._ctx.clearRect( 0, 0, this.WIDTH, this.HEIGHT );
 
   this._ctx.save();
-  this._ctx.setTransform( 1, 0, 0, 1, this._translate.x, this._translate.y );
+  this._ctx.translate( this.getTranslateX(), this.getTranslateY() );
+  this._ctx.rotate( this.getRotation() );
 
   for ( var i = 0, n = this._shapes.length; i < n; i++ ) {
     this._shapes[i].draw( this._ctx );
@@ -179,10 +159,6 @@ Editor.prototype.stop = function() {
   this._running = false;
 };
 
-Editor.prototype.getUser = function() {
-  return this._user;
-};
-
 Editor.prototype.loadShapeInspector = function( shape ) {
   this._inspectorPane.empty();
 
@@ -190,9 +166,12 @@ Editor.prototype.loadShapeInspector = function( shape ) {
 };
 
 Editor.prototype.loadPatternInspector = function( pattern ) {
+  this._patternPane.empty();
 
+  pattern.createInspector( this._patternPane );
 };
 
+// State.
 Editor.prototype.getState = function() {
   return this._state;
 };
@@ -201,6 +180,7 @@ Editor.prototype.setState = function( state ) {
   this._state = state;
 };
 
+// Shapes.
 Editor.prototype.getShapes = function() {
   return this._shapes;
 };
@@ -213,6 +193,76 @@ Editor.prototype.removeShape = function( shape ) {
   this._shapes.splice( this._shapes.lastIndexOf( shape ), 1 );
 };
 
+// Translate.
+Editor.prototype.getTranslateX = function() {
+  return this.getTranslate().x;
+};
+
+Editor.prototype.setTranslateX = function( translateX ) {
+  this._translate.x = translateX;
+};
+
+Editor.prototype.getTranslateY = function() {
+  return this.getTranslate().y;
+};
+
+Editor.prototype.setTranslateY = function( translateY ) {
+  this._translate.y = translateY;
+};
+
+Editor.prototype.getTranslate = function() {
+  return this._translate;
+};
+
+Editor.prototype.setTranslate = function() {
+  if ( arguments.length === 1 ) {
+    this.setTranslateX( arguments[0].x );
+    this.setTranslateY( arguments[0].y );
+  } else if ( arguments.length === 2 ) {
+    this.setTranslateX( arguments[0] );
+    this.setTranslateY( arguments[1] );
+  }
+
+  return this;
+};
+
+Editor.prototype.translateX = function( translateX ) {
+  this.setTranslateX( this.getTranslateX() + translateX );
+  return this;
+};
+
+Editor.prototype.translateY = function( translateY ) {
+  this.setTranslateY( this.getTranslateY() + translateY );
+  return this;
+};
+
+Editor.prototype.translate = function() {
+  if ( arguments.length === 1 ) {
+    this.translateX( arguments[0].x );
+    this.translateY( arguments[0].y );
+  } else if ( arguments.length === 2 ) {
+    this.translateX( arguments[0] );
+    this.translateY( arguments[1] );
+  }
+
+  return this;
+};
+
+// Rotation.
+Editor.prototype.getRotation = function() {
+  return this._rotation;
+};
+
+Editor.prototype.setRotation = function( rotation ) {
+  this._rotation = rotation;
+};
+
+Editor.prototype.rotate = function( angle ) {
+  this._rotation -= angle;
+  return this;
+};
+
+// Offset (mouse from shape).
 Editor.prototype.getOffsetX = function() {
   return this.getOffset().x;
 };
@@ -241,16 +291,37 @@ Editor.prototype.setOffset = function() {
     this.setOffsetX( arguments[0] );
     this.setOffsetY( arguments[1] );
   }
-}
+};
 
+// Patterns.
+Editor.prototype.getPatterns = function() {
+  return this._patterns;
+};
+
+Editor.prototype.addPattern = function( pattern ) {
+  this._patterns.push( pattern );
+};
+
+Editor.prototype.getPatternIndex = function() {
+  return this._patternIndex;
+};
+
+Editor.prototype.setPatternIndex = function( patternIndex ) {
+  this._patternIndex = patternIndex;
+
+  this.loadPatternInspector( this.getPatterns()[ this._patternIndex ] );
+};
+
+// Brush.
 Editor.prototype.getBrush = function() {
   return this._brush;
 };
 
 Editor.prototype.setBrushByIndex = function( brushIndex ) {
-  this._brush = this._pattern.getShapes()[ brushIndex ];
+  this._brush = this.getPatterns()[ this.getPatternIndex() ].getShapes()[ brushIndex ];
 };
 
+// Snapping.
 Editor.prototype.isSnapping = function() {
   return this._snapping;
 };
@@ -271,6 +342,7 @@ Editor.prototype.setSnappingRadius = function( snappingRadius ) {
   this._snappingRadius = snappingRadius;
 };
 
+// Selected.
 Editor.prototype.getSelected = function() {
   return this._selected;
 };
