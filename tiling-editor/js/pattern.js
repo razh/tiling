@@ -1,5 +1,6 @@
 var Pattern = function( jsonURL ) {
   jsonURL = jsonURL || '';
+  this._jsonURL = jsonURL;
 
   var jsonData = (function() {
     var json = null;
@@ -14,6 +15,7 @@ var Pattern = function( jsonURL ) {
     });
     return json;
   }) ();
+  console.log( jsonData );
 
   this._name = '';
   this._shapes = [];
@@ -22,20 +24,29 @@ var Pattern = function( jsonURL ) {
   this._ctxArray = [];
 
   if ( jsonData !== null ) {
-    this.fromJSON( jsonData );
+    this.fromJSON( JSON.stringify( jsonData ) );
   }
 };
 
 Pattern.prototype.fromJSON = function( json ) {
-  this._name = json.name || '';
+  var jsonObject = JSON.parse( json );
+  this._name = jsonObject.name || '';
 
   this._shapes = [];
   var shape = null;
-  for ( var i = 0, n = json.shapes.length; i < n; i++ ) {
+  for ( var i = 0, n = jsonObject.shapes.length; i < n; i++ ) {
     shape = new Shape();
-    shape.fromJSON( JSON.stringify( json.shapes[i] ) );
+    shape.fromJSON( JSON.stringify( jsonObject.shapes[i] ) );
     this._shapes.push( shape );
   }
+};
+
+Pattern.prototype.toJSON = function() {
+  var object = {};
+
+  object.name = this._name;
+
+  return object;
 };
 
 Pattern.prototype.createInspector = function( $id ) {
@@ -80,6 +91,14 @@ Pattern.prototype.createInspector = function( $id ) {
                    1.5 * shape.getHeight() - shape.getY() );
     shape.draw( ctx );
   }
+};
+
+Pattern.prototype.getName = function() {
+  return this._name;
+};
+
+Pattern.prototype.setName = function( name ) {
+  this._name = name;
 };
 
 Pattern.prototype.getShapes = function() {

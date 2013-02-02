@@ -33,7 +33,7 @@ function onMouseDownDefault( input ) {
 function onMouseDownAddingShape( input ) {
   var brush = _editor.getBrush();
 
-  var shape = new Shape().copy( brush );
+  var shape = brush.clone();
   shape.setPosition( input.x, input.y );
   _editor.addShape( shape );
 
@@ -51,14 +51,13 @@ function onMouseDownRemovingShape( input ) {
 
 function onMouseDownCopyingShape( input ) {
   if ( _editor.hasSelected() ) {
-    var shape = new Shape().copy( _editor.getSelected() )
-                           .setPosition( input.x, input.y );
+    var shape =  _editor.getSelected()
+                        .clone()
+                        .setPosition( input.x, input.y );
     _editor.addShape( shape );
     _editor.setState( EditorState.DEFAULT );
-    console.log( 'copy ')
   } else {
     _editor.setSelected( _editor.hit( input.x, input.y ) );
-    console.log( 'select' );
   }
 }
 

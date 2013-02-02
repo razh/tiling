@@ -115,7 +115,7 @@ var Editor = function() {
 
   this._running = true;
 
-  this._pattern = new Pattern( './json/example.json' );
+  this._pattern = new Pattern( './json/example_pattern.json' );
   this._pattern.createInspector( this._patternPane );
 
   // For adding shapes.

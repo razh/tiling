@@ -1,0 +1,39 @@
+{
+  "name": "Bird",
+  "pattern": "./json/example_pattern.json",
+  "patternShapes": [
+    "index": 0,
+    "x": 50,
+    "y": 60
+  ],
+  "shapes": [
+    {
+      "name": "Triangle",
+      "vertices": [
+        0,
+        1,
+        -0.866,
+        -0.5,
+        0.866,
+        -0.5
+      ],
+      "edges": [
+        0,
+        1,
+        2,
+        0
+      ],
+      "x": 100,
+      "y": 100,
+      "color": {
+        "red": 100,
+        "green": 200,
+        "blue": 125,
+        "alpha": 1.0
+      },
+      "width": 50,
+      "height": 50,
+      "rotation": 0.577
+    }
+  ]
+}

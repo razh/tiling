@@ -306,9 +306,8 @@ Shape.prototype.fromJSON = function( json ) {
       y        = jsonObject.y,
       width    = jsonObject.width,
       height   = jsonObject.height
-      rotation = jsonObject.rotation;
-
-  var vertices = jsonObject.vertices,
+      rotation = jsonObject.rotation,
+      vertices = jsonObject.vertices,
       edges    = jsonObject.edges;
 
   var color = new Color();
@@ -323,14 +322,29 @@ Shape.prototype.fromJSON = function( json ) {
              .setColor( color );
 };
 
-Shape.prototype.copy = function( shape ) {
-  return this.setPosition( shape.getPosition() )
-             .setWidth( shape.getWidth() )
-             .setHeight( shape.getHeight() )
-             .setRotation( shape.getRotation() )
-             .setVertices( shape.getVertices() )
-             .setEdges( shape.getEdges() )
-             .setColor( shape.getColor() );
+Shape.prototype.toJSON = function() {
+  var object = {};
+
+  object.x        = this.getX();
+  object.y        = this.getY();
+  object.width    = this.getWidth();
+  object.height   = this.getHeight();
+  object.rotation = this.getRotation();
+  object.vertices = this.getVertices();
+  object.edges    = this.getEdges();
+  object.color    = this.getColor().toJSON();
+
+  return object;
+};
+
+Shape.prototype.clone = function() {
+  return new Shape().setPosition( this.getPosition() )
+                    .setWidth( this.getWidth() )
+                    .setHeight( this.getHeight() )
+                    .setRotation( this.getRotation() )
+                    .setVertices( this.getVertices() )
+                    .setEdges( this.getEdges() )
+                    .setColor( this.getColor() );
 };
 
 // May be optimized (calculate localToWorldCoordinates for self only once).
@@ -555,4 +569,15 @@ Color.prototype.fromJSON = function( json ) {
       .setGreen( jsonObject.green )
       .setBlue( jsonObject.blue )
       .setAlpha( jsonObject.alpha );
+};
+
+Color.prototype.toJSON = function() {
+  var object = {};
+
+  object.red   = this.getRed();
+  object.green = this.getGreen();
+  object.blue  = this.getBlue();
+  object.alpha = this.getAlpha();
+
+  return object;
 };
