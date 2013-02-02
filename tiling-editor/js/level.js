@@ -14,12 +14,24 @@ Level.prototype.setName = function( name ) {
   this._name = name;
 };
 
+Level.prototype.getPattern = function() {
+  return this._pattern;
+};
+
+Level.prototype.setPattern = function( pattern ) {
+  this._pattern = pattern;
+};
+
 Level.prototype.getBackgroundColor = function() {
   return this._backgroundColor;
 };
 
 Level.prototype.setBackgroundColor = function( backgroundColor ) {
   this._backgroundColor.set( backgroundColor );
+};
+
+Level.prototype.getShapes = function() {
+  return this._shapes;
 };
 
 Level.prototype.addShape = function( shape ) {
@@ -38,6 +50,7 @@ Level.prototype.fromJSON = function( json ) {
     this.addShape( new Shape().fromJSON( JSON.stringify( jsonObject.shapes[i] ) ) );
   }
 
+  this.setPattern( new Pattern( jsonObject.pattern ) );
   for ( i = 0, n = jsonObject.patternShapes.length; i < n; i++ ) {
     this.addShape( this.loadPatternShapeFromJSON( JSON.stringify( jsonObject.patternShapes[i] ) ) );
   }
@@ -51,8 +64,8 @@ Level.prototype.fromJSON = function( json ) {
 Level.prototype.toJSON = function() {
   var object = {};
 
-  object.backgroundColor = this._backgroundColor;
-  object.shapes = this._shapes;
+  object.backgroundColor = this.getBackgroundColor();
+  object.shapes = this.getShapes();
 
   return object;
 };
