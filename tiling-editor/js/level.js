@@ -1,9 +1,16 @@
 var Level = function() {
   this._name = '';
 
+  this._patternURL = '';
   this._pattern = null;
+
   this._backgroundColor = new Color();
   this._shapes = [];
+
+  this._jsonData = null;
+  if ( arguments.length !== 0 ) {
+    this.fromURL( arguments[0] );
+  }
 };
 
 Level.prototype.getName = function() {
@@ -38,6 +45,26 @@ Level.prototype.addShape = function( shape ) {
   this._shapes.push( shape );
 };
 
+Level.prototype.fromURL = function( url ) {
+  this._jsonData = (function() {
+    var json = null;
+    $.ajax({
+      'async': false,
+      'global': false,
+      'url': url,
+      'dataType': 'json',
+      'success': function( data ) {
+        json = data;
+      }
+    });
+    return json;
+  }) ();
+
+  if ( this._jsonData !== null ) {
+    this.fromJSON( JSON.stringify( this._jsonData ) );
+  }
+}
+
 Level.prototype.fromJSON = function( json ) {
   var jsonObject = JSON.parse( json );
 
@@ -50,13 +77,14 @@ Level.prototype.fromJSON = function( json ) {
     this.addShape( new Shape().fromJSON( JSON.stringify( jsonObject.shapes[i] ) ) );
   }
 
-  this.setPattern( new Pattern( jsonObject.pattern ) );
+  this._patternURL = jsonObject.pattern;
+  this.setPattern( new Pattern( this._patternURL ) );
   for ( i = 0, n = jsonObject.patternShapes.length; i < n; i++ ) {
     this.addShape( this.loadPatternShapeFromJSON( JSON.stringify( jsonObject.patternShapes[i] ) ) );
   }
 
-  this.setName( jsonObject.name || '' )
-      .setBackgroundColor( backgroundColor );
+  this.setName( jsonObject.name || '' );
+  this.setBackgroundColor( backgroundColor );
 
   return this;
 };
@@ -64,8 +92,15 @@ Level.prototype.fromJSON = function( json ) {
 Level.prototype.toJSON = function() {
   var object = {};
 
+  object.name = this.getName();
+  object.pattern = this._patternURL;
+
+  object.shapes = [];
+  for ( var i = 0, n = this._shapes.length; i < n; i++ ) {
+    object.shapes.push( this._shapes[i].toJSON() );
+  }
+
   object.backgroundColor = this.getBackgroundColor();
-  object.shapes = this.getShapes();
 
   return object;
 };

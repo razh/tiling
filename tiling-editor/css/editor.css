@@ -56,3 +56,9 @@ html, body {
   outline: 2px solid #cccccc;
   outline-style: dashed;
 }
+
+.modal textarea {
+  margin-left: auto;
+  margin-right: auto;
+  width: 515px;
+}

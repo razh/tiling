@@ -36,6 +36,27 @@
       "width": 50,
       "height": 50,
       "rotation": 0.577
+    },
+    {
+      "name": "Test",
+      "sides": 5,
+      "x": 200,
+      "y": 150,
+      "color": {
+        "red": 25,
+        "green": 50,
+        "blue": 65,
+        "alpha": 1.0
+      },
+      "width": 40,
+      "height": 40,
+      "rotation": 0
     }
-  ]
+  ],
+  "backgroundColor": {
+    "red": 20,
+    "green": 20,
+    "blue": 125,
+    "alpha": 1.0
+  }
 }

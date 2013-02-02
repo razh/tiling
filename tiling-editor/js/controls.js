@@ -163,7 +163,18 @@ function onKeyDown( event ) {
 
     // S.
     case 83:
-      _editor.toggleSnapping();
+      if ( event.ctrlKey ) {
+        $( '#exportModal' ).modal( 'toggle' );
+      } else {
+        _editor.toggleSnapping();
+      }
+      break;
+
+    // O.
+    case 79:
+      if ( event.ctrlKey ) {
+        $( '#loadModal' ).modal( 'toggle' );
+      }
       break;
 
     // R.

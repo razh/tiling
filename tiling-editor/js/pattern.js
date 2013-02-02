@@ -1,12 +1,23 @@
-var Pattern = function( jsonURL ) {
-  jsonURL = jsonURL || '';
+var Pattern = function() {
+  this._name = '';
+  this._shapes = [];
 
-  var jsonData = (function() {
+  this._canvasArray = [];
+  this._ctxArray = [];
+
+  this._jsonData = null;
+  if ( arguments.length !== 0 ) {
+    this.fromURL( arguments[0] );
+  }
+};
+
+Pattern.prototype.fromURL = function( url ) {
+  this._jsonData = (function() {
     var json = null;
     $.ajax({
       'async': false,
       'global': false,
-      'url': jsonURL,
+      'url': url,
       'dataType': 'json',
       'success': function( data ) {
         json = data;
@@ -15,14 +26,8 @@ var Pattern = function( jsonURL ) {
     return json;
   }) ();
 
-  this._name = '';
-  this._shapes = [];
-
-  this._canvasArray = [];
-  this._ctxArray = [];
-
-  if ( jsonData !== null ) {
-    this.fromJSON( JSON.stringify( jsonData ) );
+  if ( this._jsonData !== null ) {
+    this.fromJSON( JSON.stringify( this._jsonData ) );
   }
 };
 

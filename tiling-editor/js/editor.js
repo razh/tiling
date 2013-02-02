@@ -26,6 +26,17 @@ function init() {
 
   document.addEventListener( 'keydown', onKeyDown, null );
 
+  // Auto-select text areas when modals are open.
+  $( '#loadModal' ).on( 'shown', function() {
+    $( '#loadTextArea' ).select();
+  });
+
+  $( '#exportModal' ).on( 'shown', function() {
+    $( '#exportTextArea' ).select();
+  });
+
+
+
   loop();
 }
 
@@ -97,6 +108,9 @@ var Editor = function() {
 
   this._patternIndex = 0;
   this.loadPatternInspector( this._patterns[ this._patternIndex ] );
+
+  this._level = new Level( './json/example_level.json' );
+  console.log( this._level.toJSON() );
 
   // For adding shapes.
   this._brush = null;

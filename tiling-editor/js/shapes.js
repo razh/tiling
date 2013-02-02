@@ -243,7 +243,7 @@ Shape.prototype.calculateRadius = function() {
   }
 
   return this.setRadius( Math.sqrt( distanceSquared ) );
-}
+};
 
 Shape.prototype.createInspector = function( $id ) {
   if ( $id.length !== 0 ) {
@@ -302,7 +302,7 @@ Shape.prototype.createInspector = function( $id ) {
   Form.createColorForm({
     $id:    $id,
     object: this,
-    getter: 'getColor',
+    getter: 'getColor'
   });
 
   // Rotation.
@@ -373,6 +373,7 @@ Shape.prototype.clone = function() {
                     .setWidth( this.getWidth() )
                     .setHeight( this.getHeight() )
                     .setRotation( this.getRotation() )
+                    .setNumSides( this.getNumSides() )
                     .setVertices( this.getVertices() )
                     .setEdges( this.getEdges() )
                     .calculateRadius()
@@ -448,7 +449,7 @@ Shape.prototype.snap = function( shapes ) {
       nearestShape.getVertices()[ 2 * jmin ],
       nearestShape.getVertices()[ 2 * jmin + 1 ]
     );
-    var localVertex = {
+    localVertex = {
       x: transformedLocalVertices[ 2 * kmin ],
       y: transformedLocalVertices[ 2 * kmin + 1 ]
     };
@@ -458,7 +459,7 @@ Shape.prototype.snap = function( shapes ) {
 
     this.translate( dx, dy );
   }
-}
+};
 
 Shape.prototype.worldToLocalCoordinates = function( x, y ) {
   // Translate.
@@ -593,7 +594,7 @@ Color.prototype.toHexString = function() {
            ( ( ( 0.5 + this.getRed() )   << 0 ) << 16 ) +
            ( ( ( 0.5 + this.getGreen() ) << 0 ) << 8 ) +
            ( ( 0.5 + this.getBlue() )    << 0 ) ).toString( 16 ).slice(1);
-}
+};
 
 Color.prototype.fromJSON = function( json ) {
   var jsonObject = JSON.parse( json );
