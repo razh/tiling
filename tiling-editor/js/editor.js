@@ -27,7 +27,7 @@ function init() {
   document.addEventListener( 'keydown', onKeyDown, null );
 
   // Auto-select text areas when modals are open.
-  $( '#loadModal' ).on({
+  $( '#load-modal' ).on({
     shown: function() {
       _editor.setState( EditorState.TEXT_EDITING );
       $( '#loadTextArea' ).select();
@@ -36,7 +36,7 @@ function init() {
       _editor.setState( EditorState.DEFAULT );
     }
   });
-  $( '#exportModal' ).on({
+  $( '#export-modal' ).on({
     shown: function() {
       _editor.setState( EditorState.TEXT_EDITING );
       $( '#exportTextArea' ).select();
@@ -47,7 +47,7 @@ function init() {
   });
 
   // Name changes.
-  $( '#levelName' ).change(function() {
+  $( '#level-name' ).change(function() {
     _editor.getLevel().setName( $( this ).val() );
   });
 
@@ -56,7 +56,22 @@ function init() {
     if ( event.which === 13 ) {
       event.preventDefault();
     }
-  })
+  });
+
+  // Setup buttons.
+  _editor._stateButtons.move.click(function() {
+    _editor.setState( EditorState.DEFAULT );
+  });
+  _editor._stateButtons.add.click(function() {
+    _editor.setState( EditorState.ADDING_SHAPE );
+  });
+  _editor._stateButtons.remove.click(function() {
+    _editor.setState( EditorState.REMOVING_SHAPE );
+  });
+  _editor._stateButtons.copy.click(function() {
+    _editor.setState( EditorState.COPYING_SHAPE );
+  });
+
 
   loop();
 }
@@ -106,6 +121,12 @@ var Editor = function() {
 
   this._inspectorPane = $( '#inspector-pane' );
   this._patternPane = $( '#pattern-pane' );
+  this._stateButtons = {
+    move: $( '#move-button' ), // Default.
+    add: $( '#add-shape-button' ),
+    remove: $( '#remove-shape-button' ),
+    copy: $( '#copy-shape-button' )
+  };
 
   this._prevTime = Date.now();
   this._currTime = this._prevTime;
@@ -138,7 +159,9 @@ var Editor = function() {
   this._brush = null;
   this.setBrushByIndex(0);
 
-  this._state = EditorState.DEFAULT;
+  this._state = null;
+  this.setState( EditorState.DEFAULT );
+
   this._selected = null;
   this._snapping = false;
   this._snappingRadius = 50;
@@ -207,7 +230,7 @@ Editor.prototype.loadShapeInspector = function( shape, prototypical ) {
 Editor.prototype.loadPatternInspector = function( pattern ) {
   this._patternPane.empty();
 
-  $( '#patternName' ).val( pattern.getName() );
+  $( '#pattern-name' ).val( pattern.getName() );
   pattern.createInspector( this._patternPane );
 };
 
@@ -217,6 +240,25 @@ Editor.prototype.getState = function() {
 };
 
 Editor.prototype.setState = function( state ) {
+  // Update state toggle buttons.
+  switch ( state ) {
+    case EditorState.DEFAULT:
+      this._stateButtons.move.button( 'toggle' );
+      break;
+
+    case EditorState.ADDING_SHAPE:
+      this._stateButtons.add.button( 'toggle' );
+      break;
+
+    case EditorState.REMOVING_SHAPE:
+      this._stateButtons.remove.button( 'toggle' );
+      break;
+
+    case EditorState.COPYING_SHAPE:
+      this._stateButtons.copy.button( 'toggle' );
+      break;
+  }
+
   this._state = state;
 };
 
@@ -419,7 +461,7 @@ Editor.prototype.setLevel = function( level ) {
 };
 
 Editor.prototype.load = function( level ) {
-  $( '#levelName' ).val( level.getName() );
+  $( '#level-name' ).val( level.getName() );
 
   this._shapes = [];
   var levelShapes = level.getShapes();

@@ -26,8 +26,15 @@
         <div class="navbar-inner">
           <a class="brand">Editor</a>
           <ul class="nav">
-            <li><a data-toggle="modal" data-target="#loadModal">Load</a></li>
-            <li><a data-toggle="modal" data-target="#exportModal">Export</a></li>
+            <li><a data-toggle="modal" data-target="#load-modal">Load</a></li>
+            <li><a data-toggle="modal" data-target="#export-modal">Export</a></li>
+            <!-- Buttons -->
+            <div class="btn-group" id="state-buttons" data-toggle="buttons-radio">
+              <button class="btn btn-small" id="move-button"><i class="icon-move"></i></button>
+              <button class="btn btn-small" id="add-shape-button"><i class="icon-plus"></i></button>
+              <button class="btn btn-small" id="remove-shape-button"><i class="icon-remove"></i></button>
+              <button class="btn btn-small" id="copy-shape-button"><i class="icon-repeat"></i></button>
+            </div>
           </ul>
           <!-- Level name. -->
           <form class="navbar-form pull-right">
@@ -37,13 +44,13 @@
       </div>
     </div>
     <!-- Load modal. -->
-    <div class="modal hide fade" id="loadModal" tabindex="-1" role="dialog" aria-labelledby="loadModalLabel" aria-hidden="true">
+    <div class="modal hide fade" id="load-modal" tabindex="-1" role="dialog" aria-labelledby="load-modal-label" aria-hidden="true">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
-        <h3 id="loadModalLabel">Load</h3>
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3 id="load-modal-label">Load</h3>
       </div>
       <div class="modal-body">
-        <textarea id="loadTextArea"  rows="5"></textarea>
+        <textarea id="load-text-area" rows="5"></textarea>
       </div>
       <div class="modal-footer">
         <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
@@ -53,7 +60,7 @@
     <!-- Export modal. -->
     <div class="modal hide fade" id="exportModal" tabindex="-1" role="dialog" aria-labelledby="exportModalLabel" aria-hidden="true">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         <h3 id="exportModalLabel">Export</h3>
       </div>
       <div class="modal-body">
@@ -74,7 +81,7 @@
       <div class="row-fluid well pattern-container">
         <!-- Pattern name. -->
         <form>
-          <input class="span3" type="text" id="patternName">
+          <input class="span3" type="text" id="pattern-name">
         </form>
         <div class="span11 height12" id="pattern-pane"></div>
       </div>

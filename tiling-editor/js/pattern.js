@@ -113,8 +113,9 @@ Pattern.prototype.drawShape = function( ctx, shapeIndex, width, height ) {
   ctx.save();
 
   shape = this.getShapes()[ shapeIndex ];
+  ctx.scale( 1, -1 );
   ctx.translate( 1.5 * shape.getWidth() - shape.getX(),
-                 1.5 * shape.getHeight() - shape.getY() );
+                 -height + ( 1.5 * shape.getHeight() - shape.getY() ) );
   shape.draw( ctx );
 
   ctx.restore();

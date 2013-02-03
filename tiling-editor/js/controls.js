@@ -168,7 +168,7 @@ function onKeyDown( event ) {
     // S.
     case 83:
       if ( event.ctrlKey ) {
-        $( '#exportModal' ).modal( 'toggle' );
+        $( '#export-modal' ).modal( 'toggle' );
       } else {
         _editor.toggleSnapping();
       }
@@ -177,7 +177,7 @@ function onKeyDown( event ) {
     // O.
     case 79:
       if ( event.ctrlKey ) {
-        $( '#loadModal' ).modal( 'toggle' );
+        $( '#load-modal' ).modal( 'toggle' );
       }
       break;
 

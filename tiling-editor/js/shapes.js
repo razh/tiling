@@ -259,7 +259,7 @@ Shape.prototype.createInspector = function( $id, prototypical ) {
     $id.empty();
   }
 
-  // Prototypical shapes of patterns have no need for position.
+  // Prototypical shapes (in patterns) have no need for position.
   if ( !prototypical ) {
     // X.
     Form.createIntegerForm({
