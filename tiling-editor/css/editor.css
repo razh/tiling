@@ -72,3 +72,11 @@ html, body {
   margin-right: auto;
   width: 515px;
 }
+
+.btn-group {
+  margin: 5px;
+}
+
+.btn-group input {
+  margin-top: 0px;
+}

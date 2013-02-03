@@ -165,6 +165,11 @@ function onKeyDown( event ) {
       _editor.setState( EditorState.COPYING_SHAPE );
       break;
 
+    // V.
+    case 86:
+      _editor.setState( EditorState.DEFAULT );
+      break;
+
     // S.
     case 83:
       if ( event.ctrlKey ) {

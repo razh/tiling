@@ -262,7 +262,7 @@ Shape.prototype.createInspector = function( $id, prototypical ) {
   // Prototypical shapes (in patterns) have no need for position.
   if ( !prototypical ) {
     // X.
-    Form.createIntegerForm({
+    Form.createFloatForm({
       $id:    $id,
       object: this,
       name:   'x',
@@ -270,11 +270,12 @@ Shape.prototype.createInspector = function( $id, prototypical ) {
       setter: 'setX',
       min:    0,
       max:    _editor.WIDTH,
-      step:   1
+      step:   1,
+      digits: 1
     });
 
     // Y.
-    Form.createIntegerForm({
+    Form.createFloatForm({
       $id:    $id,
       object: this,
       name:   'y',
@@ -282,7 +283,8 @@ Shape.prototype.createInspector = function( $id, prototypical ) {
       setter: 'setY',
       min:    0,
       max:    _editor.HEIGHT,
-      step:   1
+      step:   1,
+      digits: 1
     });
   }
 
@@ -477,7 +479,8 @@ Shape.prototype.snap = function( shapes ) {
   }
 
   // Compare distance to snapping radius.
-  if ( minDistanceSquared < _editor.getSnappingRadius() ) {
+  var snappingRadius = _editor.getSnappingRadius()
+  if ( minDistanceSquared < snappingRadius * snappingRadius ) {
     var nearestShape = shapes[ imin ];
     var nearestVertex = nearestShape.localToWorldCoordinates(
       nearestShape.getVertices()[ 2 * jmin ],

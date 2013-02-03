@@ -59,19 +59,34 @@ function init() {
   });
 
   // Setup buttons.
-  _editor._stateButtons.move.click(function() {
+  _editor._actionButtons.move.click(function() {
     _editor.setState( EditorState.DEFAULT );
   });
-  _editor._stateButtons.add.click(function() {
+  _editor._actionButtons.add.click(function() {
     _editor.setState( EditorState.ADDING_SHAPE );
   });
-  _editor._stateButtons.remove.click(function() {
+  _editor._actionButtons.remove.click(function() {
     _editor.setState( EditorState.REMOVING_SHAPE );
   });
-  _editor._stateButtons.copy.click(function() {
+  _editor._actionButtons.copy.click(function() {
     _editor.setState( EditorState.COPYING_SHAPE );
   });
 
+  // Setup snapping controls.
+  _editor._snappingUI.button.click(function() {
+    _editor.toggleSnapping();
+  });
+  Form.createFloatForm({
+    $id:    _editor._snappingUI.form,
+    object: _editor,
+    name:   'snappingRadius',
+    getter: 'getSnappingRadius',
+    setter: 'setSnappingRadius',
+    min:    0,
+    max:    200,
+    step:   1,
+    simple: true
+  });
 
   loop();
 }
@@ -121,11 +136,15 @@ var Editor = function() {
 
   this._inspectorPane = $( '#inspector-pane' );
   this._patternPane = $( '#pattern-pane' );
-  this._stateButtons = {
+  this._actionButtons = {
     move: $( '#move-button' ), // Default.
     add: $( '#add-shape-button' ),
     remove: $( '#remove-shape-button' ),
     copy: $( '#copy-shape-button' )
+  };
+  this._snappingUI = {
+    button: $( '#snapping-button' ),
+    form: $( '#snapping-radius' )
   };
 
   this._prevTime = Date.now();
@@ -243,19 +262,19 @@ Editor.prototype.setState = function( state ) {
   // Update state toggle buttons.
   switch ( state ) {
     case EditorState.DEFAULT:
-      this._stateButtons.move.button( 'toggle' );
+      this._actionButtons.move.button( 'toggle' );
       break;
 
     case EditorState.ADDING_SHAPE:
-      this._stateButtons.add.button( 'toggle' );
+      this._actionButtons.add.button( 'toggle' );
       break;
 
     case EditorState.REMOVING_SHAPE:
-      this._stateButtons.remove.button( 'toggle' );
+      this._actionButtons.remove.button( 'toggle' );
       break;
 
     case EditorState.COPYING_SHAPE:
-      this._stateButtons.copy.button( 'toggle' );
+      this._actionButtons.copy.button( 'toggle' );
       break;
   }
 
@@ -423,6 +442,8 @@ Editor.prototype.setSnapping = function( snapping ) {
 
 Editor.prototype.toggleSnapping = function() {
   this._snapping = !this._snapping;
+
+  this._snappingUI.button.button( 'toggle' );
 };
 
 Editor.prototype.getSnappingRadius = function() {

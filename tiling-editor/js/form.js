@@ -21,16 +21,25 @@ var Form = (function() {
 
       var value = getterFunction.call( object );
 
-      var form = '<div class ="control-group">';
-      form += '<label class="control-label span4" for="' + name + '">' + name + '</label>';
-      form += '<div class="controls span8">';
+      var simple = options.simple || false;
+      var form = '';
+
+      if ( !simple ) {
+        form += '<div class ="control-group">';
+        form += '<label class="control-label span4" for="' + name + '">' + name + '</label>';
+        form += '<div class="controls span8">';
+      }
+
       form += '<input class="input-small" type="number" id = "' +
               name  + '" value="' +
               value + '" min="'   +
               min   + '" max="'   +
               max   + '" step="'  +
               step  + '">';
-      form += '</div></div>';
+
+      if ( !simple ) {
+        form += '</div></div>';
+      }
 
       $id.append( form );
       $id.find( '#' + name ).change(function() {
@@ -71,16 +80,24 @@ var Form = (function() {
 
       var value = getterFunction.call( object );
 
-      var form = '<div class ="control-group">';
-      form += '<label class="control-label span4" for="' + name + '">' + name + '</label>';
-      form += '<div class="controls span8">';
+      var simple = options.simple || false;
+      var form = '';
+      if ( !simple ) {
+        form += '<div class ="control-group">';
+        form += '<label class="control-label span4" for="' + name + '">' + name + '</label>';
+        form += '<div class="controls span8">';
+      }
+
       form += '<input class="input-small" type="number" id = "' +
               name  + '" value="' +
               value + '" min="'   +
               min.toFixed( digits )   + '" max="'   +
               max.toFixed( digits )   + '" step="'  +
               step  + '">';
-      form += '</div></div>';
+
+      if ( !simple ) {
+        form += '</div></div>';
+      }
 
       $id.append( form );
       $id.find( '#' + name ).change(function() {
@@ -117,13 +134,21 @@ var Form = (function() {
 
       var value = getterFunction.call( object );
 
-      var form = '<div class="control-group">';
-      form += '<label class="control-label span4" for="' + name + '">' + name + '</label>';
-      form += '<div class="controls span8">';
+      var simple = options.simple || false;
+      var form = '';
+      if ( !simple ) {
+        form += '<div class="control-group">';
+        form += '<label class="control-label span4" for="' + name + '">' + name + '</label>';
+        form += '<div class="controls span8">';
+      }
+
       form += 'input class="input-small" type="text" id="' +
               name  + '" value=' +
               value + '">';
-      form += '</div></div>';
+
+      if ( !simple ) {
+        form += '</div></div>';
+      }
 
       $id.append( form );
       $id.find( '#' + name ).change(function() {

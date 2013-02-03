@@ -28,17 +28,22 @@
           <ul class="nav">
             <li><a data-toggle="modal" data-target="#load-modal">Load</a></li>
             <li><a data-toggle="modal" data-target="#export-modal">Export</a></li>
-            <!-- Buttons -->
-            <div class="btn-group" id="state-buttons" data-toggle="buttons-radio">
-              <button class="btn btn-small" id="move-button"><i class="icon-move"></i></button>
-              <button class="btn btn-small" id="add-shape-button"><i class="icon-plus"></i></button>
-              <button class="btn btn-small" id="remove-shape-button"><i class="icon-remove"></i></button>
-              <button class="btn btn-small" id="copy-shape-button"><i class="icon-repeat"></i></button>
-            </div>
           </ul>
+          <!-- Buttons -->
+          <div class="btn-group" id="action-buttons" data-toggle="buttons-radio">
+            <button class="btn" id="move-button"><i class="icon-move"></i></button>
+            <button class="btn" id="add-shape-button"><i class="icon-plus"></i></button>
+            <button class="btn" id="remove-shape-button"><i class="icon-remove"></i></button>
+            <button class="btn" id="copy-shape-button"><i class="icon-repeat"></i></button>
+          </div>
+          <!-- Snapping. -->
+          <div class="btn-group" id="snapping-ui">
+            <button class="btn" id="snapping-button"><i class="icon-th-large"></i></button>
+            <form class="navbar-form pull-right" id="snapping-radius"></form>
+          </div>
           <!-- Level name. -->
           <form class="navbar-form pull-right">
-            <input class="span4" type="text" id="levelName">
+            <input class="input-medium" type="text" id="level-name">
           </form>
         </div>
       </div>
@@ -81,7 +86,7 @@
       <div class="row-fluid well pattern-container">
         <!-- Pattern name. -->
         <form>
-          <input class="span3" type="text" id="pattern-name">
+          <input class="input-medium" type="text" id="pattern-name">
         </form>
         <div class="span11 height12" id="pattern-pane"></div>
       </div>
