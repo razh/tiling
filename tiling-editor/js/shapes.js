@@ -1,17 +1,18 @@
 var Shape = function() {
-  // These variables are public because we're using dat.gui.
-  this.x = 0;
-  this.y = 0;
+  this._position = {
+    x: 0,
+    y: 0
+  };
 
-  this.width = 0;
-  this.height = 0;
-  this.rotation = 0.0;
+  this._width = 0;
+  this._height = 0;
+  this._rotation = 0.0;
 
   this._numSides = 0;
   this._vertices = [];
   this._edges = [];
 
-  this.color = new Color();
+  this._color = new Color();
 
   // For collision.
   this._radius = 0;
@@ -79,28 +80,25 @@ Shape.prototype.contains = function( x, y ) {
 };
 
 Shape.prototype.getX = function() {
-  return this.x;
+  return this.getPosition().x;
 };
 
 Shape.prototype.setX = function( x ) {
-  this.x = x;
+  this._position.x = x;
   return this;
 };
 
 Shape.prototype.getY = function() {
-  return this.y;
+  return this.getPosition().y;
 };
 
 Shape.prototype.setY = function( y ) {
-  this.y = y;
+  this._position.y = y;
   return this;
 };
 
 Shape.prototype.getPosition = function() {
-  return {
-    x: this.x,
-    y: this.y
-  };
+  return this._position;
 };
 
 Shape.prototype.setPosition = function() {
@@ -138,20 +136,20 @@ Shape.prototype.translate = function() {
 };
 
 Shape.prototype.getWidth = function() {
-  return this.width;
+  return this._width;
 };
 
 Shape.prototype.setWidth = function( width ) {
-  this.width = width;
+  this._width = width;
   return this;
 };
 
 Shape.prototype.getHeight = function() {
-  return this.height;
+  return this._height;
 };
 
 Shape.prototype.setHeight = function( height ) {
-  this.height = height;
+  this._height = height;
   return this;
 };
 
@@ -168,16 +166,16 @@ Shape.prototype.scale = function() {
 };
 
 Shape.prototype.getRotation = function() {
-  return this.rotation;
+  return this._rotation;
 };
 
 Shape.prototype.setRotation = function( rotation ) {
-  this.rotation = rotation;
+  this._rotation = rotation;
   return this;
 };
 
 Shape.prototype.rotate = function( angle ) {
-  this.rotation -= angle;
+  this._rotation -= angle;
   return this;
 };
 
@@ -191,7 +189,7 @@ Shape.prototype.setRadius = function( radius ) {
 };
 
 Shape.prototype.getColor = function() {
-  return this.color;
+  return this._color;
 };
 
 Shape.prototype.setColor = function() {
@@ -245,6 +243,80 @@ Shape.prototype.calculateRadius = function() {
   }
 
   return this.setRadius( Math.sqrt( distanceSquared ) );
+};
+
+Shape.prototype.createInspector = function( $id ) {
+  if ( $id.length !== 0 ) {
+    $id.empty();
+  }
+
+  // X.
+  Form.createIntegerForm({
+    $id:    $id,
+    object: this,
+    name:   'x',
+    getter: 'getX',
+    setter: 'setX',
+    min:    0,
+    max:    _editor.WIDTH,
+    step:   1
+  });
+
+  // Y.
+  Form.createIntegerForm({
+    $id:    $id,
+    object: this,
+    name:   'y',
+    getter: 'getY',
+    setter: 'setY',
+    min:    0,
+    max:    _editor.HEIGHT,
+    step:   1
+  });
+
+  // Width.
+  Form.createFloatForm({
+    $id:    $id,
+    object: this,
+    name:   'width',
+    getter: 'getWidth',
+    setter: 'setWidth',
+    min:    0,
+    max:    _editor.WIDTH,
+    step:   0.01
+  });
+
+  // Height.
+  Form.createFloatForm({
+    $id:    $id,
+    object: this,
+    name:   'height',
+    getter: 'getHeight',
+    setter: 'setHeight',
+    min:    0,
+    max:    _editor.HEIGHT,
+    step:   0.01
+  });
+
+  // Color.
+  Form.createColorForm({
+    $id:    $id,
+    object: this,
+    getter: 'getColor'
+  });
+
+  // Rotation.
+  Form.createFloatForm({
+    $id:    $id,
+    object: this,
+    name:   'rotation',
+    getter: 'getRotation',
+    setter: 'setRotation',
+    min:    -2 * Math.PI,
+    max:    2 * Math.PI,
+    step:   0.001,
+    digits: 3
+  });
 };
 
 Shape.prototype.fromJSON = function( json ) {
@@ -371,8 +443,7 @@ Shape.prototype.snap = function( shapes ) {
   }
 
   // Compare distance to snapping radius.
-  var snappingRadius = _editor.getSnappingRadius();
-  if ( minDistanceSquared < snappingRadius * snappingRadius ) {
+  if ( minDistanceSquared < _editor.getSnappingRadius() ) {
     var nearestShape = shapes[ imin ];
     var nearestVertex = nearestShape.localToWorldCoordinates(
       nearestShape.getVertices()[ 2 * jmin ],
@@ -450,11 +521,10 @@ Shape.prototype.localToWorldCoordinates = function( x, y ) {
   Color
 */
 var Color = function() {
-  // Follow dat.gui Color Object naming convention.
-  this.r = 0;
-  this.g = 0;
-  this.b = 0;
-  this.a = 0.0;
+  this._red = 0;
+  this._green = 0;
+  this._blue = 0;
+  this._alpha = 0.0;
 
   if ( arguments.length !== 0 ) {
     this.set.apply( this, arguments );
@@ -476,38 +546,38 @@ Color.prototype.set = function() {
 };
 
 Color.prototype.getRed = function() {
-  return this.r;
+  return this._red;
 };
 
 Color.prototype.setRed = function( red ) {
-  this.r = red;
+  this._red = red;
   return this;
 };
 
 Color.prototype.getGreen = function() {
-  return this.g;
+  return this._green;
 };
 
 Color.prototype.setGreen = function( green ) {
-  this.g = green;
+  this._green = green;
   return this;
 };
 
 Color.prototype.getBlue = function() {
-  return this.b;
+  return this._blue;
 };
 
 Color.prototype.setBlue = function( blue ) {
-  this.b = blue;
+  this._blue = blue;
   return this;
 };
 
 Color.prototype.getAlpha = function() {
-  return this.a;
+  return this._alpha;
 };
 
 Color.prototype.setAlpha = function( alpha ) {
-  this.a = alpha;
+  this._alpha = alpha;
   return this;
 };
 
@@ -528,13 +598,10 @@ Color.prototype.toHexString = function() {
 
 Color.prototype.fromJSON = function( json ) {
   var jsonObject = JSON.parse( json );
-
   this.setRed(   jsonObject.red   || 0 )
       .setGreen( jsonObject.green || 0 )
       .setBlue(  jsonObject.blue  || 0 )
       .setAlpha( jsonObject.alpha || 1.0 );
-
-  return jsonObject;
 };
 
 Color.prototype.toJSON = function() {

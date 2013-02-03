@@ -120,6 +120,7 @@ var Editor = function() {
   this.loadPatternInspector( this._patterns[ this._patternIndex ] );
 
   this._level = new Level( './json/example_level.json' );
+  console.log( this._level.toJSON() );
   this.load( this._level );
 
   // For adding shapes.
@@ -128,33 +129,12 @@ var Editor = function() {
 
   this._state = EditorState.DEFAULT;
   this._selected = null;
-  this.snapping = false;
-  this.snappingRadius = 50;
+  this._snapping = false;
+  this._snappingRadius = 50;
 
-  this._gui = new dat.GUI();
-  this._editorGUI = null;
-  this._levelGUI = null;
-  this._shapeGUI = null;
-
-  this.createGUI();
-};
-
-Editor.prototype.createGUI = function() {
-  this._editorGUI = this._gui.addFolder( 'Editor' );
-  this._editorGUI.add( this, 'snapping' ).listen();
-  this._editorGUI.add( this, 'snappingRadius' );
-  // this._editorGUI.add( this, '_backgroundColor' );
-  this._editorGUI.open();
-
-  this._levelGUI = this._gui.addFolder( 'Level' );
-  this._levelGUI.add( this._level, 'name' );
-  // this._levelGUI.add( this._level, 'backgroundColor' );
-  this._levelGUI.add( this._level, 'backgroundColor' );
-
-  this._levelGUI.open();
-
-  this._shapeGUI = this._gui.addFolder( 'Shape' );
-  this._shapeGUI.open();
+  this._editorGUI = new dat.GUI({ autoplace: false });
+  $( '.navbar' ).append( this._editorGUI.domElement );
+  this._shapeGUI = new dat.GUI({ autoplace: false });
 };
 
 Editor.prototype.tick = function() {
@@ -211,7 +191,9 @@ Editor.prototype.stop = function() {
 };
 
 Editor.prototype.loadShapeInspector = function( shape ) {
-  this._gui.remove( 'test' );
+  this._inspectorPane.empty();
+
+  shape.createInspector( this._inspectorPane );
 };
 
 Editor.prototype.loadPatternInspector = function( pattern ) {
@@ -381,23 +363,23 @@ Editor.prototype.setBrushByIndex = function( brushIndex ) {
 
 // Snapping.
 Editor.prototype.isSnapping = function() {
-  return this.snapping;
+  return this._snapping;
 };
 
 Editor.prototype.setSnapping = function( snapping ) {
-  this.snapping = snapping;
+  this._snapping = snapping;
 };
 
 Editor.prototype.toggleSnapping = function() {
-  this.snapping = !this.snapping;
+  this._snapping = !this._snapping;
 };
 
 Editor.prototype.getSnappingRadius = function() {
-  return this.snappingRadius;
+  return this._snappingRadius;
 };
 
 Editor.prototype.setSnappingRadius = function( snappingRadius ) {
-  this.snappingRadius = snappingRadius;
+  this._snappingRadius = snappingRadius;
 };
 
 // Selected.
