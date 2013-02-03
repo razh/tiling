@@ -40,7 +40,7 @@ Shape.prototype.draw = function( ctx ) {
 
   ctx.closePath();
 
-  ctx.fillStyle = this.getColor().toString();
+  ctx.fillStyle = Color.toString( this.getColor() );
   ctx.fill();
 
   ctx.restore();
@@ -195,7 +195,12 @@ Shape.prototype.getColor = function() {
 };
 
 Shape.prototype.setColor = function() {
-  this.getColor().set.apply( this.getColor(), arguments );
+  if ( arguments.length === 1 ) {
+    console.log( arguments[0])
+    Color.set( this.getColor(), arguments[0] );
+  } else if ( arguments.length === 4 ) {
+    Color.set( this.getColor(), arguments[0], arguments[1], arguments[2], arguments[3] );
+  }
   return this;
 };
 
@@ -261,7 +266,7 @@ Shape.prototype.fromJSON = function( json ) {
   }
 
   var color = new Color();
-  color.fromJSON( JSON.stringify( jsonObject.color ) );
+  Color.fromJSON( color, JSON.stringify( jsonObject.color ) );
 
   return this.setX( jsonObject.x || 0 )
              .setY( jsonObject.y || 0 )
@@ -291,7 +296,7 @@ Shape.prototype.toJSON = function() {
     object.sides = this.getNumSides();
   }
 
-  object.color = this.getColor().toJSON();
+  object.color = Color.toJSON( this.getColor() );
 
   return object;
 };
@@ -457,93 +462,89 @@ var Color = function() {
   this.a = 0.0;
 
   if ( arguments.length !== 0 ) {
-    this.set.apply( this, arguments );
+    Color.set.apply( this, arguments );
   }
 };
 
-Color.prototype.set = function() {
-  if ( arguments.length === 1 ) {
-    this.setRed( arguments[0].getRed() );
-    this.setGreen( arguments[0].getGreen() );
-    this.setBlue( arguments[0].getBlue() );
-    this.setAlpha( arguments[0].getAlpha() );
-  } else if ( arguments.length === 4 ) {
-    this.setRed( arguments[0] );
-    this.setGreen( arguments[1] );
-    this.setBlue( arguments[2] );
-    this.setAlpha( arguments[3] );
+Color.set = function() {
+  if ( arguments.length === 2 ) {
+    Color.setRed( arguments[0], Color.getRed( arguments[1] ) );
+    Color.setGreen( arguments[0], Color.getGreen( arguments[1] ) );
+    Color.setBlue( arguments[0], Color.getBlue( arguments[1] ) );
+    Color.setAlpha( arguments[0], Color.getAlpha( arguments[1] ) );
+  } else if ( arguments.length === 5 ) {
+    Color.setRed( arguments[0], arguments[1] );
+    Color.setGreen( arguments[0], arguments[2] );
+    Color.setBlue( arguments[0], arguments[3] );
+    Color.setAlpha( arguments[0], arguments[4] );
   }
 };
 
-Color.prototype.getRed = function() {
-  return this.r;
+Color.getRed = function( color ) {
+  return color.r;
 };
 
-Color.prototype.setRed = function( red ) {
-  this.r = red;
-  return this;
+Color.setRed = function( color, red ) {
+  color.r = red;
 };
 
-Color.prototype.getGreen = function() {
-  return this.g;
+Color.getGreen = function( color ) {
+  return color.g;
 };
 
-Color.prototype.setGreen = function( green ) {
-  this.g = green;
-  return this;
+Color.setGreen = function( color, green ) {
+  color.g = green;
 };
 
-Color.prototype.getBlue = function() {
-  return this.b;
+Color.getBlue = function( color ) {
+  return color.b;
 };
 
-Color.prototype.setBlue = function( blue ) {
-  this.b = blue;
-  return this;
+Color.setBlue = function( color, blue ) {
+  color.b = blue;
 };
 
-Color.prototype.getAlpha = function() {
-  return this.a;
+Color.getAlpha = function( color ) {
+  return color.a;
 };
 
-Color.prototype.setAlpha = function( alpha ) {
-  this.a = alpha;
-  return this;
+Color.setAlpha = function( color, alpha ) {
+  color.a = alpha;
 };
 
-Color.prototype.toString = function() {
-  return 'rgba( ' + ( ( 0.5 + this.getRed() )   << 0 ) +
-         ', '     + ( ( 0.5 + this.getGreen() ) << 0 ) +
-         ', '     + ( ( 0.5 + this.getBlue() )  << 0 ) +
-         ', '     + this.getAlpha() + ' )';
+Color.toString = function( color ) {
+  return 'rgba( ' + ( ( 0.5 + Color.getRed( color ) )   << 0 ) +
+         ', '     + ( ( 0.5 + Color.getGreen( color ) ) << 0 ) +
+         ', '     + ( ( 0.5 + Color.getBlue( color ) )  << 0 ) +
+         ', '     + Color.getAlpha( color ) + ' )';
 };
 
-Color.prototype.toHexString = function() {
+Color.toHexString = function( color ) {
     return "#" +
            ( ( 1 << 24 ) +
-           ( ( ( 0.5 + this.getRed() )   << 0 ) << 16 ) +
-           ( ( ( 0.5 + this.getGreen() ) << 0 ) << 8 ) +
-           ( ( 0.5 + this.getBlue() )    << 0 ) ).toString( 16 ).slice(1);
+           ( ( ( 0.5 + Color.getRed( color ) )   << 0 ) << 16 ) +
+           ( ( ( 0.5 + Color.getGreen( color ) ) << 0 ) << 8 ) +
+           ( ( 0.5 + Color.getBlue( color ) )    << 0 ) ).toString( 16 ).slice(1);
 };
 
-Color.prototype.fromJSON = function( json ) {
+Color.fromJSON = function( color, json ) {
   var jsonObject = JSON.parse( json );
 
-  this.setRed(   jsonObject.red   || 0 )
-      .setGreen( jsonObject.green || 0 )
-      .setBlue(  jsonObject.blue  || 0 )
-      .setAlpha( jsonObject.alpha || 1.0 );
+  Color.setRed(   color, jsonObject.red   || 0 )
+  Color.setGreen( color, jsonObject.green || 0 )
+  Color.setBlue(  color, jsonObject.blue  || 0 )
+  Color.setAlpha( color, jsonObject.alpha || 1.0 );
 
   return jsonObject;
 };
 
-Color.prototype.toJSON = function() {
+Color.toJSON = function( color ) {
   var object = {};
 
-  object.red   = this.getRed();
-  object.green = this.getGreen();
-  object.blue  = this.getBlue();
-  object.alpha = this.getAlpha();
+  object.red   = Color.getRed( color );
+  object.green = Color.getGreen( color );
+  object.blue  = Color.getBlue( color );
+  object.alpha = Color.getAlpha( color );
 
   return object;
 };

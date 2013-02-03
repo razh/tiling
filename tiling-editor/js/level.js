@@ -34,7 +34,7 @@ Level.prototype.getBackgroundColor = function() {
 };
 
 Level.prototype.setBackgroundColor = function( backgroundColor ) {
-  this.backgroundColor.set( backgroundColor );
+  Color.set( this.backgroundColor, backgroundColor );
 };
 
 Level.prototype.getShapes = function() {
@@ -69,7 +69,7 @@ Level.prototype.fromJSON = function( json ) {
   var jsonObject = JSON.parse( json );
 
   var color = new Color();
-  color.fromJSON( JSON.stringify( jsonObject.backgroundColor ) );
+  Color.fromJSON( color, JSON.stringify( jsonObject.backgroundColor ) );
 
   this._shapes = [];
   var i, n;
@@ -135,7 +135,7 @@ Level.prototype.loadPatternShapeFromJSON = function( json ) {
 
   if ( jsonObject.color ) {
     var color = new Color();
-    color.fromJSON( JSON.stringify( jsonObject.color ) );
+    Color.fromJSON( color, JSON.stringify( jsonObject.color ) );
     shape.setColor( color );
   }
 
