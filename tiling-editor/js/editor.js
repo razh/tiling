@@ -30,7 +30,7 @@ function init() {
   $( '#load-modal' ).on({
     shown: function() {
       _editor.setState( EditorState.TEXT_EDITING );
-      $( '#loadTextArea' ).select();
+      $( '#load-text-area' ).select();
     },
     hidden: function() {
       _editor.setState( EditorState.DEFAULT );
@@ -39,7 +39,7 @@ function init() {
   $( '#export-modal' ).on({
     shown: function() {
       _editor.setState( EditorState.TEXT_EDITING );
-      $( '#exportTextArea' ).select();
+      $( '#export-text-area' ).select();
     },
     hidden: function() {
       _editor.setState( EditorState.DEFAULT );
@@ -49,13 +49,6 @@ function init() {
   // Name changes.
   $( '#level-name' ).change(function() {
     _editor.getLevel().setName( $( this ).val() );
-  });
-
-  // Prevent form inputs from submitting.
-  $( 'form input' ).keydown(function( event ) {
-    if ( event.which === 13 ) {
-      event.preventDefault();
-    }
   });
 
   // Setup buttons.
@@ -86,6 +79,13 @@ function init() {
     max:    200,
     step:   1,
     simple: true
+  });
+
+  // Prevent form inputs from submitting.
+  $( 'form input' ).keydown(function( event ) {
+    if ( event.which === 13 ) {
+      event.preventDefault();
+    }
   });
 
   loop();

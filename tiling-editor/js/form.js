@@ -82,6 +82,7 @@ var Form = (function() {
 
       var simple = options.simple || false;
       var form = '';
+
       if ( !simple ) {
         form += '<div class ="control-group">';
         form += '<label class="control-label span4" for="' + name + '">' + name + '</label>';
@@ -136,6 +137,7 @@ var Form = (function() {
 
       var simple = options.simple || false;
       var form = '';
+
       if ( !simple ) {
         form += '<div class="control-group">';
         form += '<label class="control-label span4" for="' + name + '">' + name + '</label>';
