@@ -131,10 +131,6 @@ var Editor = function() {
   this._selected = null;
   this._snapping = false;
   this._snappingRadius = 50;
-
-  this._editorGUI = new dat.GUI({ autoplace: false });
-  $( '.navbar' ).append( this._editorGUI.domElement );
-  this._shapeGUI = new dat.GUI({ autoplace: false });
 };
 
 Editor.prototype.tick = function() {
