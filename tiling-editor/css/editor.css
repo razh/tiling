@@ -43,6 +43,15 @@ html, body {
   overflow: auto;
 }
 
+.pattern-container canvas {
+  margin-top: 19px;
+  margin-bottom: 19px;
+}
+
+.pattern-container canvas:first-child {
+  margin-left: 19px;
+}
+
 /* So we the pattern brushes do not move when changing selection. */
 .pattern-container canvas + canvas {
   border-left: 1px solid transparent;
@@ -55,6 +64,10 @@ html, body {
 .pattern-container canvas.selected {
   outline: 2px solid #cccccc;
   outline-style: dashed;
+}
+
+.pattern-container.well {
+  padding: 0px;
 }
 
 .modal textarea {

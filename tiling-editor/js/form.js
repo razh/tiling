@@ -22,10 +22,10 @@ var Form = (function() {
       var value = getterFunction.call( object );
 
       var form = '<div class ="control-group">';
-      form += '<label class="control-label span3" for="' + name + '">' + name + '</label>';
-      form += '<div class="controls span9">';
-      form += '<input class="input-medium" type="number" id = "' +
-              name  + '" value = "' +
+      form += '<label class="control-label span4" for="' + name + '">' + name + '</label>';
+      form += '<div class="controls span8">';
+      form += '<input class="input-small" type="number" id = "' +
+              name  + '" value="' +
               value + '" min="'   +
               min   + '" max="'   +
               max   + '" step="'  +
@@ -72,16 +72,15 @@ var Form = (function() {
       var value = getterFunction.call( object );
 
       var form = '<div class ="control-group">';
-      form += '<label class="control-label span3" for="' + name + '">' + name + '</label>';
-      form += '<div class="controls span9">';
-      form += '<input class="input-medium" type="number" id = "' +
-              name  + '" value = "' +
+      form += '<label class="control-label span4" for="' + name + '">' + name + '</label>';
+      form += '<div class="controls span8">';
+      form += '<input class="input-small" type="number" id = "' +
+              name  + '" value="' +
               value + '" min="'   +
               min.toFixed( digits )   + '" max="'   +
               max.toFixed( digits )   + '" step="'  +
               step  + '">';
       form += '</div></div>';
-
 
       $id.append( form );
       $id.find( '#' + name ).change(function() {
@@ -116,7 +115,20 @@ var Form = (function() {
         return;
       }
 
-      // TODO: Not implemented.
+      var value = getterFunction.call( object );
+
+      var form = '<div class="control-group">';
+      form += '<label class="control-label span4" for="' + name + '">' + name + '</label>';
+      form += '<div class="controls span8">';
+      form += 'input class="input-small" type="text" id="' +
+              name  + '" value=' +
+              value + '">';
+      form += '</div></div>';
+
+      $id.append( form );
+      $id.find( '#' + name ).change(function() {
+        setterFunction.call( object, $( this ).val() );
+      });
     },
 
     createColorForm: function( options ) {

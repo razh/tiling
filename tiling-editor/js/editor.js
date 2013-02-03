@@ -120,7 +120,6 @@ var Editor = function() {
   this.loadPatternInspector( this._patterns[ this._patternIndex ] );
 
   this._level = new Level( './json/example_level.json' );
-  console.log( this._level.toJSON() );
   this.load( this._level );
 
   // For adding shapes.
