@@ -186,6 +186,10 @@ function onKeyDown( event ) {
       _editor.setTranslate( 0, 0 );
       break;
 
+    // Enter.
+    case 13:
+      break;
+
     default:
       console.log( event.which );
       break;

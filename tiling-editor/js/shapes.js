@@ -179,6 +179,15 @@ Shape.prototype.rotate = function( angle ) {
   return this;
 };
 
+Shape.prototype.getRotationInDegrees = function() {
+  return this._rotation * 180 / Math.PI;
+};
+
+Shape.prototype.setRotationInDegrees = function( rotation ) {
+  this._rotation = rotation * Math.PI / 180;
+  return this;
+};;
+
 Shape.prototype.getRadius = function() {
   return this._radius;
 };
@@ -245,34 +254,37 @@ Shape.prototype.calculateRadius = function() {
   return this.setRadius( Math.sqrt( distanceSquared ) );
 };
 
-Shape.prototype.createInspector = function( $id ) {
+Shape.prototype.createInspector = function( $id, prototypical ) {
   if ( $id.length !== 0 ) {
     $id.empty();
   }
 
-  // X.
-  Form.createIntegerForm({
-    $id:    $id,
-    object: this,
-    name:   'x',
-    getter: 'getX',
-    setter: 'setX',
-    min:    0,
-    max:    _editor.WIDTH,
-    step:   1
-  });
+  // Prototypical shapes of patterns have no need for position.
+  if ( !prototypical ) {
+    // X.
+    Form.createIntegerForm({
+      $id:    $id,
+      object: this,
+      name:   'x',
+      getter: 'getX',
+      setter: 'setX',
+      min:    0,
+      max:    _editor.WIDTH,
+      step:   1
+    });
 
-  // Y.
-  Form.createIntegerForm({
-    $id:    $id,
-    object: this,
-    name:   'y',
-    getter: 'getY',
-    setter: 'setY',
-    min:    0,
-    max:    _editor.HEIGHT,
-    step:   1
-  });
+    // Y.
+    Form.createIntegerForm({
+      $id:    $id,
+      object: this,
+      name:   'y',
+      getter: 'getY',
+      setter: 'setY',
+      min:    0,
+      max:    _editor.HEIGHT,
+      step:   1
+    });
+  }
 
   // Width.
   Form.createFloatForm({
@@ -316,6 +328,28 @@ Shape.prototype.createInspector = function( $id ) {
     max:    2 * Math.PI,
     step:   0.001,
     digits: 3
+  });
+
+  // Rotation in degrees.
+  Form.createFloatForm({
+    $id:    $id,
+    object: this,
+    name:   'degrees',
+    getter: 'getRotationInDegrees',
+    setter: 'setRotationInDegrees',
+    min:    -360,
+    max:    360,
+    step:   0.01,
+    digits: 2
+  });
+
+  // Link the rotation and degree forms together.
+  var shape = this;
+  $id.find( '#rotation' ).change(function() {
+    $id.find( '#degrees' ).val( shape.getRotationInDegrees() );
+  });
+  $id.find( '#degrees' ).change(function() {
+    $id.find( '#rotation' ).val( shape.getRotation() );
   });
 };
 
@@ -598,10 +632,10 @@ Color.prototype.toHexString = function() {
 
 Color.prototype.fromJSON = function( json ) {
   var jsonObject = JSON.parse( json );
-  this.setRed(   jsonObject.red   || 0 )
-      .setGreen( jsonObject.green || 0 )
-      .setBlue(  jsonObject.blue  || 0 )
-      .setAlpha( jsonObject.alpha || 1.0 );
+  return this.setRed(   jsonObject.red   || 0 )
+             .setGreen( jsonObject.green || 0 )
+             .setBlue(  jsonObject.blue  || 0 )
+             .setAlpha( jsonObject.alpha || 1.0 );
 };
 
 Color.prototype.toJSON = function() {

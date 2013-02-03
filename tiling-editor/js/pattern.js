@@ -70,6 +70,8 @@ Pattern.prototype.createInspector = function( $id ) {
 
   // On click, clear selection and select clicked brush.
   var $canvasArray = this._canvasArray;
+  var shapes = this._shapes;
+  var pattern = this;
   $canvasArray.click(function() {
     $canvasArray.removeClass( 'selected' );
 
@@ -77,6 +79,13 @@ Pattern.prototype.createInspector = function( $id ) {
     var index = parseInt( $this.attr( 'id' )
                                .replace( 'pattern', '' ), 10 );
     _editor.setBrushByIndex( index );
+    _editor.loadShapeInspector( shapes[ index ], true );
+    _editor._inspectorPane.find( 'input' ).change(function() {
+      pattern.drawShape( pattern._ctxArray[ index ],
+                         index,
+                         $canvasArray[ index ].width,
+                         $canvasArray[ index ].height );
+    });
 
     $this.addClass( 'selected' );
   });
@@ -91,15 +100,24 @@ Pattern.prototype.createInspector = function( $id ) {
     ctx = canvas.getContext( '2d' );
     this._ctxArray.push( ctx );
 
-    shape = this._shapes[i];
-    ctx.translate( 1.5 * shape.getWidth() - shape.getX(),
-                   1.5 * shape.getHeight() - shape.getY() );
-    shape.draw( ctx );
+    this.drawShape( ctx, i, canvas.width, canvas.height );
   }
 
   if ( this._shapes.length > 0 ) {
     $( this._canvasArray[0] ).addClass( 'selected' );
   }
+};
+
+Pattern.prototype.drawShape = function( ctx, shapeIndex, width, height ) {
+  ctx.clearRect( 0, 0, width, height );
+  ctx.save();
+
+  shape = this.getShapes()[ shapeIndex ];
+  ctx.translate( 1.5 * shape.getWidth() - shape.getX(),
+                 1.5 * shape.getHeight() - shape.getY() );
+  shape.draw( ctx );
+
+  ctx.restore();
 };
 
 Pattern.prototype.getName = function() {

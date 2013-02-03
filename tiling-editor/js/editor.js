@@ -46,6 +46,18 @@ function init() {
     }
   });
 
+  // Name changes.
+  $( '#levelName' ).change(function() {
+    _editor.getLevel().setName( $( this ).val() );
+  });
+
+  // Prevent form inputs from submitting.
+  $( 'form input' ).keydown(function( event ) {
+    if ( event.which === 13 ) {
+      event.preventDefault();
+    }
+  })
+
   loop();
 }
 
@@ -185,15 +197,17 @@ Editor.prototype.stop = function() {
   this._running = false;
 };
 
-Editor.prototype.loadShapeInspector = function( shape ) {
+// Prototypical shapes don't have ability to set positions.
+Editor.prototype.loadShapeInspector = function( shape, prototypical ) {
   this._inspectorPane.empty();
 
-  shape.createInspector( this._inspectorPane );
+  shape.createInspector( this._inspectorPane, prototypical );
 };
 
 Editor.prototype.loadPatternInspector = function( pattern ) {
   this._patternPane.empty();
 
+  $( '#patternName' ).val( pattern.getName() );
   pattern.createInspector( this._patternPane );
 };
 
