@@ -90,6 +90,8 @@ var Editor = function() {
   this._canvas.width = this.WIDTH;
   this._canvas.height = this.HEIGHT;
 
+  this._backgroundColor = new Color( 100, 100, 100, 1.0 );
+
   this._inspectorPane = $( '#inspector-pane' );
   this._patternPane = $( '#pattern-pane' );
 
@@ -141,11 +143,13 @@ Editor.prototype.createGUI = function() {
   this._editorGUI = this._gui.addFolder( 'Editor' );
   this._editorGUI.add( this, 'snapping' ).listen();
   this._editorGUI.add( this, 'snappingRadius' );
+  // this._editorGUI.add( this, '_backgroundColor' );
   this._editorGUI.open();
 
   this._levelGUI = this._gui.addFolder( 'Level' );
   this._levelGUI.add( this._level, 'name' );
-  this._levelGUI.addColor( this._level, 'backgroundColor' );
+  // this._levelGUI.add( this._level, 'backgroundColor' );
+  this._levelGUI.add( this._level, 'backgroundColor' );
 
   this._levelGUI.open();
 
@@ -169,7 +173,7 @@ Editor.prototype.update = function() {
 };
 
 Editor.prototype.draw = function() {
-  this._canvas.style.backgroundColor = Color.toHexString( this.getBackgroundColor() );
+  this._canvas.style.backgroundColor = this.getBackgroundColor().toHexString();
 
   this._ctx.clearRect( 0, 0, this.WIDTH, this.HEIGHT );
 
@@ -207,11 +211,7 @@ Editor.prototype.stop = function() {
 };
 
 Editor.prototype.loadShapeInspector = function( shape ) {
-  this._shapeGUI.add( shape, 'x' );
-  this._shapeGUI.add( shape, 'y' );
-  this._shapeGUI.add( shape, 'width' );
-  this._shapeGUI.add( shape, 'height' );
-  this._shapeGUI.add( shape, 'rotation' );
+  this._gui.remove( 'test' );
 };
 
 Editor.prototype.loadPatternInspector = function( pattern ) {
@@ -344,11 +344,11 @@ Editor.prototype.setOffset = function() {
 
 // Background color.
 Editor.prototype.getBackgroundColor = function() {
-  return this.getLevel().getBackgroundColor();
+  return this._backgroundColor;
 };
 
 Editor.prototype.setBackgroundColor = function( backgroundColor ) {
-  this.getLevel().setBackgroundColor( backgroundColor );
+  this._backgroundColor = backgroundColor;
 };
 
 // Patterns.
