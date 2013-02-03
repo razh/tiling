@@ -43,13 +43,9 @@ html, body {
   overflow: auto;
 }
 
-.pattern-container canvas {
-  margin-top: 19px;
-  margin-bottom: 19px;
-}
-
-.pattern-container canvas:first-child {
-  margin-left: 19px;
+/* row-fluid for span divs*/
+.pattern-container form {
+  margin-left: 2.564102564102564%;
 }
 
 /* So we the pattern brushes do not move when changing selection. */
@@ -67,7 +63,8 @@ html, body {
 }
 
 .pattern-container.well {
-  padding: 0px;
+  padding-left: 0px;
+  padding-right: 0px;
 }
 
 .modal textarea {
