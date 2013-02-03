@@ -10,6 +10,7 @@
 
       <script src="js/jquery-1.9.0.min.js"></script>
       <script src="js/bootstrap.min.js"></script>
+      <script src="js/dat.gui.min.js"></script>
 
       <script src="js/shapes.js"></script>
       <script src="js/geometry.js"></script>
@@ -24,7 +25,7 @@
     <div class="container-fluid">
       <div class="navbar navbar-inverse">
         <div class="navbar-inner">
-          <a class="brand">Editor</a>
+          <a class="brand" id="levelName">Editor</a>
           <ul class="nav">
             <li><a data-toggle="modal" data-target="#loadModal">Load</a></li>
             <li><a data-toggle="modal" data-target="#exportModal">Export</a></li>
@@ -39,7 +40,7 @@
         <h3 id="loadModalLabel">Load</h3>
       </div>
       <div class="modal-body">
-        <textarea id="loadTextArea"></textarea>
+        <textarea id="loadTextArea"  rows="5"></textarea>
       </div>
       <div class="modal-footer">
         <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
@@ -53,7 +54,7 @@
         <h3 id="exportModalLabel">Export</h3>
       </div>
       <div class="modal-body">
-        <textarea id="exportTextArea"></textarea>
+        <textarea id="exportTextArea" rows="5"></textarea>
       </div>
       <div class="modal-footer">
         <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>

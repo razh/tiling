@@ -27,15 +27,24 @@ function init() {
   document.addEventListener( 'keydown', onKeyDown, null );
 
   // Auto-select text areas when modals are open.
-  $( '#loadModal' ).on( 'shown', function() {
-    $( '#loadTextArea' ).select();
+  $( '#loadModal' ).on({
+    shown: function() {
+      _editor.setState( EditorState.TEXT_EDITING );
+      $( '#loadTextArea' ).select();
+    },
+    hidden: function() {
+      _editor.setState( EditorState.DEFAULT );
+    }
   });
-
-  $( '#exportModal' ).on( 'shown', function() {
-    $( '#exportTextArea' ).select();
+  $( '#exportModal' ).on({
+    shown: function() {
+      _editor.setState( EditorState.TEXT_EDITING );
+      $( '#exportTextArea' ).select();
+    },
+    hidden: function() {
+      _editor.setState( EditorState.DEFAULT );
+    }
   });
-
-
 
   loop();
 }
@@ -57,7 +66,8 @@ var EditorState = {
   DEFAULT:        0,
   ADDING_SHAPE:   1,
   REMOVING_SHAPE: 2,
-  COPYING_SHAPE:  3
+  COPYING_SHAPE:  3,
+  TEXT_EDITING:   4
 };
 
 var Editor = function() {
@@ -111,6 +121,7 @@ var Editor = function() {
 
   this._level = new Level( './json/example_level.json' );
   console.log( this._level.toJSON() );
+  this.load( this._level );
 
   // For adding shapes.
   this._brush = null;
@@ -120,6 +131,10 @@ var Editor = function() {
   this._selected = null;
   this._snapping = false;
   this._snappingRadius = 50;
+
+  this._editorGUI = new dat.GUI({ autoplace: false });
+  $( '.navbar' ).append( this._editorGUI.domElement );
+  this._shapeGUI = new dat.GUI({ autoplace: false });
 };
 
 Editor.prototype.tick = function() {
@@ -138,13 +153,15 @@ Editor.prototype.update = function() {
 };
 
 Editor.prototype.draw = function() {
-  this._canvas.style.backgroundColor = this._backgroundColor.toHexString();
+  this._canvas.style.backgroundColor = this.getBackgroundColor().toHexString();
 
   this._ctx.clearRect( 0, 0, this.WIDTH, this.HEIGHT );
 
   this._ctx.save();
-  this._ctx.translate( this.getTranslateX(), this.getTranslateY() );
+  this._ctx.translate( this.getTranslateX(), this.HEIGHT + this.getTranslateY() );
   this._ctx.rotate( this.getRotation() );
+  // Coordinates are reversed in the OpenGL game.
+  this._ctx.scale( 1, -1 );
 
   for ( var i = 0, n = this._shapes.length; i < n; i++ ) {
     this._shapes[i].draw( this._ctx );
@@ -307,6 +324,15 @@ Editor.prototype.setOffset = function() {
   }
 };
 
+// Background color.
+Editor.prototype.getBackgroundColor = function() {
+  return this._backgroundColor;
+};
+
+Editor.prototype.setBackgroundColor = function( backgroundColor ) {
+  this._backgroundColor = backgroundColor;
+};
+
 // Patterns.
 Editor.prototype.getPatterns = function() {
   return this._patterns;
@@ -374,6 +400,27 @@ Editor.prototype.hasSelected = function() {
 };
 
 // Levels.
-Editor.prototype.load = function( level ) {
+Editor.prototype.getLevel = function() {
+  return this._level;
+};
 
+Editor.prototype.setLevel = function( level ) {
+  this.load( level );
+  this._level = level;
+};
+
+Editor.prototype.load = function( level ) {
+  $( '#levelName' ).val( level.getName() );
+
+  this._shapes = [];
+  var levelShapes = level.getShapes();
+  for ( var i = 0, n = levelShapes.length; i < n; i++ ) {
+    this.addShape( levelShapes[i] );
+  }
+};
+
+Editor.prototype.export = function() {
+  var object = {};
+
+  return object;
 };

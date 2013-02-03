@@ -136,9 +136,13 @@ function onMouseUp( event ) {
 
 // Key down.
 function onKeyDown( event ) {
+  if ( _editor.getState() === EditorState.TEXT_EDITING ) {
+    return;
+  }
+
   switch ( event.which ) {
-    // ESC.
-    case 27:
+    // q.
+    case 81:
       quit();
       break;
 
@@ -191,6 +195,6 @@ function onKeyDown( event ) {
 function transformCoords( x, y ) {
   return {
     x: x - _editor._canvas.offsetLeft - _editor.getTranslateX(),
-    y: y - _editor._canvas.offsetTop  - _editor.getTranslateY()
+    y: _editor.HEIGHT - ( y - _editor._canvas.offsetTop - _editor.getTranslateY() )
   };
 }
