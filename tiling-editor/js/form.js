@@ -1,7 +1,7 @@
 var Form = (function() {
   return {
     createIntegerForm: function( options ) {
-      var $id    = options.$id    || [],
+      var $id    = options.$id    || $( 'body' ),
           object = options.object || {},
           name   = options.name   || '',
           getter = options.getter || '',
@@ -59,7 +59,7 @@ var Form = (function() {
     },
 
     createFloatForm: function( options ) {
-      var $id    = options.$id    || [],
+      var $id    = options.$id    || $( 'body' ),
           object = options.object || {},
           name   = options.name   || '',
           getter = options.getter || '',
@@ -118,7 +118,7 @@ var Form = (function() {
     },
 
     createTextForm: function( options ) {
-      var $id    = options.$id    || [],
+      var $id    = options.$id    || $( 'body' ),
           object = options.object || {},
           name   = options.name   || '',
           getter = options.getter || '',
@@ -159,7 +159,7 @@ var Form = (function() {
     },
 
     createColorForm: function( options ) {
-      var $id    = options.$id    || [],
+      var $id    = options.$id    || $( 'body' ),
           object = options.object || {},
           getter = options.getter || '';
 
@@ -213,6 +213,47 @@ var Form = (function() {
       };
 
       Form.createFloatForm( floatOptions );
+    },
+
+    createModal: function( options ) {
+      var $id   = options.$id   || $( 'body' ),
+          name  = options.name  || '',
+          type  = options.type  || ModalType.EXPORT,
+          label = options.label || '',
+          rows  = options.rows  || 5;
+      console.log( $id)
+
+      var modal = '<div class="modal hide fade" id="'+
+                  name + '-modal" tabindex="-1" role="dialog" aria-labelledby="' +
+                  name + '-modal-label" aria-hidden="true">';
+      modal += '<div class="modal-header">';
+      modal += '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>';
+      modal += '<h3 id="' +
+               name + '-modal-label">' +
+               label + '</h3>';
+      modal += '</div>';
+      modal += '<div class="modal-body">';
+      modal += '<textarea id="' +
+               name + '-text-area" rows="' +
+               rows + '"></textarea>';
+      modal += '</div>';
+      modal += '<div class="modal-footer">';
+      modal += '<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>'
+      if ( type === ModalType.LOAD ) {
+        modal += '<button class="btn btn-primary">' +
+                 label + '</button>';
+      }
+      modal += '</div>';
+      modal += '</div>';
+      console.log( modal );
+
+      $id.append( modal );
     }
   };
 }) ();
+
+
+var ModalType = {
+  LOAD: 0,
+  EXPORT: 1
+};

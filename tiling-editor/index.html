@@ -48,33 +48,6 @@
         </div>
       </div>
     </div>
-    <!-- Load modal. -->
-    <div class="modal hide fade" id="load-modal" tabindex="-1" role="dialog" aria-labelledby="load-modal-label" aria-hidden="true">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h3 id="load-modal-label">Load</h3>
-      </div>
-      <div class="modal-body">
-        <textarea id="load-text-area" rows="5"></textarea>
-      </div>
-      <div class="modal-footer">
-        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-        <button class="btn btn-primary">Load</button>
-      </div>
-    </div>
-    <!-- Export modal. -->
-    <div class="modal hide fade" id="export-modal" tabindex="-1" role="dialog" aria-labelledby="export-modal-label" aria-hidden="true">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h3 id="export-modal-label">Export</h3>
-      </div>
-      <div class="modal-body">
-        <textarea id="export-text-area" rows="5"></textarea>
-      </div>
-      <div class="modal-footer">
-        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-      </div>
-    </div>
     <!-- Main editor. -->
     <div class="container-fluid height9">
       <div class="row-fluid height9">
@@ -84,10 +57,17 @@
         </div>
       </div>
       <div class="row-fluid well pattern-container">
-        <!-- Pattern name. -->
-        <form>
-          <input class="input-large" type="text" id="pattern-name">
-        </form>
+        <!-- Pattern editing. -->
+        <div class="row-fluid">
+          <form class="form-inline">
+            <input class="input-large" type="text" id="pattern-name">
+            <input class="input-mini" type="number" id="add-pattern-shape-sides" value="3" min="3" max="100">
+            <button class="btn" id="add-pattern-shape-button"><i class="icon-plus"></i></button>
+            <button class="btn" id="remove-pattern-shape-button"><i class="icon-remove"></i></button>
+            <button class="btn btn-primary" data-toggle="modal" data-target="#load-pattern-modal">Load pattern</button>
+            <button class="btn btn-primary" data-toggle="modal" data-target="#save-pattern-modal">Save pattern</button>
+          </form>
+        </div>
         <div class="span11 height12" id="pattern-pane"></div>
       </div>
     </div>

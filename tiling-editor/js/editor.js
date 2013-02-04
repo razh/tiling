@@ -26,6 +26,19 @@ function init() {
 
   document.addEventListener( 'keydown', onKeyDown, null );
 
+  // Create modals.
+  Form.createModal({
+    name: 'load',
+    label: 'Load',
+    type: ModalType.LOAD
+  });
+
+  Form.createModal({
+    name: 'export',
+    label: 'Export',
+    type: ModalType.EXPORT
+  })
+
   // Auto-select text areas when modals are open.
   $( '#load-modal' ).on({
     shown: function() {
@@ -51,7 +64,7 @@ function init() {
     _editor.getLevel().setName( $( this ).val() );
   });
 
-  // Setup buttons.
+  // Setup action buttons.
   _editor._actionButtons.move.click(function() {
     _editor.setState( EditorState.DEFAULT );
   });
@@ -79,6 +92,29 @@ function init() {
     max:    200,
     step:   1,
     simple: true
+  });
+
+  // Setup pattern controls.
+  _editor._patternUI.add.click(function( event ) {
+    event.preventDefault();
+    var sides = _editor._patternUI.sides.val();
+    var geometry = Geometry.createRegularPolygon( sides );
+    _editor.getPatterns()[0].addShape( new Shape().setWidth( 50 )
+                                                  .setHeight( 50 )
+                                                  .setNumSides( sides )
+                                                  .setVertices( geometry.vertices )
+                                                  .setEdges( geometry.edges )
+                                                  .calculateRadius()
+                                                  .setColor( new Color( 0, 0, 0, 1.0 ) ) );
+  });
+  _editor._patternUI.remove.click(function( event ) {
+    event.preventDefault();
+    var selected = $( '.selected' );
+    selected.removeClass( 'selected' );
+
+    var index = parseInt( selected.attr( 'id' )
+                                  .replace( 'pattern', '' ), 10 );
+    _editor.getPatterns()[0].removeShapeByIndex( index );
   });
 
   // Prevent form inputs from submitting.
@@ -146,6 +182,11 @@ var Editor = function() {
     button: $( '#snapping-button' ),
     form: $( '#snapping-radius' )
   };
+  this._patternUI = {
+    add: $( '#add-pattern-shape-button' ),
+    remove: $( '#remove-pattern-shape-button' ),
+    sides: $( '#add-pattern-shape-sides' )
+  };
 
   this._prevTime = Date.now();
   this._currTime = this._prevTime;
@@ -183,7 +224,7 @@ var Editor = function() {
 
   this._selected = null;
   this._snapping = false;
-  this._snappingRadius = 50;
+  this._snappingRadius = 10;
 };
 
 Editor.prototype.tick = function() {
@@ -291,7 +332,10 @@ Editor.prototype.addShape = function( shape ) {
 };
 
 Editor.prototype.removeShape = function( shape ) {
-  this._shapes.splice( this._shapes.lastIndexOf( shape ), 1 );
+  var index = this._shapes.indexOf( shape );
+  if ( index !== -1 ) {
+    this._shapes.splice( index, 1 );
+  }
 };
 
 // Translate.

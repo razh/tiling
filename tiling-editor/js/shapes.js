@@ -297,7 +297,8 @@ Shape.prototype.createInspector = function( $id, prototypical ) {
     setter: 'setWidth',
     min:    0,
     max:    _editor.WIDTH,
-    step:   0.01
+    step:   0.1,
+    digits: 1
   });
 
   // Height.
@@ -309,7 +310,8 @@ Shape.prototype.createInspector = function( $id, prototypical ) {
     setter: 'setHeight',
     min:    0,
     max:    _editor.HEIGHT,
-    step:   0.01
+    step:   0.1,
+    digits: 1
   });
 
   // Color.
@@ -328,8 +330,8 @@ Shape.prototype.createInspector = function( $id, prototypical ) {
     setter: 'setRotation',
     min:    -2 * Math.PI,
     max:    2 * Math.PI,
-    step:   0.001,
-    digits: 3
+    step:   0.01,
+    digits: 2
   });
 
   // Rotation in degrees.
@@ -341,8 +343,8 @@ Shape.prototype.createInspector = function( $id, prototypical ) {
     setter: 'setRotationInDegrees',
     min:    -360,
     max:    360,
-    step:   0.01,
-    digits: 2
+    step:   0.1,
+    digits: 1
   });
 
   // Link the rotation and degree forms together.

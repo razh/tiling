@@ -9,6 +9,9 @@ var Pattern = function() {
   if ( arguments.length !== 0 ) {
     this.fromURL( arguments[0] );
   }
+
+  // Keeping track of this when we need to redraw.
+  this._$id = null;
 };
 
 Pattern.prototype.fromURL = function( url ) {
@@ -55,6 +58,7 @@ Pattern.prototype.toJSON = function() {
 };
 
 Pattern.prototype.createInspector = function( $id ) {
+  this._$id = $id;
   if ( $id.length !== 0 ) {
     $id.empty();
   }
@@ -131,4 +135,21 @@ Pattern.prototype.setName = function( name ) {
 
 Pattern.prototype.getShapes = function() {
   return this._shapes;
+};
+
+Pattern.prototype.addShape = function( shape ) {
+  this._shapes.push( shape );
+  this.createInspector( this._$id );
+};
+
+Pattern.prototype.removeShape = function( shape ) {
+  var index = this._shapes.indexOf( shape );
+  this.removeShapeByIndex( index );
+};
+
+Pattern.prototype.removeShapeByIndex = function( index ) {
+  if ( index !== -1 ) {
+    this._shapes.splice( index, 1 )
+    this.createInspector( this._$id );
+  }
 };
