@@ -161,7 +161,8 @@ var Form = (function() {
     createColorForm: function( options ) {
       var $id    = options.$id    || $( 'body' ),
           object = options.object || {},
-          getter = options.getter || '';
+          getter = options.getter || '',
+          prefix = options.prefix || '';
 
       var getterFunction = object[ getter ];
 
@@ -171,12 +172,15 @@ var Form = (function() {
       }
 
       var color = getterFunction.call( object );
+      if ( prefix.length !== 0 ) {
+        prefix += '-';
+      }
 
       // Red.
       var intOptions = {
         $id:    $id,
         object: color,
-        name:   'red',
+        name:   prefix + 'red',
         getter: 'getRed',
         setter: 'setRed',
         min:    0,
@@ -187,14 +191,14 @@ var Form = (function() {
       Form.createIntegerForm( intOptions );
 
       // Green.
-      intOptions.name = 'green';
+      intOptions.name   = prefix + 'green';
       intOptions.getter = 'getGreen';
       intOptions.setter = 'setGreen';
 
       Form.createIntegerForm( intOptions );
 
       // Blue.
-      intOptions.name = 'blue';
+      intOptions.name   = prefix + 'blue';
       intOptions.getter = 'getBlue';
       intOptions.setter = 'setBlue';
 
@@ -204,7 +208,7 @@ var Form = (function() {
       var floatOptions = {
         $id:    $id,
         object: color,
-        name:   'alpha',
+        name:   prefix + 'alpha',
         getter: 'getAlpha',
         setter: 'setAlpha',
         min:    0.0,

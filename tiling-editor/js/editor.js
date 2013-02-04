@@ -160,7 +160,8 @@ function setupGUI() {
                                               .setVertices( geometry.vertices )
                                               .setEdges( geometry.edges )
                                               .calculateRadius()
-                                              .setColor( new Color( 0, 0, 0, 1.0 ) ) );
+                                              .setColor( new Color( 0, 0, 0, 1.0 ) )
+                                              .setAltColor( new Color( 255, 255, 255, 1.0 ) ) );
   });
   _editor._patternUI.remove.click(function( event ) {
     event.preventDefault();

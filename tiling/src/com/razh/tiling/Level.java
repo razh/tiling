@@ -2,12 +2,17 @@ package com.razh.tiling;
 
 import java.util.ArrayList;
 
+import com.badlogic.gdx.graphics.Color;
+
 public class Level {
 	private String mName;
+	private Color mBackgroundColor;
 	private ArrayList<MeshActor> mActors;
 
 	public Level() {
-		mActors = new ArrayList<MeshActor>();
+		setName("");
+		setBackgroundColor(new Color());
+		setActors(new ArrayList<MeshActor>());
 	}
 
 	public ArrayList<MeshActor> getActors() {
@@ -19,7 +24,7 @@ public class Level {
 	}
 
 	public void addActor(MeshActor actor) {
-		this.mActors.add(actor);
+		mActors.add(actor);
 	}
 
 	public String getName() {
@@ -28,5 +33,13 @@ public class Level {
 
 	public void setName(String name) {
 		mName = name;
+	}
+
+	public Color getBackgroundColor() {
+		return mBackgroundColor;
+	}
+
+	public void setBackgroundColor(Color backgroundColor) {
+		mBackgroundColor = backgroundColor;
 	}
 }

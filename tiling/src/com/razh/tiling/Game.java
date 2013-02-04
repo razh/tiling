@@ -16,6 +16,8 @@ import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.SnapshotArray;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.razh.tiling.json.LevelDeserializer;
 
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
@@ -238,6 +240,13 @@ public class Game implements ApplicationListener {
 
 		mPlayer = new Player();
 		mLevelLoader = new LevelDeserializer();
+
+		Gson gson = new GsonBuilder().create();
+
+		String json;
+		System.out.println("COLOR-BLACK-----");
+		json = gson.toJson(new Color(Color.BLACK));
+		System.out.println(json);
 
 		mInputProcessor = new GameInputProcessor();
 		((GameInputProcessor) mInputProcessor).setPlayer(mPlayer);

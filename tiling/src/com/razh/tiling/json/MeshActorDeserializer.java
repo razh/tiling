@@ -2,6 +2,7 @@ package com.razh.tiling.json;
 
 import java.lang.reflect.Type;
 
+import com.badlogic.gdx.graphics.Color;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
@@ -16,7 +17,23 @@ public class MeshActorDeserializer implements JsonDeserializer<MeshActor> {
 			JsonDeserializationContext context) throws JsonParseException {
 
 		JsonObject object = json.getAsJsonObject();
-		return null;
+
+		float x = object.get("x").getAsFloat();
+		float y = object.get("y").getAsFloat();
+
+		float width = object.get("width").getAsFloat();
+		float height = object.get("height").getAsFloat();
+		float rotation = object.get("rotation").getAsFloat();
+
+		int sides = object.get("sides").getAsInt();
+
+		Color color = (Color) context.deserialize(object.get("color"), Color.class);
+
+		MeshActor actor = new MeshActor();
+		actor.setPosition(x, y);
+		actor.setColor(color);
+
+		return actor;
 	}
 
 }

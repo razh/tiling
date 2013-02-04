@@ -13,6 +13,7 @@ var Shape = function() {
   this._edges = [];
 
   this._color = new Color();
+  this._altColor = new Color();
 
   // For collision.
   this._radius = 0;
@@ -206,6 +207,15 @@ Shape.prototype.setColor = function() {
   return this;
 };
 
+Shape.prototype.getAltColor = function() {
+  return this._altColor;
+};
+
+Shape.prototype.setAltColor = function() {
+  this.getAltColor().set.apply( this.getAltColor(), arguments );
+  return this;
+};
+
 Shape.prototype.getNumSides = function() {
   return this._numSides;
 };
@@ -355,6 +365,14 @@ Shape.prototype.createInspector = function( $id, prototypical ) {
   $id.find( '#degrees' ).change(function() {
     $id.find( '#rotation' ).val( shape.getRotation() );
   });
+
+  // AltColor.
+  Form.createColorForm({
+    $id:    $id,
+    object: this,
+    getter: 'getAltColor',
+    prefix: 'alt'
+  });
 };
 
 Shape.prototype.fromJSON = function( json ) {
@@ -370,8 +388,8 @@ Shape.prototype.fromJSON = function( json ) {
     edges = geometry.edges;
   }
 
-  var color = new Color();
-  color.fromJSON( JSON.stringify( jsonObject.color ) );
+  var color = new Color().fromJSON( JSON.stringify( jsonObject.color ) );
+  var altColor = new Color().fromJSON( JSON.stringify( jsonObject.altColor ) );
 
   return this.setX( jsonObject.x || 0 )
              .setY( jsonObject.y || 0 )
@@ -382,7 +400,8 @@ Shape.prototype.fromJSON = function( json ) {
              .setVertices( vertices )
              .setEdges( edges )
              .calculateRadius()
-             .setColor( color );
+             .setColor( color )
+             .setAltColor( altColor );
 };
 
 Shape.prototype.toJSON = function() {
@@ -402,6 +421,7 @@ Shape.prototype.toJSON = function() {
   }
 
   object.color = this.getColor().toJSON();
+  object.altColor = this.getAltColor().toJSON();
 
   return object;
 };
@@ -415,7 +435,8 @@ Shape.prototype.clone = function() {
                     .setVertices( this.getVertices() )
                     .setEdges( this.getEdges() )
                     .calculateRadius()
-                    .setColor( this.getColor() );
+                    .setColor( this.getColor() )
+                    .setAltColor( this.getAltColor );
 };
 
 // May be optimized (calculate localToWorldCoordinates for self only once).
@@ -637,19 +658,19 @@ Color.prototype.toHexString = function() {
 
 Color.prototype.fromJSON = function( json ) {
   var jsonObject = JSON.parse( json );
-  return this.setRed(   jsonObject.red   || 0 )
-             .setGreen( jsonObject.green || 0 )
-             .setBlue(  jsonObject.blue  || 0 )
-             .setAlpha( jsonObject.alpha || 1.0 );
+  return this.setRed(   jsonObject.r || 0 )
+             .setGreen( jsonObject.g || 0 )
+             .setBlue(  jsonObject.b || 0 )
+             .setAlpha( jsonObject.a || 1.0 );
 };
 
 Color.prototype.toJSON = function() {
   var object = {};
 
-  object.red   = this.getRed();
-  object.green = this.getGreen();
-  object.blue  = this.getBlue();
-  object.alpha = this.getAlpha();
+  object.r = this.getRed();
+  object.g = this.getGreen();
+  object.b = this.getBlue();
+  object.a = this.getAlpha();
 
   return object;
 };
