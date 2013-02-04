@@ -86,13 +86,13 @@ function setupGUI() {
   // Individual modals.
   $( '#export-modal' ).on({
     show: function() {
-      $( this ).find( 'textarea' ).val( JSON.stringify( _editor.export() ) )
+      $( this ).find( 'textarea' ).val( JSON.stringify( _editor.exportLevel() ) );
     }
   });
 
   $( '#export-pattern-modal' ).on({
     show: function() {
-      $( this ).find( 'textarea' ).val( JSON.stringify( _editor.getPattern().toJSON() ) )
+      $( this ).find( 'textarea' ).val( JSON.stringify( _editor.getPattern().toJSON() ) );
     }
   });
 
@@ -102,7 +102,7 @@ function setupGUI() {
       $modal.find( '#load-modal-button' ).click(function() {
         var json = $modal.find( 'textarea' ).val();
         _editor.setLevel( new Level().fromJSON( json ) );
-      })
+      });
   }});
 
   $( '#load-pattern-modal' ).on({
@@ -111,7 +111,7 @@ function setupGUI() {
       $modal.find( '#load-pattern-modal-button' ).click(function() {
         var json = $modal.find( 'textarea' ).val();
         _editor.setPattern( new Pattern().fromJSON( json ) );
-      })
+      });
   }});
 
   // Name changes.
@@ -580,7 +580,7 @@ Editor.prototype.getLevelName = function() {
 Editor.prototype.setLevelName = function( name ) {
   this._levelName = name;
   $( '#lname' ).val( name );
-}
+};
 
 // Levels.
 Editor.prototype.getLevel = function() {
@@ -608,7 +608,7 @@ Editor.prototype.load = function( level ) {
   this.loadLevelInspector( level );
 };
 
-Editor.prototype.export = function() {
+Editor.prototype.exportLevel = function() {
   var level = new Level();
 
   level.setName( this.getLevelName() );

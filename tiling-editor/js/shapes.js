@@ -186,7 +186,7 @@ Shape.prototype.getRotationInDegrees = function() {
 Shape.prototype.setRotationInDegrees = function( rotation ) {
   this._rotation = rotation * Math.PI / 180;
   return this;
-};;
+};
 
 Shape.prototype.getRadius = function() {
   return this._radius;
@@ -481,7 +481,7 @@ Shape.prototype.snap = function( shapes ) {
   }
 
   // Compare distance to snapping radius.
-  var snappingRadius = _editor.getSnappingRadius()
+  var snappingRadius = _editor.getSnappingRadius();
   if ( minDistanceSquared < snappingRadius * snappingRadius ) {
     var nearestShape = shapes[ imin ];
     var nearestVertex = nearestShape.localToWorldCoordinates(

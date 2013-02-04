@@ -152,7 +152,7 @@ Pattern.prototype.removeShape = function( shape ) {
 
 Pattern.prototype.removeShapeByIndex = function( index ) {
   if ( index !== -1 ) {
-    this._shapes.splice( index, 1 )
+    this._shapes.splice( index, 1 );
     if ( this._$id !== undefined && this._$id !== null ) {
       this.createInspector( this._$id );
     }
