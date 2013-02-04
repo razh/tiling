@@ -26,6 +26,27 @@ function init() {
 
   document.addEventListener( 'keydown', onKeyDown, null );
 
+  setupGUI();
+
+  // Prevent form inputs from submitting or from triggering key commands.
+  $( 'form input' ).on({
+    focus: function() {
+      _editor.setState( EditorState.TEXT_EDITING );
+    },
+    blur: function() {
+      _editor.setState( EditorState.DEFAULT );
+    },
+    keydown: function( event ) {
+      if ( event.which === 13 ) {
+        event.preventDefault();
+      }
+    }
+  });
+
+  loop();
+}
+
+function setupGUI() {
   // Create modals.
   Form.createModal({
     name: 'load',
@@ -150,15 +171,9 @@ function init() {
                                   .replace( 'pattern', '' ), 10 );
     _editor.getPattern().removeShapeByIndex( index );
   });
-
-  // Prevent form inputs from submitting.
-  $( 'form input' ).keydown(function( event ) {
-    if ( event.which === 13 ) {
-      event.preventDefault();
-    }
+  _editor._patternUI.name.change(function() {
+    _editor.getPattern().setName( $( this ).val() );
   });
-
-  loop();
 }
 
 function loop() {
@@ -220,7 +235,8 @@ var Editor = function() {
   this._patternUI = {
     add: $( '#add-pattern-shape-button' ),
     remove: $( '#remove-pattern-shape-button' ),
-    sides: $( '#add-pattern-shape-sides' )
+    sides: $( '#add-pattern-shape-sides' ),
+    name: $( '#pattern-name' )
   };
 
   this._prevTime = Date.now();
@@ -242,10 +258,10 @@ var Editor = function() {
 
   this._running = true;
 
-  this._pattern = new Pattern( './json/example_pattern.json' );
+  this._pattern = new Pattern();
   this.loadPatternInspector( this._pattern );
 
-  this._level = new Level( './json/example_level.json' );
+  this._level = new Level();
   this.load( this._level );
 
   // For adding shapes.
@@ -579,7 +595,9 @@ Editor.prototype.setLevel = function( level ) {
 Editor.prototype.load = function( level ) {
   this.setLevelName( level.getName() );
   this.setBackgroundColor( level.getBackgroundColor() );
-  this.setPattern( level.getPattern() );
+  if ( level.getPattern() !== null ) {
+    this.setPattern( level.getPattern() );
+  }
 
   this._shapes = [];
   var levelShapes = level.getShapes();

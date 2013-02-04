@@ -394,7 +394,7 @@ Shape.prototype.toJSON = function() {
   object.height   = this.getHeight();
   object.rotation = this.getRotation();
 
-  if ( this.getNumSides() <= 3 ) {
+  if ( this.getNumSides() < 3 ) {
     object.vertices = this.getVertices();
     object.edges    = this.getEdges();
   } else {
