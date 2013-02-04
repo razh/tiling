@@ -79,9 +79,17 @@ function init() {
     show: function() {
       var $modal = $( this );
       $modal.find( '#load-modal-button' ).click(function() {
-        console.log( 'hello')
         var json = $modal.find( 'textarea' ).val();
         _editor.setLevel( new Level().fromJSON( json ) );
+      })
+  }});
+
+  $( '#load-pattern-modal' ).on({
+    show: function() {
+      var $modal = $( this );
+      $modal.find( '#load-pattern-modal-button' ).click(function() {
+        var json = $modal.find( 'textarea' ).val();
+        _editor.setPattern( new Pattern().fromJSON( json ) );
       })
   }});
 
