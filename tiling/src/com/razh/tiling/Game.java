@@ -16,12 +16,14 @@ import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.SnapshotArray;
+import com.razh.tiling.json.LevelLoader;
 
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
 
 public class Game implements ApplicationListener {
 	private InputProcessor mInputProcessor;
 	private Player mPlayer;
+	private LevelLoader mLevelLoader;
 	private MeshStage mStage;
 	private FPSLogger mFPSLogger;
 	private boolean mGL20;
@@ -235,6 +237,7 @@ public class Game implements ApplicationListener {
 		mShaderProgramNeedsUpdate = true;
 
 		mPlayer = new Player();
+		mLevelLoader = new LevelLoader();
 
 		mInputProcessor = new GameInputProcessor();
 		((GameInputProcessor) mInputProcessor).setPlayer(mPlayer);
