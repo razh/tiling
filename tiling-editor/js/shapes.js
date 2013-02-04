@@ -21,7 +21,7 @@ var Shape = function() {
 
 Shape.prototype.update = function( elapsedTime ) {};
 
-Shape.prototype.draw = function( ctx ) {
+Shape.prototype.draw = function( ctx, altColor ) {
   ctx.save();
   ctx.translate( this.getX(), this.getY() );
   ctx.rotate( -this.getRotation() );
@@ -42,7 +42,11 @@ Shape.prototype.draw = function( ctx ) {
 
   ctx.closePath();
 
-  ctx.fillStyle = this.getColor().toString();
+  if ( !altColor ) {
+    ctx.fillStyle = this.getColor().toString();
+  } else {
+    ctx.fillStyle = this.getAltColor().toString();
+  }
   ctx.fill();
 
   ctx.restore();
@@ -306,7 +310,7 @@ Shape.prototype.createInspector = function( $id, prototypical ) {
     getter: 'getWidth',
     setter: 'setWidth',
     min:    0,
-    max:    _editor.WIDTH,
+    max:    1000,
     step:   0.1,
     digits: 1
   });
@@ -319,7 +323,7 @@ Shape.prototype.createInspector = function( $id, prototypical ) {
     getter: 'getHeight',
     setter: 'setHeight',
     min:    0,
-    max:    _editor.HEIGHT,
+    max:    1000,
     step:   0.1,
     digits: 1
   });
@@ -436,7 +440,7 @@ Shape.prototype.clone = function() {
                     .setEdges( this.getEdges() )
                     .calculateRadius()
                     .setColor( this.getColor() )
-                    .setAltColor( this.getAltColor );
+                    .setAltColor( this.getAltColor() );
 };
 
 // May be optimized (calculate localToWorldCoordinates for self only once).

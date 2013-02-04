@@ -175,6 +175,10 @@ function setupGUI() {
   _editor._patternUI.name.change(function() {
     _editor.getPattern().setName( $( this ).val() );
   });
+
+  _editor._altColorsButton.click(function() {
+    _editor._altColors = !_editor._altColors;
+  });
 }
 
 function loop() {
@@ -219,6 +223,7 @@ var Editor = function() {
   this._canvas.height = this.HEIGHT;
 
   this._backgroundColor = new Color( 100, 100, 100, 1.0 );
+  this._altColors = false;
 
   this._inspectorPane = $( '#inspector-pane' );
   this._patternPane = $( '#pattern-pane' );
@@ -239,6 +244,7 @@ var Editor = function() {
     sides: $( '#add-pattern-shape-sides' ),
     name: $( '#pattern-name' )
   };
+  this._altColorsButton = $( '#show-alt-colors' );
 
   this._prevTime = Date.now();
   this._currTime = this._prevTime;
@@ -304,7 +310,7 @@ Editor.prototype.draw = function() {
   this._ctx.scale( 1, -1 );
 
   for ( var i = 0, n = this._shapes.length; i < n; i++ ) {
-    this._shapes[i].draw( this._ctx );
+    this._shapes[i].draw( this._ctx, this._altColors );
   }
 
   this._ctx.restore();
