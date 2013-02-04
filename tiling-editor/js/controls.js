@@ -158,8 +158,11 @@ function onKeyDown( event ) {
       _editor.setState( EditorState.ADDING_SHAPE );
       break;
 
+    // Backspace.
+    case 8:
     // Delete.
     case 46:
+      event.preventDefault();
       _editor.setState( EditorState.REMOVING_SHAPE );
       break;
 
