@@ -96,14 +96,16 @@ Level.prototype.fromJSON = function( json ) {
   return this;
 };
 
-Level.prototype.toJSON = function() {
+Level.prototype.toJSON = function( pattern ) {
   var object = {};
 
   object.name = this.getName();
-  if ( this._patternURL.length !== 0 ) {
-    object.patternURL = this._patternURL;
-  } else {
-    object.pattern = this.getPattern().toJSON();
+  if ( pattern ) {
+    if ( this._patternURL.length !== 0 ) {
+      object.patternURL = this._patternURL;
+    } else {
+      object.pattern = this.getPattern().toJSON();
+    }
   }
 
   object.shapes = [];

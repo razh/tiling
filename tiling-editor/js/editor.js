@@ -616,5 +616,5 @@ Editor.prototype.export = function() {
   level.setPattern( this.getPattern() );
   level._shapes = this.getShapes();
 
-  return level.toJSON();
+  return level.toJSON( $( '#export-level-with-pattern' ).hasClass( 'active' ) );
 };
