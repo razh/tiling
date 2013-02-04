@@ -52,6 +52,9 @@ function onMouseDownDefault( input ) {
 
 function onMouseDownAddingShape( input ) {
   var brush = _editor.getBrush();
+  if ( brush === undefined || brush === null ) {
+    return;
+  }
 
   var shape = brush.clone();
   shape.setPosition( input.x, input.y );
