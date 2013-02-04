@@ -52,11 +52,12 @@ public class Shader {
 			"#ifdef GL_ES\n" +
 			"precision mediump float;\n" +
 			"#endif\n" +
+			"uniform float opacity;\n" +
 			"varying vec3 v_lightFront;\n" +
 			"\n" +
 			"void main()\n" +
 			"{\n" +
-			"  gl_FragColor = vec4(1.0);\n" +
+			"  gl_FragColor = vec4(vec3(1.0), opacity);\n" +
 			"  gl_FragColor.xyz *= v_lightFront;\n" +
 			"}";
 		System.out.println(vertex);
@@ -115,11 +116,12 @@ public class Shader {
 			"#ifdef GL_ES\n" +
 			"precision mediump float;\n" +
 			"#endif\n" +
+			"uniform float opacity;\n" +
 			"varying vec3 v_lightFront;\n" +
 			"\n" +
 			"void main()\n" +
 			"{\n" +
-			"  gl_FragColor = vec4(1.0);\n" +
+			"  gl_FragColor = vec4(vec3(1.0), opacity);\n" +
 			"  gl_FragColor.xyz *= v_lightFront;\n" +
 			"}";
 
@@ -164,6 +166,7 @@ public class Shader {
 				"uniform vec3 emissive;\n" +
 				"uniform vec3 specular;\n" +
 				"uniform float shininess;\n" +
+				"uniform float opacity;\n" +
 				"uniform vec3 ambientLightColor;\n" +
 				"#if MAX_POINT_LIGHTS > 0\n" +
 				"  uniform vec3 pointLightColor[MAX_POINT_LIGHTS];\n" +
@@ -175,7 +178,7 @@ public class Shader {
 				"\n" +
 				"void main()\n" +
 				"{\n" +
-				"  gl_FragColor = vec4(1.0);\n" +
+				"  gl_FragColor = vec4(vec3(1.0), opacity);\n" +
 				"  float specularStrength = 1.0;\n" +
 				"  vec3 viewPosition = normalize(v_viewPosition);\n" +
 				"  vec3 pointDiffuse = vec3(0.0);\n" +
@@ -239,6 +242,7 @@ public class Shader {
 				"uniform vec3 emissive;\n" +
 				"uniform vec3 specular;\n" +
 				"uniform float shininess;\n" +
+				"uniform float opacity;\n" +
 				"uniform vec3 ambientLightColor;\n" +
 				"#if MAX_POINT_LIGHTS > 0\n" +
 				"  uniform vec3 pointLightColor[MAX_POINT_LIGHTS];\n" +
@@ -252,7 +256,7 @@ public class Shader {
 				"void main()\n" +
 				"{\n" +
 				"  vec3 finalDiffuse = v_color + diffuse - diffuse;\n" +
-				"  gl_FragColor = vec4(1.0);\n" +
+				"  gl_FragColor = vec4(vec3(1.0), opacity);\n" +
 				"  float specularStrength = 1.0;\n" +
 				"  vec3 viewPosition = normalize(v_viewPosition);\n" +
 				"  vec3 pointDiffuse = vec3(0.0);\n" +

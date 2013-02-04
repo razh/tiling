@@ -62,6 +62,7 @@ public class MeshActor extends Actor3D {
 		mShaderProgram.setUniformMatrix("normalMatrix", mNormalMatrix);
 
 		mShaderProgram.setUniformf("diffuse", getColor().r, getColor().g, getColor().b);
+		mShaderProgram.setUniformf("opacity", getColor().a);
 
 		if (hasMaterial()) {
 			mMaterial.bind(mShaderProgram);

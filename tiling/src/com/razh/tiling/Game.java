@@ -57,6 +57,9 @@ public class Game implements ApplicationListener {
 			Gdx.app.exit();
 		}
 
+		Gdx.gl20.glEnable(GL20.GL_BLEND);
+		Gdx.gl20.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+
 		Gdx.gl20.glEnable(GL20.GL_CULL_FACE);
 		Gdx.gl20.glCullFace(GL20.GL_BACK);
 
@@ -119,7 +122,13 @@ public class Game implements ApplicationListener {
 		meshActor2.setMaterial(material);
 		meshActor2.addAction(
 			forever(
-				rotateBy(360, 4.0f)
+				parallel(
+					rotateBy(360, 4.0f),
+					sequence(
+						alpha(0.0f, 1.0f),
+						alpha(1.0f, 1.0f)
+					)
+				)
 			)
 		);
 		mStage.addActor(meshActor2);
@@ -302,12 +311,12 @@ public class Game implements ApplicationListener {
 		Gdx.gl.glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+		Gdx.gl20.glEnable(GL20.GL_BLEND);
 		Gdx.gl20.glEnable(GL20.GL_CULL_FACE);
 		mStage.draw();
 		Gdx.gl20.glDisable(GL20.GL_CULL_FACE);
 
 		mSpriteBatch.begin();
-		mSpriteBatch.enableBlending();
 		mFont.draw(mSpriteBatch, Integer.toString(Gdx.graphics.getFramesPerSecond()), Gdx.graphics.getWidth() * 0.1f, Gdx.graphics.getHeight() * 0.9f);
 		mSpriteBatch.end();
 
