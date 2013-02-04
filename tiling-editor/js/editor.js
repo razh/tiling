@@ -101,7 +101,9 @@ function setupGUI() {
       var $modal = $( this );
       $modal.find( '#load-modal-button' ).click(function() {
         var json = $modal.find( 'textarea' ).val();
-        _editor.setLevel( new Level().fromJSON( json ) );
+        if ( json.length > 0 ) {
+          _editor.setLevel( new Level().fromJSON( json ) );
+        }
       });
   }});
 
@@ -110,7 +112,9 @@ function setupGUI() {
       var $modal = $( this );
       $modal.find( '#load-pattern-modal-button' ).click(function() {
         var json = $modal.find( 'textarea' ).val();
-        _editor.setPattern( new Pattern().fromJSON( json ) );
+        if ( json.length > 0 ) {
+          _editor.setPattern( new Pattern().fromJSON( json ) );
+        }
       });
   }});
 
@@ -166,6 +170,10 @@ function setupGUI() {
   _editor._patternUI.remove.click(function( event ) {
     event.preventDefault();
     var selected = $( '.selected' );
+    if ( selected.length === 0 ) {
+      return;
+    }
+
     selected.removeClass( 'selected' );
 
     var index = parseInt( selected.attr( 'id' )

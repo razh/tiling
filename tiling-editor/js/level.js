@@ -4,7 +4,7 @@ var Level = function() {
   this._patternURL = '';
   this._pattern = null;
 
-  this._backgroundColor = new Color();
+  this._backgroundColor = new Color( 0, 0, 0, 1.0 );
   this._shapes = [];
 
   this._jsonData = null;
