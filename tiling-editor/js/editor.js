@@ -37,30 +37,56 @@ function init() {
     name: 'export',
     label: 'Export',
     type: ModalType.EXPORT
-  })
+  });
+
+  Form.createModal({
+    name: 'load-pattern',
+    label: 'Load Pattern',
+    type: ModalType.LOAD
+  });
+
+  Form.createModal({
+    name: 'export-pattern',
+    label: 'Export Pattern',
+    type: ModalType.EXPORT
+  });
 
   // Auto-select text areas when modals are open.
-  $( '#load-modal' ).on({
+  $( '.modal' ).on({
     shown: function() {
       _editor.setState( EditorState.TEXT_EDITING );
-      $( '#load-text-area' ).select();
-    },
-    hidden: function() {
-      _editor.setState( EditorState.DEFAULT );
-    }
-  });
-  $( '#export-modal' ).on({
-    shown: function() {
-      _editor.setState( EditorState.TEXT_EDITING );
-      $( '#export-text-area' ).select();
+      $( this ).find( 'textarea' ).select();
     },
     hidden: function() {
       _editor.setState( EditorState.DEFAULT );
     }
   });
 
+  // Individual modals.
+  $( '#export-modal' ).on({
+    show: function() {
+      $( this ).find( 'textarea' ).val( JSON.stringify( _editor.export() ) )
+    }
+  });
+
+  $( '#export-pattern-modal' ).on({
+    show: function() {
+      $( this ).find( 'textarea' ).val( JSON.stringify( _editor.getPattern().toJSON() ) )
+    }
+  });
+
+  $( '#load-modal' ).on({
+    show: function() {
+      var $modal = $( this );
+      $modal.find( '#load-modal-button' ).click(function() {
+        console.log( 'hello')
+        var json = $modal.find( 'textarea' ).val();
+        _editor.setLevel( new Level().fromJSON( json ) );
+      })
+  }});
+
   // Name changes.
-  $( '#level-name' ).change(function() {
+  $( '#lname' ).change(function() {
     _editor.getLevel().setName( $( this ).val() );
   });
 
@@ -99,13 +125,13 @@ function init() {
     event.preventDefault();
     var sides = _editor._patternUI.sides.val();
     var geometry = Geometry.createRegularPolygon( sides );
-    _editor.getPatterns()[0].addShape( new Shape().setWidth( 50 )
-                                                  .setHeight( 50 )
-                                                  .setNumSides( sides )
-                                                  .setVertices( geometry.vertices )
-                                                  .setEdges( geometry.edges )
-                                                  .calculateRadius()
-                                                  .setColor( new Color( 0, 0, 0, 1.0 ) ) );
+    _editor.getPattern().addShape( new Shape().setWidth( 50 )
+                                              .setHeight( 50 )
+                                              .setNumSides( sides )
+                                              .setVertices( geometry.vertices )
+                                              .setEdges( geometry.edges )
+                                              .calculateRadius()
+                                              .setColor( new Color( 0, 0, 0, 1.0 ) ) );
   });
   _editor._patternUI.remove.click(function( event ) {
     event.preventDefault();
@@ -114,7 +140,7 @@ function init() {
 
     var index = parseInt( selected.attr( 'id' )
                                   .replace( 'pattern', '' ), 10 );
-    _editor.getPatterns()[0].removeShapeByIndex( index );
+    _editor.getPattern().removeShapeByIndex( index );
   });
 
   // Prevent form inputs from submitting.
@@ -172,6 +198,7 @@ var Editor = function() {
 
   this._inspectorPane = $( '#inspector-pane' );
   this._patternPane = $( '#pattern-pane' );
+  this._levelPane = $( '#level-pane' );
   this._actionButtons = {
     move: $( '#move-button' ), // Default.
     add: $( '#add-shape-button' ),
@@ -192,6 +219,7 @@ var Editor = function() {
   this._currTime = this._prevTime;
 
   this._shapes = [];
+  this._levelName = '';
 
   this._translate = {
     x: 0,
@@ -206,11 +234,8 @@ var Editor = function() {
 
   this._running = true;
 
-  this._patterns = [];
-  this._patterns.push( new Pattern( './json/example_pattern.json' ) );
-
-  this._patternIndex = 0;
-  this.loadPatternInspector( this._patterns[ this._patternIndex ] );
+  this._pattern = new Pattern( './json/example_pattern.json' );
+  this.loadPatternInspector( this._pattern );
 
   this._level = new Level( './json/example_level.json' );
   this.load( this._level );
@@ -292,6 +317,23 @@ Editor.prototype.loadPatternInspector = function( pattern ) {
 
   $( '#pattern-name' ).val( pattern.getName() );
   pattern.createInspector( this._patternPane );
+};
+
+Editor.prototype.loadLevelInspector = function( level ) {
+  this._levelPane.empty();
+
+  Form.createTextForm({
+    $id:    this._levelPane,
+    object: this,
+    name:   'lname',
+    getter: 'getLevelName',
+    setter: 'setLevelName'
+  });
+  Form.createColorForm({
+    $id:    this._levelPane,
+    object: this,
+    getter: 'getBackgroundColor'
+  });
 };
 
 // State.
@@ -448,22 +490,13 @@ Editor.prototype.setBackgroundColor = function( backgroundColor ) {
 };
 
 // Patterns.
-Editor.prototype.getPatterns = function() {
-  return this._patterns;
+Editor.prototype.getPattern = function() {
+  return this._pattern;
 };
 
-Editor.prototype.addPattern = function( pattern ) {
-  this._patterns.push( pattern );
-};
-
-Editor.prototype.getPatternIndex = function() {
-  return this._patternIndex;
-};
-
-Editor.prototype.setPatternIndex = function( patternIndex ) {
-  this._patternIndex = patternIndex;
-
-  this.loadPatternInspector( this.getPatterns()[ this._patternIndex ] );
+Editor.prototype.setPattern = function( pattern ) {
+  this._pattern = pattern;
+  this.loadPatternInspector( pattern );
 };
 
 // Brush.
@@ -472,7 +505,7 @@ Editor.prototype.getBrush = function() {
 };
 
 Editor.prototype.setBrushByIndex = function( brushIndex ) {
-  this._brush = this.getPatterns()[ this.getPatternIndex() ].getShapes()[ brushIndex ];
+  this._brush = this.getPattern().getShapes()[ brushIndex ];
 };
 
 // Snapping.
@@ -515,6 +548,16 @@ Editor.prototype.hasSelected = function() {
   return this._selected !== undefined && this._selected !== null;
 };
 
+// Level name.
+Editor.prototype.getLevelName = function() {
+  return this._levelName;
+};
+
+Editor.prototype.setLevelName = function( name ) {
+  this._levelName = name;
+  $( '#lname' ).val( name );
+}
+
 // Levels.
 Editor.prototype.getLevel = function() {
   return this._level;
@@ -526,17 +569,26 @@ Editor.prototype.setLevel = function( level ) {
 };
 
 Editor.prototype.load = function( level ) {
-  $( '#level-name' ).val( level.getName() );
+  this.setLevelName( level.getName() );
+  this.setBackgroundColor( level.getBackgroundColor() );
+  this.setPattern( level.getPattern() );
 
   this._shapes = [];
   var levelShapes = level.getShapes();
   for ( var i = 0, n = levelShapes.length; i < n; i++ ) {
     this.addShape( levelShapes[i] );
   }
+
+  this.loadLevelInspector( level );
 };
 
 Editor.prototype.export = function() {
-  var object = {};
+  var level = new Level();
 
-  return object;
+  level.setName( this.getLevelName() );
+  level.setBackgroundColor( this.getBackgroundColor() );
+  level.setPattern( this.getPattern() );
+  level._shapes = this.getShapes();
+
+  return level.toJSON();
 };

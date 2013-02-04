@@ -77,10 +77,17 @@ Level.prototype.fromJSON = function( json ) {
     this.addShape( new Shape().fromJSON( JSON.stringify( jsonObject.shapes[i] ) ) );
   }
 
-  this._patternURL = jsonObject.pattern;
-  this.setPattern( new Pattern( this._patternURL ) );
-  for ( i = 0, n = jsonObject.patternShapes.length; i < n; i++ ) {
-    this.addShape( this.loadPatternShapeFromJSON( JSON.stringify( jsonObject.patternShapes[i] ) ) );
+  if ( jsonObject.pattern === undefined ) {
+    this._patternURL = jsonObject.patternURL;
+    this.setPattern( new Pattern( this._patternURL ) );
+  } else {
+    this.setPattern( new Pattern().fromJSON( JSON.stringify( jsonObject.pattern ) ) );
+  }
+
+  if ( jsonObject.patternShapes !== undefined ) {
+    for ( i = 0, n = jsonObject.patternShapes.length; i < n; i++ ) {
+      this.addShape( this.loadPatternShapeFromJSON( JSON.stringify( jsonObject.patternShapes[i] ) ) );
+    }
   }
 
   this.setName( jsonObject.name || '' );
@@ -93,7 +100,11 @@ Level.prototype.toJSON = function() {
   var object = {};
 
   object.name = this.getName();
-  object.pattern = this._patternURL;
+  if ( this._patternURL.length !== 0 ) {
+    object.patternURL = this._patternURL;
+  } else {
+    object.pattern = this.getPattern().toJSON();
+  }
 
   object.shapes = [];
   for ( var i = 0, n = this._shapes.length; i < n; i++ ) {

@@ -39,10 +39,8 @@ Pattern.prototype.fromJSON = function( json ) {
 
   this.setName( jsonObject.name || '' );
   this._shapes = [];
-  var shape = null;
   for ( var i = 0, n = jsonObject.shapes.length; i < n; i++ ) {
-    shape = new Shape().fromJSON( JSON.stringify( jsonObject.shapes[i] ) );
-    this._shapes.push( shape );
+    this.addShape( new Shape().fromJSON( JSON.stringify( jsonObject.shapes[i] ) ) );
   }
 
   return this;
@@ -52,7 +50,10 @@ Pattern.prototype.toJSON = function() {
   var object = {};
 
   object.name = this._name;
-  object.shapes = this._shapes;
+  object.shapes = [];
+  for ( var i = 0, n = this._shapes.length; i < n; i++ ) {
+    object.shapes.push( this._shapes[i].toJSON() );
+  }
 
   return object;
 };
@@ -118,8 +119,8 @@ Pattern.prototype.drawShape = function( ctx, shapeIndex, width, height ) {
 
   shape = this.getShapes()[ shapeIndex ];
   ctx.scale( 1, -1 );
-  ctx.translate( 1.5 * shape.getWidth() - shape.getX(),
-                 -height + ( 1.5 * shape.getHeight() - shape.getY() ) );
+  ctx.translate(  0.5 * width  - shape.getX(),
+                 -0.5 * height - shape.getY() );
   shape.draw( ctx );
 
   ctx.restore();
@@ -139,7 +140,9 @@ Pattern.prototype.getShapes = function() {
 
 Pattern.prototype.addShape = function( shape ) {
   this._shapes.push( shape );
-  this.createInspector( this._$id );
+  if ( this._$id !== undefined && this._$id !== null ) {
+    this.createInspector( this._$id );
+  }
 };
 
 Pattern.prototype.removeShape = function( shape ) {
@@ -150,6 +153,8 @@ Pattern.prototype.removeShape = function( shape ) {
 Pattern.prototype.removeShapeByIndex = function( index ) {
   if ( index !== -1 ) {
     this._shapes.splice( index, 1 )
-    this.createInspector( this._$id );
+    if ( this._$id !== undefined && this._$id !== null ) {
+      this.createInspector( this._$id );
+    }
   }
 };

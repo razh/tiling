@@ -1,6 +1,6 @@
 {
   "name": "Bird",
-  "pattern": "./json/example_pattern.json",
+  "patternURL": "./json/example_pattern.json",
   "patternShapes": [
     {
       "index": 0,

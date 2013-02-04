@@ -144,8 +144,8 @@ var Form = (function() {
         form += '<div class="controls span8">';
       }
 
-      form += 'input class="input-small" type="text" id="' +
-              name  + '" value=' +
+      form += '<input class="input-small" type="text" id="' +
+              name  + '" value="' +
               value + '">';
 
       if ( !simple ) {
@@ -218,10 +218,9 @@ var Form = (function() {
     createModal: function( options ) {
       var $id   = options.$id   || $( 'body' ),
           name  = options.name  || '',
-          type  = options.type  || ModalType.EXPORT,
+          type  = options.type  || ModalType.LOAD,
           label = options.label || '',
           rows  = options.rows  || 5;
-      console.log( $id)
 
       var modal = '<div class="modal hide fade" id="'+
                   name + '-modal" tabindex="-1" role="dialog" aria-labelledby="' +
@@ -238,14 +237,14 @@ var Form = (function() {
                rows + '"></textarea>';
       modal += '</div>';
       modal += '<div class="modal-footer">';
-      modal += '<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>'
+      modal += '<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>';
       if ( type === ModalType.LOAD ) {
-        modal += '<button class="btn btn-primary">' +
+        modal += '<button class="btn btn-primary" id="' +
+                 name  + '-modal-button" data-dismiss="modal">' +
                  label + '</button>';
       }
       modal += '</div>';
       modal += '</div>';
-      console.log( modal );
 
       $id.append( modal );
     }
