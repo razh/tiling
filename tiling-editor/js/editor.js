@@ -453,18 +453,14 @@ Editor.prototype.setTranslate = function() {
     this.setTranslateX( arguments[0] );
     this.setTranslateY( arguments[1] );
   }
-
-  return this;
 };
 
 Editor.prototype.translateX = function( translateX ) {
   this.setTranslateX( this.getTranslateX() + translateX );
-  return this;
 };
 
 Editor.prototype.translateY = function( translateY ) {
   this.setTranslateY( this.getTranslateY() + translateY );
-  return this;
 };
 
 Editor.prototype.translate = function() {
@@ -475,8 +471,6 @@ Editor.prototype.translate = function() {
     this.translateX( arguments[0] );
     this.translateY( arguments[1] );
   }
-
-  return this;
 };
 
 // Rotation.
@@ -489,8 +483,7 @@ Editor.prototype.setRotation = function( rotation ) {
 };
 
 Editor.prototype.rotate = function( angle ) {
-  this._rotation -= angle;
-  return this;
+  this._rotation += angle;
 };
 
 // Offset (mouse from shape).

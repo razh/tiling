@@ -24,7 +24,7 @@ Shape.prototype.update = function( elapsedTime ) {};
 Shape.prototype.draw = function( ctx, altColor ) {
   ctx.save();
   ctx.translate( this.getX(), this.getY() );
-  ctx.rotate( -this.getRotation() );
+  ctx.rotate( this.getRotation() );
   ctx.scale( this.getWidth(), this.getHeight() );
 
   ctx.beginPath();
@@ -180,7 +180,7 @@ Shape.prototype.setRotation = function( rotation ) {
 };
 
 Shape.prototype.rotate = function( angle ) {
-  this._rotation -= angle;
+  this._rotation += angle;
   return this;
 };
 

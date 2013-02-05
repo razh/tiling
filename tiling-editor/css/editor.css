@@ -62,7 +62,7 @@ html, body {
   outline-style: dashed;
 }
 
-.pattern-container .well {
+.pattern-container {
   padding-left: 0;
   padding-right: 0;
 }
