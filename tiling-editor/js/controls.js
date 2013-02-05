@@ -201,6 +201,27 @@ function onKeyDown( event ) {
     case 13:
       break;
 
+    // Numbers.
+    case 48:
+    case 49:
+    case 50:
+    case 51:
+    case 52:
+    case 53:
+    case 54:
+    case 55:
+    case 56:
+    case 57:
+      var index = event.which - 49;
+      if ( index === -1 ) {
+        index = 9;
+      }
+
+      _editor.getPattern()._canvasArray.removeClass( 'selected' );
+      _editor._patternPane.find( '#pattern' + index ).addClass( 'selected' );
+      _editor.getPattern().setBrushByIndex( index );
+      break;
+
     default:
       console.log( event.which );
       break;

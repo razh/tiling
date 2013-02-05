@@ -285,8 +285,7 @@ var Editor = function() {
   this.loadLevel( this._level );
 
   // For adding shapes.
-  this._brush = null;
-  this.setBrushByIndex(0);
+  this.getPattern().setBrushByIndex(0);
 
   this._state = null;
   this.setState( EditorState.DEFAULT );
@@ -538,11 +537,7 @@ Editor.prototype.setPattern = function( pattern ) {
 
 // Brush.
 Editor.prototype.getBrush = function() {
-  return this._brush;
-};
-
-Editor.prototype.setBrushByIndex = function( brushIndex ) {
-  this._brush = this.getPattern().getShapes()[ brushIndex ];
+  return this.getPattern().getBrush();
 };
 
 // Snapping.

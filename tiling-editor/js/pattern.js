@@ -1,6 +1,7 @@
 var Pattern = function() {
   this._name = '';
   this._shapes = [];
+  this._brush = null;
 
   this._canvasArray = [];
   this._ctxArray = [];
@@ -83,15 +84,7 @@ Pattern.prototype.createInspector = function( $id ) {
     var $this = $( this );
     var index = parseInt( $this.attr( 'id' )
                                .replace( 'pattern', '' ), 10 );
-    _editor.setBrushByIndex( index );
-    _editor.loadShapeInspector( shapes[ index ], true );
-    _editor._inspectorPane.find( 'input' ).change(function() {
-      pattern.drawShape( pattern._ctxArray[ index ],
-                         index,
-                         $canvasArray[ index ].width,
-                         $canvasArray[ index ].height );
-    });
-
+    pattern.setBrushByIndex( index );
     $this.addClass( 'selected' );
   });
 
@@ -110,6 +103,7 @@ Pattern.prototype.createInspector = function( $id ) {
 
   if ( this._shapes.length > 0 ) {
     $( this._canvasArray[0] ).addClass( 'selected' );
+    this.setBrushByIndex(0);
   }
 };
 
@@ -157,4 +151,24 @@ Pattern.prototype.removeShapeByIndex = function( index ) {
       this.createInspector( this._$id );
     }
   }
+};
+
+Pattern.prototype.getBrush = function() {
+  return this._brush;
+};
+
+Pattern.prototype.setBrushByIndex = function( index ) {
+    if ( 0 <= index && index < this._shapes.length ) {
+        this._brush = this._shapes[ index ];
+        _editor.loadShapeInspector( this._brush, true );
+
+        // Change on input.
+        var pattern = this;
+        _editor._inspectorPane.find( 'input' ).change(function() {
+          pattern.drawShape( pattern._ctxArray[ index ],
+                          index,
+                          pattern._canvasArray[ index ].width,
+                          pattern._canvasArray[ index ].height );
+        });
+    }
 };
