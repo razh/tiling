@@ -11,6 +11,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.razh.tiling.Geometry;
 import com.razh.tiling.MeshActor;
+import com.razh.tiling.MeshMaterial;
 
 public class MeshActorDeserializer implements JsonDeserializer<MeshActor> {
 
@@ -31,15 +32,18 @@ public class MeshActorDeserializer implements JsonDeserializer<MeshActor> {
 		Color color = (Color) context.deserialize(object.get("color"), Color.class);
 		Color altColor = (Color) context.deserialize(object.get("altColor"), Color.class);
 
+		MeshMaterial material = new MeshMaterial(new Color(0.33f, 0.33f, 0.33f, 1.0f), new Color(Color.WHITE), new Color(Color.BLACK), 50);
 		Mesh mesh = Geometry.createBicolorBipyramid(sides, color, altColor);
 
 		MeshActor actor = new MeshActor();
-		actor.setPosition(x, y);
 		actor.setWidth(width);
 		actor.setHeight(height);
-		actor.setRotation(rotation);
-		actor.setMesh(mesh);
+		actor.setDepth(50.0f);
+		actor.setPosition(x, y);
+		actor.setOrientation(rotation);
 		actor.setColor(color);
+		actor.setMesh(mesh);
+		actor.setMaterial(material);
 
 		return actor;
 	}

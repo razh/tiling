@@ -141,7 +141,7 @@ function setupGUI() {
   // Setup pattern controls.
   _editor._patternUI.add.click(function( event ) {
     event.preventDefault();
-    var sides = _editor._patternUI.sides.val();
+    var sides = parseInt( _editor._patternUI.sides.val(), 10 );
     var geometry = Geometry.createRegularPolygon( sides );
     _editor.getPattern().addShape( new Shape().setWidth( 50 )
                                               .setHeight( 50 )

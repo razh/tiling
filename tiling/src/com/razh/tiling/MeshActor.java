@@ -30,6 +30,7 @@ public class MeshActor extends Actor3D {
 
 		mModelMatrix = new Matrix4();
 		mNormalMatrix = new Matrix3();
+
 		setRotationAxis(new Vector3(0.0f, 1.0f, 0.0f));
 		setOrientation(0.0f);
 	}

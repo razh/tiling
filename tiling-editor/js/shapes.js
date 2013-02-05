@@ -409,7 +409,7 @@ Shape.prototype.fromJSON = function( json ) {
              .setY( jsonObject.y || 0 )
              .setWidth( jsonObject.width || 1 )
              .setHeight( jsonObject.height || 1 )
-             .setRotation( jsonObject.rotation || 0 )
+             .setRotationInDegrees( jsonObject.rotation || 0 )
              .setNumSides( sides )
              .setVertices( vertices )
              .setEdges( edges )
@@ -425,7 +425,7 @@ Shape.prototype.toJSON = function() {
   object.y        = this.getY();
   object.width    = this.getWidth();
   object.height   = this.getHeight();
-  object.rotation = this.getRotation();
+  object.rotation = this.getRotationInDegrees();
 
   if ( this.getNumSides() < 3 ) {
     object.vertices = this.getVertices();
