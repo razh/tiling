@@ -6,6 +6,7 @@ import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
@@ -259,6 +260,12 @@ public class Game implements ApplicationListener {
 				rotateBy(360, 2.0f)
 			)
 		);
+
+		FileHandle file = Gdx.files.internal("testLevel.json");
+		Level tempLevel = gson.fromJson(file.readString(), Level.class);
+		for (int i = 0, n = tempLevel.getActors().size(); i < n; i++) {
+			mStage.addColorActor(tempLevel.getActors().get(i));
+		}
 
 
 		mInputProcessor = new GameInputProcessor();
