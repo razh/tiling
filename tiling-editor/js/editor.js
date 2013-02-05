@@ -28,21 +28,6 @@ function init() {
 
   setupGUI();
 
-  // Prevent inputs from submitting or from triggering key commands.
-  $( ':input' ).on({
-    focus: function() {
-      _editor.setState( EditorState.TEXT_EDITING );
-    },
-    blur: function() {
-      _editor.setState( EditorState.DEFAULT );
-    },
-    keydown: function( event ) {
-      if ( event.which === 13 ) {
-        event.preventDefault();
-      }
-    }
-  });
-
   loop();
 }
 
@@ -184,8 +169,28 @@ function setupGUI() {
     _editor.getPattern().setName( $( this ).val() );
   });
 
+  // Setup toggling alternative colors button.
   _editor._altColorsButton.click(function() {
     _editor._altColors = !_editor._altColors;
+  });
+
+  // Prevent inputs from triggering key commands when focused.
+  $( ':input' ).on({
+    focus: function() {
+      _editor.setState( EditorState.TEXT_EDITING );
+    },
+    blur: function() {
+      _editor.setState( EditorState.DEFAULT );
+    }
+  });
+
+  // Prevent forms from submitting (except for those inputs in the level inspector pane).
+  $( 'form:not(#level-pane) :input' ).on({
+    keydown: function( event ) {
+      if ( event.which === 13 ) {
+        event.preventDefault();
+      }
+    }
   });
 }
 
@@ -277,7 +282,7 @@ var Editor = function() {
   this.loadPatternInspector( this._pattern );
 
   this._level = new Level();
-  this.load( this._level );
+  this.loadLevel( this._level );
 
   // For adding shapes.
   this._brush = null;
@@ -603,11 +608,11 @@ Editor.prototype.getLevel = function() {
 };
 
 Editor.prototype.setLevel = function( level ) {
-  this.load( level );
+  this.loadLevel( level );
   this._level = level;
 };
 
-Editor.prototype.load = function( level ) {
+Editor.prototype.loadLevel = function( level ) {
   this.setLevelName( level.getName() );
   this.setBackgroundColor( level.getBackgroundColor() );
   if ( level.getPattern() !== null ) {
