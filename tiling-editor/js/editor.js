@@ -32,7 +32,6 @@ function init() {
   $( ':input' ).on({
     focus: function() {
       _editor.setState( EditorState.TEXT_EDITING );
-      console.log('focus')
     },
     blur: function() {
       _editor.setState( EditorState.DEFAULT );
@@ -120,7 +119,7 @@ function setupGUI() {
   }});
 
   // Name changes.
-  $( '#lname' ).change(function() {
+  $( '#level-name' ).change(function() {
     _editor.getLevel().setName( $( this ).val() );
   });
 
@@ -365,7 +364,7 @@ Editor.prototype.loadLevelInspector = function( level ) {
   Form.createTextForm({
     $id:    this._levelPane,
     object: this,
-    name:   'lname',
+    name:   'level-name',
     getter: 'getLevelName',
     setter: 'setLevelName'
   });

@@ -48,7 +48,7 @@ html, body {
   margin-left: 2.564102564102564%;
 }
 
-/* So we the pattern brushes do not move when changing selection. */
+/* So the pattern brushes do not move/readjust positions when selecting another brush. */
 .pattern-container canvas + canvas {
   border-left: 1px solid transparent;
 }
@@ -67,16 +67,27 @@ html, body {
   padding-right: 0;
 }
 
+/* Size textarea to fit modal (in center). */
 .modal textarea {
   margin-left: auto;
   margin-right: auto;
   width: 515px;
 }
 
+/* Space buttons in navbar more evenly. */
 .btn-group {
   margin: 5px;
 }
 
 .btn-group input {
   margin-top: 0;
+}
+
+/* Tighten up form inputs. */
+.form-horizontal .control-group {
+  margin-bottom: 0;
+}
+
+.control-label {
+  font-size: 12px;
 }
