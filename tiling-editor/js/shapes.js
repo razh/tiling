@@ -469,7 +469,7 @@ Shape.prototype.snap = function( shapes ) {
   var transformedLocalVertices = [];
   for ( k = 0; k < localNumVertices; k++ ) {
     localVertex = this.localToWorldCoordinates( localVertices[ 2 * k ],
-                                                           localVertices[ 2 * k + 1 ] );
+                                                localVertices[ 2 * k + 1 ] );
     transformedLocalVertices.push( localVertex.x  );
     transformedLocalVertices.push( localVertex.y );
   }
@@ -574,8 +574,8 @@ Shape.prototype.localToWorldCoordinates = function( x, y ) {
     var cos = Math.cos( rotation ),
         sin = Math.sin( rotation );
 
-    var rx =  cos * x + sin * y,
-        ry = -sin * x + cos * y;
+    var rx = cos * x - sin * y,
+        ry = sin * x + cos * y;
 
     x = rx;
     y = ry;
