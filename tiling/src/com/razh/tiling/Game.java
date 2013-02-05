@@ -251,7 +251,7 @@ public class Game implements ApplicationListener {
 		System.out.println("COLOR-BLACK-----");
 		json = gson.toJson(new Color(Color.BLACK));
 		System.out.println(json);
-		String testJson = "{\"x\":100,\"y\":100,\"width\":100,\"height\":100,\"rotation\":180,\"sides\":3,\"color\":{\"r\":250,\"g\":0,\"b\":0,\"a\":1},\"altColor\":{\"r\":255,\"g\":255,\"b\":255,\"a\":1}}";
+		String testJson = "{\"x\":100,\"y\":100,\"width\":100,\"height\":100,\"rotation\":180,\"sides\":3,\"color\":{\"r\":100,\"g\":0,\"b\":0,\"a\":1},\"altColor\":{\"r\":255,\"g\":255,\"b\":255,\"a\":1}}";
 		MeshActor jsonActor = gson.fromJson(testJson, MeshActor.class);
 		mStage.addColorActor(jsonActor);
 		jsonActor.addAction(
