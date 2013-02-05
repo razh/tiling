@@ -377,6 +377,16 @@ Shape.prototype.createInspector = function( $id, prototypical ) {
     getter: 'getAltColor',
     prefix: 'alt'
   });
+
+  // Prevent shape inspector form inputs from triggering key commands.
+  $id.find( ':input' ).on({
+    focus: function() {
+      _editor.setState( EditorState.TEXT_EDITING );
+    },
+    blur: function() {
+      _editor.setState( EditorState.DEFAULT );
+    }
+  });
 };
 
 Shape.prototype.fromJSON = function( json ) {

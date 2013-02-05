@@ -29,16 +29,14 @@ function init() {
   setupGUI();
 
   // Prevent inputs from submitting or from triggering key commands.
-  $( 'input' ).on({
+  $( ':input' ).on({
     focus: function() {
       _editor.setState( EditorState.TEXT_EDITING );
+      console.log('focus')
     },
     blur: function() {
       _editor.setState( EditorState.DEFAULT );
-    }
-  });
-
-  $( 'input[type=text]' ).on({
+    },
     keydown: function( event ) {
       if ( event.which === 13 ) {
         event.preventDefault();
