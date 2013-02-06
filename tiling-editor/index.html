@@ -25,10 +25,11 @@
     <div class="container-fluid">
       <div class="navbar navbar-inverse">
         <div class="navbar-inner">
-          <a class="brand">Editor</a>
           <ul class="nav">
-            <li><a data-toggle="modal" data-target="#load-modal">Load</a></li>
-            <li><a data-toggle="modal" data-target="#export-modal">Export</a></li>
+            <div class="btn-group">
+              <button class="btn btn-inverse" data-toggle="modal" data-target="#load-modal">Load</button>
+              <button class="btn btn-inverse" data-toggle="modal" data-target="#export-modal">Export</button>
+          </div>
             <div class="btn-group" data-toggle="buttons-checkbox">
               <button class="btn btn-inverse" id="export-level-with-pattern">Export pattern <i class="icon-share icon-white"></i></button>
               <button class="btn btn-inverse" id="show-alt-colors">Alternative colors <i class="icon-eye-open icon-white"></i></button>
@@ -41,10 +42,14 @@
           </div>
           <!-- Buttons -->
           <div class="btn-group pull-right" id="action-buttons" data-toggle="buttons-radio">
-            <button class="btn btn-inverse" id="move-button"><i class="icon-move icon-white"></i></button>
-            <button class="btn btn-inverse" id="add-shape-button"><i class="icon-plus icon-white"></i></button>
-            <button class="btn btn-inverse" id="remove-shape-button"><i class="icon-remove icon-white"></i></button>
-            <button class="btn btn-inverse" id="copy-shape-button"><i class="icon-repeat icon-white"></i></button>
+            <button class="btn btn-inverse btn-small" id="move-button"><i class="icon-move icon-white"></i></button>
+            <button class="btn btn-inverse btn-small" id="add-shape-button"><i class="icon-plus icon-white"></i></button>
+            <button class="btn btn-inverse btn-small" id="remove-shape-button"><i class="icon-remove icon-white"></i></button>
+            <button class="btn btn-inverse btn-small" id="copy-shape-button"><i class="icon-ok icon-white"></i></button>
+            <!-- Light buttons. -->
+            <button class="btn btn-inverse btn-small" id="add-light-button"><i class="icon-plus-sign icon-white"></i></button>
+            <button class="btn btn-inverse btn-small" id="remove-light-button"><i class="icon-remove-sign icon-white"></i></button>
+            <button class="btn btn-inverse btn-small" id="copy-light-button"><i class="icon-ok-sign icon-white"></i></button>
           </div>
 
         </div>

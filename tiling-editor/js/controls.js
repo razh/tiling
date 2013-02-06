@@ -38,6 +38,18 @@ function onMouseDown( event ) {
     case EditorState.COPYING_SHAPE:
       onMouseDownCopyingShape( input );
       break;
+
+    case EditorState.ADDING_LIGHT:
+      onMouseDownAddingLight( input );
+      break;
+
+    case EditorState.REMOVING_LIGHT:
+      onMouseDownRemovingLight( input );
+      break;
+
+    case EditorState.COPYING_LIGHT:
+      onMouseDownCopyingLight( input );
+      break;
   }
 }
 
@@ -56,16 +68,13 @@ function onMouseDownAddingShape( input ) {
     return;
   }
 
-  var shape = brush.clone();
-  shape.setPosition( input.x, input.y );
-  _editor.addShape( shape );
-
+  _editor.addShape( brush.clone().setPosition( input.x, input.y ) );
   _editor.setState( EditorState.DEFAULT );
 }
 
 function onMouseDownRemovingShape( input ) {
   var hit = _editor.hit( input.x, input.y );
-  if ( hit !== null ) {
+  if ( hit !== null && !hit instanceof Light  ) {
     _editor.removeShape( hit );
   }
 
@@ -74,6 +83,10 @@ function onMouseDownRemovingShape( input ) {
 
 function onMouseDownCopyingShape( input ) {
   if ( _editor.hasSelected() ) {
+    if ( _editor.getSelected() instanceof Light ) {
+      return;
+    }
+
     var shape =  _editor.getSelected()
                         .clone()
                         .setPosition( input.x, input.y );
@@ -84,6 +97,35 @@ function onMouseDownCopyingShape( input ) {
   }
 }
 
+function onMouseDownAddingLight( input ) {
+  _editor.addLight( new Light().setPosition( input.x, input.y ) )
+  _editor.setState( EditorState.DEFAULT );
+}
+
+function onMouseDownRemovingLight( input ) {
+  var hit = _editor.hit( input.x, input.y );
+  if ( hit !== null && hit instanceof Light ) {
+    _editor.removeLight( hit );
+  }
+
+  _editor.setState( EditorState.Default );
+}
+
+function onMouseDownCopyingLight( input ) {
+  if ( _editor.hasSelected() ) {
+    if ( !_editor.getSelected() instanceof Light ) {
+      return;
+    }
+
+    var light = _editor.getSelected()
+                       .clone()
+                       .setPosition( input.x, input.y );
+    _editor.addLight( light );
+    _editor.setState( EditorState.DEFAULT );
+  } else {
+    _editor.setSelected( _editor.hit( input.x, input.y ) )
+  }
+}
 
 // Mouse move.
 function onMouseMove( event ) {
@@ -98,6 +140,9 @@ function onMouseMove( event ) {
     case EditorState.ADDING_SHAPE:
     case EditorState.REMOVING_SHAPE:
     case EditorState.COPYING_SHAPE:
+    case EditorState.ADDING_LIGHT:
+    case EditorState.REMOVING_LIGHT:
+    case EditorState.COPYING_LIGHT:
       break;
   }
 }
@@ -128,10 +173,13 @@ function onMouseUp( event ) {
     case EditorState.DEFAULT:
     case EditorState.ADDING_SHAPE:
     case EditorState.REMOVING_SHAPE:
+    case EditorState.ADDING_LIGHT:
+    case EditorState.REMOVING_LIGHT:
       _editor.setSelected( null );
       break;
 
     case EditorState.COPYING_SHAPE:
+    case EditorState.COPYING_LIGHT:
       break;
   }
 }

@@ -6,6 +6,7 @@ var Level = function() {
 
   this._backgroundColor = new Color( 0, 0, 0, 1.0 );
   this._shapes = [];
+  this._lights = [];
 
   this._jsonData = null;
   if ( arguments.length !== 0 ) {
@@ -43,6 +44,14 @@ Level.prototype.getShapes = function() {
 
 Level.prototype.addShape = function( shape ) {
   this._shapes.push( shape );
+};
+
+Level.prototype.getLights = function() {
+  return this._lights;
+};
+
+Level.prototype.addLight = function( light ) {
+  this._lights.push( light );
 };
 
 Level.prototype.fromURL = function( url ) {

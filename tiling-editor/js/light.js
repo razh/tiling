@@ -70,14 +70,6 @@ Light.prototype.createInspector = function( $id ) {
     getter: 'getColor'
   });
 
-  // AltColor.
-  Form.createColorForm({
-    $id:    $id,
-    object: this,
-    getter: 'getAltColor',
-    prefix: 'alt'
-  });
-
   // Distance.
   Form.createIntegerForm({
     $id:    $id,
@@ -109,7 +101,6 @@ Light.prototype.setDistance = function( distance ) {
   return this;
 };
 
-
 Light.prototype.fromJSON = function( json ) {
   var jsonObject = JSON.parse( json );
 
@@ -119,4 +110,16 @@ Light.prototype.fromJSON = function( json ) {
              .setY( jsonObject.y || 0 )
              .setColor( this.getColor() )
              .setDistance( jsonObject.distance || 0 );
+};
+
+Light.prototype.toJSON = function() {
+  var object = {};
+
+  return object;
+};
+
+Light.prototype.clone = function() {
+  return new Light().setPosition( this.getX(), this.getY() )
+                    .setColor( this.getColor() )
+                    .setDistance( this.getDistance() );
 };

@@ -109,17 +109,20 @@ function setupGUI() {
   });
 
   // Setup action buttons.
-  _editor._actionButtons.move.click(function() {
-    _editor.setState( EditorState.DEFAULT );
-  });
-  _editor._actionButtons.add.click(function() {
-    _editor.setState( EditorState.ADDING_SHAPE );
-  });
-  _editor._actionButtons.remove.click(function() {
-    _editor.setState( EditorState.REMOVING_SHAPE );
-  });
-  _editor._actionButtons.copy.click(function() {
-    _editor.setState( EditorState.COPYING_SHAPE );
+  var buttonStates = {
+    move:        EditorState.DEFAULT,
+    add:         EditorState.ADDING_SHAPE,
+    remove:      EditorState.REMOVING_SHAPE,
+    copy:        EditorState.COPYING_SHAPE,
+    addLight:    EditorState.ADDING_LIGHT,
+    removeLight: EditorState.REMOVING_LIGHT,
+    copyLight:   EditorState.COPYING_LIGHT
+  };
+
+  $.each( buttonStates, function( key, value ) {
+    _editor._actionButtons[ key ].click(function() {
+      _editor.setState( value );
+    });
   });
 
   // Setup snapping controls.
@@ -211,7 +214,10 @@ var EditorState = {
   ADDING_SHAPE:   1,
   REMOVING_SHAPE: 2,
   COPYING_SHAPE:  3,
-  TEXT_EDITING:   4
+  ADDING_LIGHT:   4,
+  REMOVING_LIGHT: 5,
+  COPYING_LIGHT:  6,
+  TEXT_EDITING:   7
 };
 
 var Editor = function() {
@@ -238,23 +244,26 @@ var Editor = function() {
   this._altColors = false;
 
   this._inspectorPane = $( '#inspector-pane' );
-  this._patternPane = $( '#pattern-pane' );
-  this._levelPane = $( '#level-pane' );
+  this._patternPane   = $( '#pattern-pane' );
+  this._levelPane     = $( '#level-pane' );
   this._actionButtons = {
-    move: $( '#move-button' ), // Default.
-    add: $( '#add-shape-button' ),
-    remove: $( '#remove-shape-button' ),
-    copy: $( '#copy-shape-button' )
+    move:        $( '#move-button' ), // Default.
+    add:         $( '#add-shape-button' ),
+    remove:      $( '#remove-shape-button' ),
+    copy:        $( '#copy-shape-button' ),
+    addLight:    $( '#add-light-button' ),
+    removeLight: $( '#remove-light-button' ),
+    copyLight:   $( '#copy-light-button' )
   };
   this._snappingUI = {
     button: $( '#snapping-button' ),
-    form: $( '#snapping-radius' )
+    form:   $( '#snapping-radius' )
   };
   this._patternUI = {
-    add: $( '#add-pattern-shape-button' ),
+    add:    $( '#add-pattern-shape-button' ),
     remove: $( '#remove-pattern-shape-button' ),
-    sides: $( '#add-pattern-shape-sides' ),
-    name: $( '#pattern-name' )
+    sides:  $( '#add-pattern-shape-sides' ),
+    name:   $( '#pattern-name' )
   };
   this._altColorsButton = $( '#show-alt-colors' );
 
@@ -308,6 +317,10 @@ Editor.prototype.update = function() {
   for ( var i = 0, n = this._shapes.length; i < n; i++ ) {
     this._shapes[i].update( elapsedTime );
   }
+
+  for ( var i = 0, n = this._lights.length; i < n; i++ ) {
+    this._lights[i].update( elapsedTime );
+  }
 };
 
 Editor.prototype.draw = function() {
@@ -321,8 +334,13 @@ Editor.prototype.draw = function() {
   // Coordinates are reversed in the OpenGL game.
   this._ctx.scale( 1, -1 );
 
-  for ( var i = 0, n = this._shapes.length; i < n; i++ ) {
+  var i, n;
+  for ( i = 0, n = this._shapes.length; i < n; i++ ) {
     this._shapes[i].draw( this._ctx, this._altColors );
+  }
+
+  for ( i = 0, n = this._lights.length; i < n; i++ ) {
+    this._lights[i].draw( this._ctx, this._altColors );
   }
 
   this._ctx.restore();
@@ -332,6 +350,13 @@ Editor.prototype.hit = function( x, y ) {
   var hit = null;
   for ( var i = this._shapes.length - 1; i >= 0; i-- ) {
     hit = this._shapes[i].hit( x, y );
+    if ( hit !== null ) {
+      return hit;
+    }
+  }
+
+  for ( var i = this._lights.length - 1; i >= 0; i-- ) {
+    hit = this._lights[i].hit( x, y );
     if ( hit !== null ) {
       return hit;
     }
@@ -349,10 +374,10 @@ Editor.prototype.stop = function() {
 };
 
 // Prototypical shapes don't have ability to set positions.
-Editor.prototype.loadShapeInspector = function( shape, prototypical ) {
+Editor.prototype.loadInspector = function( object, prototypical ) {
   this._inspectorPane.empty();
 
-  shape.createInspector( this._inspectorPane, prototypical );
+  object.createInspector( this._inspectorPane, prototypical );
 };
 
 Editor.prototype.loadPatternInspector = function( pattern ) {
@@ -386,22 +411,18 @@ Editor.prototype.getState = function() {
 
 Editor.prototype.setState = function( state ) {
   // Update state toggle buttons.
-  switch ( state ) {
-    case EditorState.DEFAULT:
-      this._actionButtons.move.button( 'toggle' );
-      break;
+  var buttonNames = [
+    'move',
+    'add',
+    'remove',
+    'copy',
+    'addLight',
+    'removeLight',
+    'copyLight'
+  ];
 
-    case EditorState.ADDING_SHAPE:
-      this._actionButtons.add.button( 'toggle' );
-      break;
-
-    case EditorState.REMOVING_SHAPE:
-      this._actionButtons.remove.button( 'toggle' );
-      break;
-
-    case EditorState.COPYING_SHAPE:
-      this._actionButtons.copy.button( 'toggle' );
-      break;
+  if ( 0 <= state && state < buttonNames.length ) {
+    this._actionButtons[ buttonNames[ state ] ].button( 'toggle' );
   }
 
   this._state = state;
@@ -588,7 +609,7 @@ Editor.prototype.setSelected = function( selected ) {
   this._selected = selected;
 
   if ( selected !== null ) {
-    this.loadShapeInspector( selected );
+    this.loadInspector( selected );
   }
 };
 
@@ -625,8 +646,15 @@ Editor.prototype.loadLevel = function( level ) {
 
   this._shapes = [];
   var levelShapes = level.getShapes();
-  for ( var i = 0, n = levelShapes.length; i < n; i++ ) {
+  var i, n;
+  for ( i = 0, n = levelShapes.length; i < n; i++ ) {
     this.addShape( levelShapes[i] );
+  }
+
+  this._lights = [];
+  var levelLights = level.getLights();
+  for ( i = 0, n = levelLights.length; i < n; i++ ) {
+    this.addLight( levelLights[i] );
   }
 
   this.loadLevelInspector( level );
@@ -639,6 +667,7 @@ Editor.prototype.exportLevel = function() {
   level.setBackgroundColor( this.getBackgroundColor() );
   level.setPattern( this.getPattern() );
   level._shapes = this.getShapes();
+  level._lights = this.getLights();
 
   return level.toJSON( $( '#export-level-with-pattern' ).hasClass( 'active' ) );
 };

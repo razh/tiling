@@ -160,7 +160,7 @@ Pattern.prototype.getBrush = function() {
 Pattern.prototype.setBrushByIndex = function( index ) {
     if ( 0 <= index && index < this._shapes.length ) {
         this._brush = this._shapes[ index ];
-        _editor.loadShapeInspector( this._brush, true );
+        _editor.loadInspector( this._brush, true );
 
         // Change on input.
         var pattern = this;
