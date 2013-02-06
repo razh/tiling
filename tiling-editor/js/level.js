@@ -10,6 +10,7 @@ var Level = function() {
   this._shapes = [];
   this._lights = [];
 
+  this._graph = new Graph();
 
   this._jsonData = null;
   if ( arguments.length !== 0 ) {
@@ -65,6 +66,14 @@ Level.prototype.addLight = function( light ) {
   this._lights.push( light );
 };
 
+Level.prototype.getGraph = function() {
+  return this._graph;
+};
+
+Level.prototype.setGraph = function( graph ) {
+  this._graph = graph;
+};
+
 Level.prototype.fromURL = function( url ) {
   this._jsonData = (function() {
     var json = null;
@@ -83,7 +92,7 @@ Level.prototype.fromURL = function( url ) {
   if ( this._jsonData !== null ) {
     this.fromJSON( JSON.stringify( this._jsonData ) );
   }
-}
+};
 
 Level.prototype.fromJSON = function( json ) {
   var jsonObject = JSON.parse( json );
@@ -118,9 +127,12 @@ Level.prototype.fromJSON = function( json ) {
     }
   }
 
+  var graph = new Graph().fromJSON( JSON.stringify( jsonObject.graph ) );
+
   this.setName( jsonObject.name || '' );
   this.setBackgroundColor( backgroundColor );
   this.setAmbientColor( ambientColor );
+  this.setGraph( graph );
 
   return this;
 };
@@ -147,6 +159,8 @@ Level.prototype.toJSON = function( pattern ) {
   for ( i = 0, n = this._lights.length; i < n; i++ ) {
     object.lights.push( this._lights[i].toJSON() );
   }
+
+  object.graph = this.getGraph();
 
   object.backgroundColor = this.getBackgroundColor();
   object.ambientColor = this.getAmbientColor();

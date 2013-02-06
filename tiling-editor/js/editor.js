@@ -151,7 +151,7 @@ function setupGUI() {
                                               .setNumSides( sides )
                                               .setVertices( geometry.vertices )
                                               .setEdges( geometry.edges )
-                                              .setColor( new Color( 0, 0, 0, 1.0 ) )
+                                              .setColor( new Color( 128, 128, 128, 1.0 ) )
                                               .setAltColor( new Color( 255, 255, 255, 1.0 ) ) );
   });
   _editor._patternUI.remove.click(function( event ) {
@@ -293,6 +293,7 @@ var Editor = function() {
 
   this._level = new Level();
   this.loadLevel( this._level );
+  this._graph = this._level.getGraph();
 
   // For adding shapes.
   this.getPattern().setBrushByIndex(0);
@@ -315,11 +316,12 @@ Editor.prototype.update = function() {
   var elapsedTime = this._currTime - this._prevTime;
   this._prevTime = this._currTime;
 
-  for ( var i = 0, n = this._shapes.length; i < n; i++ ) {
+  var i, n;
+  for ( i = 0, n = this._shapes.length; i < n; i++ ) {
     this._shapes[i].update( elapsedTime );
   }
 
-  for ( var i = 0, n = this._lights.length; i < n; i++ ) {
+  for ( i = 0, n = this._lights.length; i < n; i++ ) {
     this._lights[i].update( elapsedTime );
   }
 };
@@ -331,7 +333,7 @@ Editor.prototype.draw = function() {
 
   // Show ambient color.
   this._ctx.fillStyle = this.getAmbientColor().toString();
-  this._ctx.fillRect( 0, 0, this.WIDTH, 14 );
+  this._ctx.fillRect( 0, 0, this.WIDTH, 14 ); // 14 px is height of the various UI elements.
 
   this._ctx.save();
   this._ctx.translate( this.getTranslateX(), this.HEIGHT + this.getTranslateY() );
@@ -347,6 +349,8 @@ Editor.prototype.draw = function() {
   for ( i = 0, n = this._lights.length; i < n; i++ ) {
     this._lights[i].draw( this._ctx, this._altColors );
   }
+
+  this._graph.draw( this._ctx, this._shapes );
 
   this._ctx.restore();
 };
@@ -641,6 +645,15 @@ Editor.prototype.hasSelected = function() {
   return this._selected !== undefined && this._selected !== null;
 };
 
+// Graphs.
+Editor.prototype.getGraph = function() {
+  return this._graph;
+};
+
+Editor.prototype.setGraph = function( graph ) {
+  this._graph = graph;
+};
+
 // Level name.
 Editor.prototype.getLevelName = function() {
   return this._levelName;
@@ -683,6 +696,8 @@ Editor.prototype.loadLevel = function( level ) {
     this.addLight( levelLights[i] );
   }
 
+  this._graph = level.getGraph();
+
   this.loadLevelInspector( level );
 };
 
@@ -693,6 +708,7 @@ Editor.prototype.exportLevel = function() {
   level.setBackgroundColor( this.getBackgroundColor() );
   level.setAmbientColor( this.getAmbientColor() );
   level.setPattern( this.getPattern() );
+  level.setGraph( this.getGraph() );
   level._shapes = this.getShapes();
   level._lights = this.getLights();
 

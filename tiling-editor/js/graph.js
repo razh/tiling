@@ -2,11 +2,48 @@ var Graph = function() {
   this._edges = [];
 };
 
+Graph.prototype.draw = function( ctx, shapes ) {
+  ctx.beginPath();
+  var srcShape, dstShape;
+  for ( var i = this._edges.length - 1; i >= 0; i-- ) {
+    srcShape = shapes[i];
+    if ( srcShape !== undefined ) {
+      for ( var j = this._edges[i].length - 1; j >= 0; j-- ) {
+        dstShape = shapes[ this._edges[i][j] ];
+
+        if ( dstShape !== undefined ) {
+          ctx.moveTo( srcShape.getX(), srcShape.getY() );
+          ctx.lineTo( dstShape.getX(), dstShape.getY() );
+        }
+
+      }
+    }
+  }
+  ctx.closePath();
+
+  // See Mark Ransom's answer on StackOverflow.
+  // http://stackoverflow.com/questions/946544/good-text-foreground-color-for-a-given-background-color
+  var backgroundColor = _editor.getBackgroundColor();
+  var brightness = 0.299 * backgroundColor.getRed()   +
+                   0.587 * backgroundColor.getGreen() +
+                   0.114 * backgroundColor.getBlue();
+
+  if ( brightness < 186 ) {
+    ctx.strokeStyle = 'rgba( 255, 255, 255, 1.0 )';
+  } else {
+    ctx.strokeStyle = 'rgba( 0, 0, 0, 1.0 )';
+  }
+
+  ctx.lineWidth = 1;
+
+  ctx.stroke();
+};
+
 Graph.prototype.getEdges = function() {
   return this._edges;
 };
 
-Graph.prototype.getNeighboars = function( index ) {
+Graph.prototype.getNeighbors = function( index ) {
   return this._edges[ index ] || [];
 };
 
@@ -21,10 +58,12 @@ Graph.prototype.addDirectedEdge = function( src, dst ) {
     srcList = [];
   }
 
-  var index = srcList.indexOf( dst );
-  if ( index !== -1 ) {
+  if ( srcList.length === 0 || srcList.indexOf( dst ) === -1 ) {
     srcList.push( dst );
   }
+
+  srcList.sort();
+  this._edges[ src ] = srcList;
 };
 
 Graph.prototype.removeEdge = function( src, dst ) {
@@ -40,9 +79,20 @@ Graph.prototype.removeDirectedEdge = function( src, dst ) {
       srcList.splice( index, 1 );
     }
   }
+
+  this._edges[ src ] = srcList;
+};
+
+Graph.prototype.removeIndex = function( index ) {
+
 };
 
 Graph.prototype.fromJSON = function( json ) {
+  var jsonObject = JSON.parse( json );
+
+  this._edges = jsonObject.edges || [];
+
+  return this;
 };
 
 Graph.prototype.toJSON = function() {
