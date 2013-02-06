@@ -16,6 +16,10 @@ var Light = function() {
 Light.prototype = new Shape();
 Light.prototype.constructor = Light;
 
+// Fall-off distance in the Java code is not the same.
+// Approximate difference in scales.
+Light.scaleFactor = 10;
+
 Light.prototype.draw = function( ctx, altColor ) {
   Shape.prototype.draw.call( this, ctx, altColor );
 
@@ -23,7 +27,7 @@ Light.prototype.draw = function( ctx, altColor ) {
   ctx.translate( this.getX(), this.getY() );
 
   ctx.beginPath();
-  ctx.arc( 0, 0, this.getDistance(), 0, Math.PI * 2 );
+  ctx.arc( 0, 0, this.getDistance() / Light.scaleFactor, 0, Math.PI * 2 );
   ctx.closePath();
 
   ctx.strokeStyle = this.getColor().toString();
@@ -78,8 +82,8 @@ Light.prototype.createInspector = function( $id ) {
     getter: 'getDistance',
     setter: 'setDistance',
     min:    0,
-    max:    Math.max( _editor.WIDTH, _editor.HEIGHT ),
-    step:   1
+    max:    Math.max( _editor.WIDTH, _editor.HEIGHT ) * Light.scaleFactor,
+    step:   Light.scaleFactor
   });
 
   $id.find( ':input' ).on({

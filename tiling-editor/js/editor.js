@@ -330,7 +330,7 @@ Editor.prototype.draw = function() {
   this._ctx.clearRect( 0, 0, this.WIDTH, this.HEIGHT );
 
   // Show ambient color.
-  this._ctx.fillStyle = this.getAmbientColor().toHexString();
+  this._ctx.fillStyle = this.getAmbientColor().toString();
   this._ctx.fillRect( 0, 0, this.WIDTH, 14 );
 
   this._ctx.save();
