@@ -112,12 +112,17 @@ Light.prototype.fromJSON = function( json ) {
 
   return this.setX( jsonObject.x || 0 )
              .setY( jsonObject.y || 0 )
-             .setColor( this.getColor() )
+             .setColor( color )
              .setDistance( jsonObject.distance || 0 );
 };
 
 Light.prototype.toJSON = function() {
   var object = {};
+
+  object.x        = this.getX();
+  object.y        = this.getY();
+  object.color    = this.getColor().toJSON();
+  object.distance = this.getDistance();
 
   return object;
 };

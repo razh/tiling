@@ -75,6 +75,10 @@ public class Level {
 			stage.addColorActor(mActors.get(i));
 		}
 
+		AmbientLight light = new AmbientLight();
+		light.setColor(getAmbientColor());
+		stage.addLight(light);
+
 		for (int i = 0, n = mLights.size(); i < n; i++) {
 			stage.addLight(mLights.get(i));
 		}

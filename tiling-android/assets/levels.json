@@ -1,3 +1,4 @@
 [
-  "levels/testLevel.json"
+  "levels/testLevel.json",
+  "levels/testLevelWithLights.json"
 ]

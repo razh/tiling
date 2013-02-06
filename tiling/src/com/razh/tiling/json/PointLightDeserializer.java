@@ -2,6 +2,7 @@ package com.razh.tiling.json;
 
 import java.lang.reflect.Type;
 
+import com.badlogic.gdx.graphics.Color;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
@@ -16,7 +17,18 @@ public class PointLightDeserializer implements JsonDeserializer<PointLight> {
 			JsonDeserializationContext context) throws JsonParseException {
 		JsonObject object = json.getAsJsonObject();
 
+		float x = object.get("x").getAsFloat();
+		float y = object.get("y").getAsFloat();
+		float distance = object.get("distance").getAsFloat();
+
+		Color color = (Color) context.deserialize(object.get("color"), Color.class);
+
 		PointLight light = new PointLight();
+		light.setPosition(x, y, 100);
+		light.setWidth(3);
+		light.setHeight(3);
+		light.setColor(color);
+		light.setDistance(distance);
 
 		return light;
 	}
