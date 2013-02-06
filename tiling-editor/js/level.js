@@ -5,8 +5,11 @@ var Level = function() {
   this._pattern = null;
 
   this._backgroundColor = new Color( 0, 0, 0, 1.0 );
+  this._ambientColor = new Color( 0, 0, 0, 1.0 );
+
   this._shapes = [];
   this._lights = [];
+
 
   this._jsonData = null;
   if ( arguments.length !== 0 ) {
@@ -36,6 +39,14 @@ Level.prototype.getBackgroundColor = function() {
 
 Level.prototype.setBackgroundColor = function( backgroundColor ) {
   this._backgroundColor.set( backgroundColor );
+};
+
+Level.prototype.getAmbientColor = function() {
+  return this._ambientColor;
+};
+
+Level.prototype.setAmbientColor = function( ambientColor ) {
+  this._ambientColor.set( ambientColor );
 };
 
 Level.prototype.getShapes = function() {
@@ -80,6 +91,9 @@ Level.prototype.fromJSON = function( json ) {
   var backgroundColor = new Color();
   backgroundColor.fromJSON( JSON.stringify( jsonObject.backgroundColor ) );
 
+  var ambientColor = new Color();
+  ambientColor.fromJSON( JSON.stringify( jsonObject.ambientColor ) );
+
   this._shapes = [];
   var i, n;
   for ( i = 0, n = jsonObject.shapes.length; i < n; i++ ) {
@@ -106,6 +120,7 @@ Level.prototype.fromJSON = function( json ) {
 
   this.setName( jsonObject.name || '' );
   this.setBackgroundColor( backgroundColor );
+  this.setAmbientColor( ambientColor );
 
   return this;
 };
@@ -134,6 +149,7 @@ Level.prototype.toJSON = function( pattern ) {
   }
 
   object.backgroundColor = this.getBackgroundColor();
+  object.ambientColor = this.getAmbientColor();
 
   return object;
 };

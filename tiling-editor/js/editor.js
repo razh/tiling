@@ -241,6 +241,7 @@ var Editor = function() {
   this._canvas.height = this.HEIGHT;
 
   this._backgroundColor = new Color( 100, 100, 100, 1.0 );
+  this._ambientColor = new Color( 0, 0, 0, 1.0 );
   this._altColors = false;
 
   this._inspectorPane = $( '#inspector-pane' );
@@ -328,6 +329,10 @@ Editor.prototype.draw = function() {
 
   this._ctx.clearRect( 0, 0, this.WIDTH, this.HEIGHT );
 
+  // Show ambient color.
+  this._ctx.fillStyle = this.getAmbientColor().toHexString();
+  this._ctx.fillRect( 0, 0, this.WIDTH, 14 );
+
   this._ctx.save();
   this._ctx.translate( this.getTranslateX(), this.HEIGHT + this.getTranslateY() );
   this._ctx.rotate( this.getRotation() );
@@ -397,10 +402,18 @@ Editor.prototype.loadLevelInspector = function( level ) {
     getter: 'getLevelName',
     setter: 'setLevelName'
   });
+
   Form.createColorForm({
     $id:    this._levelPane,
     object: this,
     getter: 'getBackgroundColor'
+  });
+
+  Form.createColorForm({
+    $id:    this._levelPane,
+    object: this,
+    getter: 'getAmbientColor',
+    prefix: 'amb'
   });
 };
 
@@ -562,6 +575,15 @@ Editor.prototype.setBackgroundColor = function( backgroundColor ) {
   this._backgroundColor = backgroundColor;
 };
 
+// Ambient color.
+Editor.prototype.getAmbientColor = function() {
+  return this._ambientColor;
+};
+
+Editor.prototype.setAmbientColor = function( ambientColor ) {
+  this._ambientColor = ambientColor;
+};
+
 // Patterns.
 Editor.prototype.getPattern = function() {
   return this._pattern;
@@ -640,6 +662,8 @@ Editor.prototype.setLevel = function( level ) {
 Editor.prototype.loadLevel = function( level ) {
   this.setLevelName( level.getName() );
   this.setBackgroundColor( level.getBackgroundColor() );
+  this.setAmbientColor( level.getAmbientColor() );
+
   if ( level.getPattern() !== null ) {
     this.setPattern( level.getPattern() );
   }
@@ -665,6 +689,7 @@ Editor.prototype.exportLevel = function() {
 
   level.setName( this.getLevelName() );
   level.setBackgroundColor( this.getBackgroundColor() );
+  level.setAmbientColor( this.getAmbientColor() );
   level.setPattern( this.getPattern() );
   level._shapes = this.getShapes();
   level._lights = this.getLights();
