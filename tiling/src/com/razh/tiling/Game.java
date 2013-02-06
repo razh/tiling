@@ -242,7 +242,7 @@ public class Game implements ApplicationListener {
 		mPlayer = new Player();
 		mLevelLoader = new LevelLoader();
 		mLevelLoader.getLevelByIndex(1).load(mStage);
-		
+
 		mShaderProgramNeedsUpdate = true;
 
 		mInputProcessor = new GameInputProcessor();
