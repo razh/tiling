@@ -239,11 +239,11 @@ public class Game implements ApplicationListener {
 		pLight4.setDistance(2000);
 		mStage.addLight(pLight4);
 
-		mShaderProgramNeedsUpdate = true;
-
 		mPlayer = new Player();
 		mLevelLoader = new LevelLoader();
-		mLevelLoader.getLevelByIndex(1).loadOnto(mStage);
+		mLevelLoader.getLevelByIndex(1).load(mStage);
+		
+		mShaderProgramNeedsUpdate = true;
 
 		mInputProcessor = new GameInputProcessor();
 		((GameInputProcessor) mInputProcessor).setPlayer(mPlayer);

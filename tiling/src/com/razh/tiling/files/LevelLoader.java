@@ -33,8 +33,12 @@ public class LevelLoader {
 	}
 
 	public Level getLevelByIndex(int levelIndex) {
-		mFile = Gdx.files.internal(mFileNames[levelIndex]);
+		if (0 <= levelIndex && levelIndex < mFileNames.length) {
+			mFile = Gdx.files.internal(mFileNames[levelIndex]);
 
-		return mGson.fromJson(mFile.readString(), Level.class);
+			return mGson.fromJson(mFile.readString(), Level.class);
+		}
+
+		return null;
 	}
 }

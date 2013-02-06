@@ -68,7 +68,7 @@ public class Level {
 		mAmbientColor = ambientColor;
 	}
 
-	public void loadOnto(MeshStage stage) {
+	public void load(MeshStage stage) {
 		stage.setColor(getBackgroundColor());
 
 		for (int i = 0, n = mActors.size(); i < n; i++) {
