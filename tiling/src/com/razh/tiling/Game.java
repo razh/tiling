@@ -19,6 +19,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.SnapshotArray;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.razh.tiling.files.LevelLoader;
 import com.razh.tiling.json.LevelDeserializer;
 import com.razh.tiling.json.MeshActorDeserializer;
 
@@ -27,7 +28,7 @@ import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
 public class Game implements ApplicationListener {
 	private InputProcessor mInputProcessor;
 	private Player mPlayer;
-	private LevelDeserializer mLevelLoader;
+	private LevelLoader mLevelLoader;
 	private MeshStage mStage;
 	private FPSLogger mFPSLogger;
 	private boolean mGL20;
@@ -241,32 +242,8 @@ public class Game implements ApplicationListener {
 		mShaderProgramNeedsUpdate = true;
 
 		mPlayer = new Player();
-		mLevelLoader = new LevelDeserializer();
-
-		Gson gson = new GsonBuilder()
-			.registerTypeAdapter(Level.class, new LevelDeserializer())
-			.registerTypeAdapter(MeshActor.class, new MeshActorDeserializer())
-			.create();
-
-		String json;
-		System.out.println("COLOR-BLACK-----");
-		json = gson.toJson(new Color(Color.BLACK));
-		System.out.println(json);
-		String testJson = "{\"x\":100,\"y\":100,\"width\":100,\"height\":100,\"rotation\":180,\"sides\":3,\"color\":{\"r\":100,\"g\":0,\"b\":0,\"a\":1},\"altColor\":{\"r\":255,\"g\":255,\"b\":255,\"a\":1}}";
-		MeshActor jsonActor = gson.fromJson(testJson, MeshActor.class);
-		mStage.addColorActor(jsonActor);
-		jsonActor.addAction(
-			forever(
-				rotateBy(360, 2.0f)
-			)
-		);
-
-		FileHandle file = Gdx.files.internal("testLevel.json");
-		Level tempLevel = gson.fromJson(file.readString(), Level.class);
-		for (int i = 0, n = tempLevel.getActors().size(); i < n; i++) {
-			mStage.addColorActor(tempLevel.getActors().get(i));
-		}
-
+		mLevelLoader = new LevelLoader();
+		mLevelLoader.getLevelByIndex(0).loadOnto(mStage);
 
 		mInputProcessor = new GameInputProcessor();
 		((GameInputProcessor) mInputProcessor).setPlayer(mPlayer);

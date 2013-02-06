@@ -353,15 +353,17 @@ Editor.prototype.draw = function() {
 
 Editor.prototype.hit = function( x, y ) {
   var hit = null;
-  for ( var i = this._shapes.length - 1; i >= 0; i-- ) {
-    hit = this._shapes[i].hit( x, y );
+  var i;
+  // Check lights first since generally, they are smaller and harder to hit.
+  for ( i = this._lights.length - 1; i >= 0; i-- ) {
+    hit = this._lights[i].hit( x, y );
     if ( hit !== null ) {
       return hit;
     }
   }
 
-  for ( var i = this._lights.length - 1; i >= 0; i-- ) {
-    hit = this._lights[i].hit( x, y );
+  for ( i = this._shapes.length - 1; i >= 0; i-- ) {
+    hit = this._shapes[i].hit( x, y );
     if ( hit !== null ) {
       return hit;
     }

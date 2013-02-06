@@ -6,13 +6,18 @@ import com.badlogic.gdx.graphics.Color;
 
 public class Level {
 	private String mName;
-	private Color mBackgroundColor;
 	private ArrayList<MeshActor> mActors;
+	private ArrayList<Light> mLights;
+
+	private Color mBackgroundColor;
+	private Color mAmbientColor;
 
 	public Level() {
 		setName("");
-		setBackgroundColor(new Color());
 		setActors(new ArrayList<MeshActor>());
+		setLights(new ArrayList<Light>());
+		setBackgroundColor(new Color());
+		setAmbientColor(new Color());
 	}
 
 	public ArrayList<MeshActor> getActors() {
@@ -25,6 +30,18 @@ public class Level {
 
 	public void addActor(MeshActor actor) {
 		mActors.add(actor);
+	}
+
+	public ArrayList<Light> getLights() {
+		return mLights;
+	}
+
+	public void setLights(ArrayList<Light> lights) {
+		mLights = lights;
+	}
+
+	public void addLight(Light light) {
+		mLights.add(light);
 	}
 
 	public String getName() {
@@ -41,5 +58,25 @@ public class Level {
 
 	public void setBackgroundColor(Color backgroundColor) {
 		mBackgroundColor = backgroundColor;
+	}
+
+	public Color getAmbientColor() {
+		return mAmbientColor;
+	}
+
+	public void setAmbientColor(Color ambientColor) {
+		mAmbientColor = ambientColor;
+	}
+
+	public void loadOnto(MeshStage stage) {
+		stage.setColor(getBackgroundColor());
+
+		for (int i = 0, n = mActors.size(); i < n; i++) {
+			stage.addColorActor(mActors.get(i));
+		}
+
+		for (int i = 0, n = mLights.size(); i < n; i++) {
+			stage.addLight(mLights.get(i));
+		}
 	}
 }

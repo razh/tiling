@@ -11,6 +11,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.razh.tiling.Level;
 import com.razh.tiling.MeshActor;
+import com.razh.tiling.PointLight;
 
 public class LevelDeserializer implements JsonDeserializer<Level> {
 
@@ -21,11 +22,13 @@ public class LevelDeserializer implements JsonDeserializer<Level> {
 		JsonObject object = json.getAsJsonObject();
 
 		String name = object.get("name").getAsString();
-		Color color = (Color) context.deserialize(object.get("color"), Color.class);
+		Color backgroundColor = (Color) context.deserialize(object.get("color"), Color.class);
+		Color ambientColor = (Color) context.deserialize(object.get("ambientColor"), Color.class);
 
 		Level level = new Level();
 		level.setName(name);
-		level.setBackgroundColor(color);
+		level.setBackgroundColor(backgroundColor);
+		level.setAmbientColor(ambientColor);
 
 		JsonArray jsonShapes = object.get("shapes").getAsJsonArray();
 		MeshActor actor = null;
@@ -33,6 +36,15 @@ public class LevelDeserializer implements JsonDeserializer<Level> {
 			actor = (MeshActor) context.deserialize(jsonShapes.get(i), MeshActor.class);
 			if (actor != null) {
 				level.addActor(actor);
+			}
+		}
+
+		JsonArray jsonLights = object.get("lights").getAsJsonArray();
+		PointLight light = null;
+		for (int i = 0, n = jsonLights.size(); i < n; i++) {
+			light = (PointLight) context.deserialize(jsonLights.get(i), PointLight.class);
+			if (light != null) {
+				level.addLight(light);
 			}
 		}
 
