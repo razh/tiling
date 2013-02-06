@@ -77,6 +77,11 @@ Level.prototype.fromJSON = function( json ) {
     this.addShape( new Shape().fromJSON( JSON.stringify( jsonObject.shapes[i] ) ) );
   }
 
+  this._lights = [];
+  for ( i = 0, n = jsonObject.lights.length; i < n; i++ ) {
+    this.addShape( new Shape().fromJSON( JSON.stringify( jsonObject.shapes[i] ) ) );
+  }
+
   if ( jsonObject.pattern === undefined ) {
     this._patternURL = jsonObject.patternURL;
     this.setPattern( new Pattern( this._patternURL ) );
@@ -109,8 +114,14 @@ Level.prototype.toJSON = function( pattern ) {
   }
 
   object.shapes = [];
-  for ( var i = 0, n = this._shapes.length; i < n; i++ ) {
+  var i, n;
+  for ( i = 0, n = this._shapes.length; i < n; i++ ) {
     object.shapes.push( this._shapes[i].toJSON() );
+  }
+
+  object.lights = [];
+  for ( i = 0, n = this._lights.length; i < n; i++ ) {
+    object.lights.push( this._lights[i].toJSON() );
   }
 
   object.backgroundColor = this.getBackgroundColor();
@@ -143,8 +154,6 @@ Level.prototype.loadPatternShapeFromJSON = function( json ) {
   if ( jsonObject.rotation ) {
     shape.setRotation( jsonObject.rotation );
   }
-
-  shape.calculateRadius();
 
   if ( jsonObject.color ) {
     var color = new Color();

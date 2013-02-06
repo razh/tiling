@@ -14,9 +14,6 @@ var Shape = function() {
 
   this._color = new Color();
   this._altColor = new Color();
-
-  // For collision.
-  this._radius = 0;
 };
 
 Shape.prototype.update = function( elapsedTime ) {};
@@ -193,15 +190,6 @@ Shape.prototype.setRotationInDegrees = function( rotation ) {
   return this;
 };
 
-Shape.prototype.getRadius = function() {
-  return this._radius;
-};
-
-Shape.prototype.setRadius = function( radius ) {
-  this._radius = radius;
-  return this;
-};
-
 Shape.prototype.getColor = function() {
   return this._color;
 };
@@ -265,7 +253,7 @@ Shape.prototype.calculateRadius = function() {
     distanceSquared = Math.max( distanceSquared, x * x + y * y );
   }
 
-  return this.setRadius( Math.sqrt( distanceSquared ) );
+  return Math.sqrt( distanceSquared );
 };
 
 Shape.prototype.createInspector = function( $id, prototypical ) {
@@ -402,8 +390,8 @@ Shape.prototype.fromJSON = function( json ) {
     edges = geometry.edges;
   }
 
-  var color = new Color().fromJSON( JSON.stringify( jsonObject.color ) );
-  var altColor = new Color().fromJSON( JSON.stringify( jsonObject.altColor ) );
+  var color    = new Color().fromJSON( JSON.stringify( jsonObject.color ) );
+      altColor = new Color().fromJSON( JSON.stringify( jsonObject.altColor ) );
 
   return this.setX( jsonObject.x || 0 )
              .setY( jsonObject.y || 0 )
@@ -413,7 +401,6 @@ Shape.prototype.fromJSON = function( json ) {
              .setNumSides( sides )
              .setVertices( vertices )
              .setEdges( edges )
-             .calculateRadius()
              .setColor( color )
              .setAltColor( altColor );
 };
@@ -448,7 +435,6 @@ Shape.prototype.clone = function() {
                     .setNumSides( this.getNumSides() )
                     .setVertices( this.getVertices() )
                     .setEdges( this.getEdges() )
-                    .calculateRadius()
                     .setColor( this.getColor() )
                     .setAltColor( this.getAltColor() );
 };

@@ -148,7 +148,6 @@ function setupGUI() {
                                               .setNumSides( sides )
                                               .setVertices( geometry.vertices )
                                               .setEdges( geometry.edges )
-                                              .calculateRadius()
                                               .setColor( new Color( 0, 0, 0, 1.0 ) )
                                               .setAltColor( new Color( 255, 255, 255, 1.0 ) ) );
   });
@@ -263,6 +262,7 @@ var Editor = function() {
   this._currTime = this._prevTime;
 
   this._shapes = [];
+  this._lights = [];
   this._levelName = '';
 
   this._translate = {
@@ -420,6 +420,22 @@ Editor.prototype.removeShape = function( shape ) {
   var index = this._shapes.indexOf( shape );
   if ( index !== -1 ) {
     this._shapes.splice( index, 1 );
+  }
+};
+
+// Lights.
+Editor.prototype.getLights = function() {
+  return this._lights;
+};
+
+Editor.prototype.addLight = function( light ) {
+  this._lights.push( light );
+};
+
+Editor.prototype.removeLight = function( light ) {
+  var index = this._lights.indexOf( light );
+  if ( index !== -1 ) {
+    this._lights.splice( index, 1 );
   }
 };
 
