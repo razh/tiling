@@ -50,6 +50,12 @@ function onMouseDown( event ) {
     case EditorState.COPYING_LIGHT:
       onMouseDownCopyingLight( input );
       break;
+
+    case EditorState.ADDING_EDGE:
+      break;
+
+    case EditorState.REMOVING_EDGE:
+      break;
   }
 }
 
@@ -98,7 +104,7 @@ function onMouseDownCopyingShape( input ) {
 }
 
 function onMouseDownAddingLight( input ) {
-  _editor.addLight( new Light().setPosition( input.x, input.y ) )
+  _editor.addLight( new Light().setPosition( input.x, input.y ) );
   _editor.setState( EditorState.DEFAULT );
 }
 
@@ -123,9 +129,34 @@ function onMouseDownCopyingLight( input ) {
     _editor.addLight( light );
     _editor.setState( EditorState.DEFAULT );
   } else {
-    _editor.setSelected( _editor.hit( input.x, input.y ) )
+    _editor.setSelected( _editor.hit( input.x, input.y ) );
   }
 }
+
+function onMouseDownAddingEdge( input ) {
+  if ( _editor.hasSelected() ) {
+    if ( _editor.getSelected() instanceof Light ) {
+      return;
+    }
+
+    _editor.setState( EditorState.DEFAULT );
+  } else {
+    _editor.setSelected( _editor.hit( input.x, input.y ) );
+  }
+}
+
+function onMouseDownRemovingEdge( input ) {
+  if ( _editor.hasSelected() ) {
+    if ( _editor.getSelected() instanceof Light ) {
+      return;
+    }
+
+    _editor.setState( EditorState.DEFAULT );
+  } else {
+    _editor.setSelected( _editor.hit( input.x, input.y ) );
+  }
+}
+
 
 // Mouse move.
 function onMouseMove( event ) {
@@ -147,6 +178,8 @@ function onMouseMove( event ) {
     case EditorState.ADDING_LIGHT:
     case EditorState.REMOVING_LIGHT:
     case EditorState.COPYING_LIGHT:
+    case EditorState.ADDING_EDGE:
+    case EditorState.REMOVING_EDGE:
       break;
   }
 }
@@ -184,6 +217,8 @@ function onMouseUp( event ) {
 
     case EditorState.COPYING_SHAPE:
     case EditorState.COPYING_LIGHT:
+    case EditorState.ADDING_EDGE:
+    case EditorState.REMOVING_EDGE:
       break;
   }
 }

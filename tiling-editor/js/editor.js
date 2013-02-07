@@ -116,7 +116,9 @@ function setupGUI() {
     copy:        EditorState.COPYING_SHAPE,
     addLight:    EditorState.ADDING_LIGHT,
     removeLight: EditorState.REMOVING_LIGHT,
-    copyLight:   EditorState.COPYING_LIGHT
+    copyLight:   EditorState.COPYING_LIGHT,
+    addEdge:     EditorState.ADDING_EDGE,
+    removeEdge:  EditorState.REMOVING_EDGE
   };
 
   $.each( buttonStates, function( key, value ) {
@@ -217,7 +219,9 @@ var EditorState = {
   ADDING_LIGHT:   4,
   REMOVING_LIGHT: 5,
   COPYING_LIGHT:  6,
-  TEXT_EDITING:   7
+  ADDING_EDGE:    7,
+  REMOVING_EDGE:  8,
+  TEXT_EDITING:   9
 };
 
 var Editor = function() {
@@ -254,7 +258,9 @@ var Editor = function() {
     copy:        $( '#copy-shape-button' ),
     addLight:    $( '#add-light-button' ),
     removeLight: $( '#remove-light-button' ),
-    copyLight:   $( '#copy-light-button' )
+    copyLight:   $( '#copy-light-button' ),
+    addEdge:     $( '#add-edge-button' ),
+    removeEdge:  $( '#remove-edge-button' )
   };
   this._snappingUI = {
     button: $( '#snapping-button' ),
@@ -460,6 +466,17 @@ Editor.prototype.removeShape = function( shape ) {
   var index = this._shapes.indexOf( shape );
   if ( index !== -1 ) {
     this._shapes.splice( index, 1 );
+    this._graph.removeIndex( index );
+  }
+};
+
+Editor.prototype.indexOfShape = function( shape ) {
+  return this._shapes.indexOf( shape );
+};
+
+Editor.prototype.shapeAt = function( index ) {
+  if ( 0 <= index && index < this._shapes.length ) {
+    return this._shapes[ index ];
   }
 };
 

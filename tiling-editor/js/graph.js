@@ -58,6 +58,7 @@ Graph.prototype.addDirectedEdge = function( src, dst ) {
     srcList = [];
   }
 
+  // If srcList is empty, or if it does not contain srcList.
   if ( srcList.length === 0 || srcList.indexOf( dst ) === -1 ) {
     srcList.push( dst );
   }
@@ -83,8 +84,25 @@ Graph.prototype.removeDirectedEdge = function( src, dst ) {
   this._edges[ src ] = srcList;
 };
 
+// Remove shape at index and update all indices.
 Graph.prototype.removeIndex = function( index ) {
+  var i, j;
+  for ( i = this._edges.length - 1; i >= 0; i-- ) {
+    if ( this._edges[i] === undefined ) {
+      continue;
+    }
 
+    for ( j = this._edges[i].length - 1; j >= 0; j-- ) {
+      if ( this._edges[i][j] === index ) {
+        this._edges[i].splice( j, 1 );
+        j--;
+      } else if ( this._edges[i][j] > index ) {
+        this._edges[i][j]--;
+      }
+    }
+  }
+
+  this._edges.splice( i, 1 );
 };
 
 Graph.prototype.fromJSON = function( json ) {
@@ -102,3 +120,11 @@ Graph.prototype.toJSON = function() {
 
   return object;
 };
+
+
+_graph = new Graph();
+_graph.addEdge( 2, 3 );
+_graph.addEdge( 2, 3 );
+_graph.addEdge( 2, 7 );
+_graph.addEdge( 5, 6 );
+_graph.removeIndex( 2 );
