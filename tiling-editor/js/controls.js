@@ -52,9 +52,11 @@ function onMouseDown( event ) {
       break;
 
     case EditorState.ADDING_EDGE:
+      onMouseDownAddingEdge( input );
       break;
 
     case EditorState.REMOVING_EDGE:
+      onMouseDownRemovingEdge( input );
       break;
   }
 }
@@ -80,7 +82,7 @@ function onMouseDownAddingShape( input ) {
 
 function onMouseDownRemovingShape( input ) {
   var hit = _editor.hit( input.x, input.y );
-  if ( hit !== null && !hit instanceof Light  ) {
+  if ( hit !== null && !( hit instanceof Light ) ) {
     _editor.removeShape( hit );
   }
 
@@ -139,6 +141,15 @@ function onMouseDownAddingEdge( input ) {
       return;
     }
 
+    var hit = _editor.hit( input.x, input.y );
+    if ( hit !== null ) {
+      var srcIndex = _editor.indexOfShape( _editor.getSelected() ),
+          dstIndex = _editor.indexOfShape( hit );
+      if ( srcIndex !== -1 && dstIndex !== -1 ) {
+        _editor.getGraph().addEdge( srcIndex, dstIndex );
+      }
+    }
+
     _editor.setState( EditorState.DEFAULT );
   } else {
     _editor.setSelected( _editor.hit( input.x, input.y ) );
@@ -149,6 +160,15 @@ function onMouseDownRemovingEdge( input ) {
   if ( _editor.hasSelected() ) {
     if ( _editor.getSelected() instanceof Light ) {
       return;
+    }
+
+    var hit = _editor.hit( input.x, input.y );
+    if ( hit !== null ) {
+      var srcIndex = _editor.indexOfShape( _editor.getSelected() ),
+          dstIndex = _editor.indexOfShape( hit );
+      if ( srcIndex !== -1 && dstIndex !== -1 ) {
+        _editor.getGraph().removeEdge( srcIndex, dstIndex );
+      }
     }
 
     _editor.setState( EditorState.DEFAULT );

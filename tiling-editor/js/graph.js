@@ -4,12 +4,14 @@ var Graph = function() {
 
 Graph.prototype.draw = function( ctx, shapes ) {
   ctx.beginPath();
+  var srcList;
   var srcShape, dstShape;
   for ( var i = this._edges.length - 1; i >= 0; i-- ) {
     srcShape = shapes[i];
-    if ( srcShape !== undefined ) {
-      for ( var j = this._edges[i].length - 1; j >= 0; j-- ) {
-        dstShape = shapes[ this._edges[i][j] ];
+    srcList  = this._edges[i];
+    if ( srcShape !== undefined && srcList !== undefined ) {
+      for ( var j = srcList.length - 1; j >= 0; j-- ) {
+        dstShape = shapes[ srcList[j] ];
 
         if ( dstShape !== undefined ) {
           ctx.moveTo( srcShape.getX(), srcShape.getY() );
@@ -34,7 +36,7 @@ Graph.prototype.draw = function( ctx, shapes ) {
     ctx.strokeStyle = 'rgba( 0, 0, 0, 1.0 )';
   }
 
-  ctx.lineWidth = 1;
+  ctx.lineWidth = 0.5;
 
   ctx.stroke();
 };
@@ -86,23 +88,27 @@ Graph.prototype.removeDirectedEdge = function( src, dst ) {
 
 // Remove shape at index and update all indices.
 Graph.prototype.removeIndex = function( index ) {
-  var i, j;
-  for ( i = this._edges.length - 1; i >= 0; i-- ) {
-    if ( this._edges[i] === undefined ) {
-      continue;
-    }
+  if ( 0 <= index && index < this._edges.length ) {
+    var i, j;
+    for ( i = this._edges.length - 1; i >= 0; i-- ) {
+      if ( this._edges[i] === undefined ) {
+        continue;
+      }
 
-    for ( j = this._edges[i].length - 1; j >= 0; j-- ) {
-      if ( this._edges[i][j] === index ) {
-        this._edges[i].splice( j, 1 );
-        j--;
-      } else if ( this._edges[i][j] > index ) {
-        this._edges[i][j]--;
+      for ( j = this._edges[i].length - 1; j >= 0; j-- ) {
+        // Remove edge
+        if ( this._edges[i][j] === index ) {
+          this._edges[i].splice( j, 1 );
+        }
+        // Subtracting fixes stored data to match new indices (with edge removed).
+        else if ( this._edges[i][j] > index ) {
+          this._edges[i][j]--;
+        }
       }
     }
-  }
 
-  this._edges.splice( i, 1 );
+    this._edges.splice( index, 1 );
+  }
 };
 
 Graph.prototype.fromJSON = function( json ) {
@@ -120,11 +126,3 @@ Graph.prototype.toJSON = function() {
 
   return object;
 };
-
-
-_graph = new Graph();
-_graph.addEdge( 2, 3 );
-_graph.addEdge( 2, 3 );
-_graph.addEdge( 2, 7 );
-_graph.addEdge( 5, 6 );
-_graph.removeIndex( 2 );

@@ -443,7 +443,9 @@ Editor.prototype.setState = function( state ) {
     'copy',
     'addLight',
     'removeLight',
-    'copyLight'
+    'copyLight',
+    'addEdge',
+    'removeEdge'
   ];
 
   if ( 0 <= state && state < buttonNames.length ) {
