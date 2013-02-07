@@ -22,43 +22,19 @@ function onMouseDown( event ) {
   var input = transformCoords( event.pageX, event.pageY );
   Input.setMouseState( MouseState.DOWN );
 
-  switch ( _editor.getState() ) {
-    case EditorState.DEFAULT:
-      onMouseDownDefault( input );
-      break;
+  var onMouseDownFunctions = [
+    onMouseDownDefault,
+    onMouseDownAddingShape,
+    onMouseDownRemovingShape,
+    onMouseDownCopyingShape,
+    onMouseDownAddingLight,
+    onMouseDownRemovingLight,
+    onMouseDownCopyingLight,
+    onMouseDownAddingEdge,
+    onMouseDownRemovingEdge
+  ];
 
-    case EditorState.ADDING_SHAPE:
-      onMouseDownAddingShape( input );
-      break;
-
-    case EditorState.REMOVING_SHAPE:
-      onMouseDownRemovingShape( input );
-      break;
-
-    case EditorState.COPYING_SHAPE:
-      onMouseDownCopyingShape( input );
-      break;
-
-    case EditorState.ADDING_LIGHT:
-      onMouseDownAddingLight( input );
-      break;
-
-    case EditorState.REMOVING_LIGHT:
-      onMouseDownRemovingLight( input );
-      break;
-
-    case EditorState.COPYING_LIGHT:
-      onMouseDownCopyingLight( input );
-      break;
-
-    case EditorState.ADDING_EDGE:
-      onMouseDownAddingEdge( input );
-      break;
-
-    case EditorState.REMOVING_EDGE:
-      onMouseDownRemovingEdge( input );
-      break;
-  }
+  onMouseDownFunctions[ _editor.getState() ].call( this, input );
 }
 
 function onMouseDownDefault( input ) {
@@ -221,7 +197,6 @@ function onMouseMoveDefault( input, dx, dy ) {
   }
 }
 
-
 // Mouse up.
 function onMouseUp( event ) {
   Input.setMouseState( MouseState.UP );
@@ -276,6 +251,11 @@ function onKeyDown( event ) {
     // C.
     case 67:
       _editor.setState( EditorState.COPYING_SHAPE );
+      break;
+
+    // E.
+    case 69:
+      _editor.setState( EditorState.ADDING_EDGE );
       break;
 
     // V.
