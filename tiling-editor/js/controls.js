@@ -134,7 +134,11 @@ function onMouseMove( event ) {
   switch ( _editor.getState() ) {
     case EditorState.DEFAULT:
       // Can only use these vars on webkit.
-      onMouseMoveDefault( input, event.webkitMovementX, event.webkitMovementY );
+      if ( event.webkitMovementX !== undefined ) {
+        onMouseMoveDefault( input, event.webkitMovementX, event.webkitMovementY );
+      } else if ( event.mozMovementX !== undefined ) {
+        onMouseMoveDefault( input, event.mozMovementX, event.mozMovementY );
+      }
       break;
 
     case EditorState.ADDING_SHAPE:
