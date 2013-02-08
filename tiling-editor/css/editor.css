@@ -37,10 +37,12 @@ html, body {
 
 .inspector-container {
   overflow: auto;
+  position: relative;
 }
 
 .pattern-container {
   overflow: auto;
+  position: relative;
 }
 
 /* row-fluid for span divs*/
