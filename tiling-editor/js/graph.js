@@ -9,7 +9,7 @@ Graph.prototype.draw = function( ctx, shapes ) {
   for ( var i = this._edges.length - 1; i >= 0; i-- ) {
     srcShape = shapes[i];
     srcList  = this._edges[i];
-    if ( srcShape !== undefined && srcList !== undefined ) {
+    if ( srcShape !== undefined && srcList !== undefined && srcList !== null ) {
       for ( var j = srcList.length - 1; j >= 0; j-- ) {
         dstShape = shapes[ srcList[j] ];
 
