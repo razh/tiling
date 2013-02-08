@@ -6,25 +6,16 @@ import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
-import com.badlogic.gdx.math.Interpolation;
-import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.SnapshotArray;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.razh.tiling.files.LevelLoader;
-import com.razh.tiling.json.LevelDeserializer;
-import com.razh.tiling.json.MeshActorDeserializer;
 import com.razh.tiling.tests.OriginalStageTest;
-
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
 
 public class Game implements ApplicationListener {
 	private InputProcessor mInputProcessor;

@@ -13,6 +13,7 @@ import com.razh.tiling.Level;
 import com.razh.tiling.MeshActor;
 import com.razh.tiling.PointLight;
 import com.razh.tiling.logic.GraphEntity;
+import com.razh.tiling.logic.TilingEntity;
 
 public class LevelDeserializer implements JsonDeserializer<Level> {
 
@@ -33,9 +34,13 @@ public class LevelDeserializer implements JsonDeserializer<Level> {
 
 		JsonArray jsonShapes = object.get("shapes").getAsJsonArray();
 		MeshActor actor = null;
+		TilingEntity entity;
 		for (int i = 0, n = jsonShapes.size(); i < n; i++) {
 			actor = (MeshActor) context.deserialize(jsonShapes.get(i), MeshActor.class);
 			if (actor != null) {
+				entity = new TilingEntity();
+				actor.setEntity(entity);
+
 				level.addActor(actor);
 			}
 		}
@@ -50,9 +55,18 @@ public class LevelDeserializer implements JsonDeserializer<Level> {
 		}
 
 		JsonArray jsonGraph = object.get("graph").getAsJsonArray();
-		GraphEntity graphEntity;
+		JsonArray jsonEdgeList;
+		int index;
 		for (int i = 0, n = jsonGraph.size(); i < n; i++) {
-			graphEntity = new GraphEntity();
+			if (jsonGraph.get(i) != null) {
+				jsonEdgeList = jsonGraph.get(i).getAsJsonArray();
+				entity = (TilingEntity) level.getActorAt(i).getEntity();
+
+				for (int j = 0, m = jsonEdgeList.size(); j < m; j++) {
+					index = jsonEdgeList.get(i).getAsInt();
+					entity.addNeighbor((GraphEntity) level.getActorAt(index).getEntity());
+				}
+			}
 		}
 
 		return level;
