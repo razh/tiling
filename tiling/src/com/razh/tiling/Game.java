@@ -22,6 +22,7 @@ import com.google.gson.GsonBuilder;
 import com.razh.tiling.files.LevelLoader;
 import com.razh.tiling.json.LevelDeserializer;
 import com.razh.tiling.json.MeshActorDeserializer;
+import com.razh.tiling.tests.OriginalStageTest;
 
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
 
@@ -40,17 +41,14 @@ public class Game implements ApplicationListener {
 	private boolean mShaderProgramNeedsUpdate;
 	private boolean mLightUniformsNeedRefresh;
 
-	private PointLight pLight;
-	private MeshActor meshActor;
-
 	private BitmapFont mFont;
 	private SpriteBatch mSpriteBatch;
 
-	private enum LightingModel {
+	public enum LightingModel {
 		LAMBERT,
 		PHONG
 	};
-	private LightingModel mLightingModel = LightingModel.LAMBERT;
+	public static LightingModel lightingModel = LightingModel.LAMBERT;
 
 	@Override
 	public void create() {
@@ -72,9 +70,9 @@ public class Game implements ApplicationListener {
 
 		mShaderProgramNeedsUpdate = false;
 		mLightUniformsNeedRefresh = false;
-		if (mLightingModel == LightingModel.PHONG) {
+		if (Game.lightingModel == LightingModel.PHONG) {
 			mShaderProgram = Shader.createPhongShaderProgram();
-		} else if (mLightingModel == LightingModel.LAMBERT) {
+		} else if (Game.lightingModel == LightingModel.LAMBERT) {
 			mShaderProgram = Shader.createLambertShaderProgram();
 		}
 		mUniforms = new Uniforms();
@@ -88,156 +86,15 @@ public class Game implements ApplicationListener {
 		mFont = new BitmapFont();
 		mFont.setColor(Color.WHITE);
 
-		MeshMaterial material = new MeshMaterial(new Color(0.33f, 0.33f, 0.33f, 1.0f), new Color(Color.WHITE), new Color(Color.BLACK), 50);
-		if (mLightingModel == LightingModel.PHONG) {
-			material.setShiny(true);
-		}
-
-		meshActor = new MeshActor();
-		meshActor.setWidth(100.0f);
-		meshActor.setHeight(100.0f);
-		meshActor.setDepth(50.0f);
-		meshActor.setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2 - 200);
-		meshActor.setColor(new Color(Color.BLUE).add(new Color(0.25f,0.0f,0.0f,0.0f)));
-		meshActor.setMaterial(material);
-		meshActor.setOrientation(180);
-		meshActor.setMesh(Geometry.createTriangularBipyramid());
-		meshActor.addAction(
-			parallel(
-				forever(
-					sequence(
-						moveBy(200, 200, 2.0f, Interpolation.pow2),
-						moveBy(-200, 200, 2.0f, Interpolation.pow2),
-						moveBy(-200, -200, 2.0f, Interpolation.pow2),
-						moveBy(200, -200, 2.0f, Interpolation.pow2)
-					)
-				),
-				forever(
-					rotateBy(360, 4.0f)
-				)
-			)
-		);
-		mStage.addActor(meshActor);
-
-		MeshActor meshActor2 = new MeshActor();
-		meshActor2.setWidth(100.0f);
-		meshActor2.setHeight(100.0f);
-		meshActor2.setDepth(50.0f);
-		meshActor2.setPosition(200, 200);
-		meshActor2.setColor(new Color(Color.RED).add(new Color(0.0f, 0.0f, 0.25f, 0.0f)));
-		meshActor2.setMesh(Geometry.createOctagonalBipyramid());
-		meshActor2.setMaterial(material);
-		meshActor2.addAction(
-			forever(
-				parallel(
-					rotateBy(360, 4.0f),
-					sequence(
-						alpha(0.0f, 1.0f),
-						alpha(1.0f, 1.0f)
-					)
-				)
-			)
-		);
-		mStage.addActor(meshActor2);
-
-		MeshActor meshActor3 = new MeshActor();
-		meshActor3.setWidth(100.0f);
-		meshActor3.setHeight(100.0f);
-		meshActor3.setDepth(50.0f);
-		meshActor3.setPosition(800, 200);
-		meshActor3.setColor(new Color(Color.WHITE));
-		meshActor3.setMesh(Geometry.createOctagonalBipyramid());
-		meshActor3.setMaterial(material);
-		mStage.addActor(meshActor3);
-
-		MeshActor meshActor4 = new MeshActor();
-		meshActor4.setWidth(100.0f);
-		meshActor4.setHeight(100.0f);
-		meshActor4.setDepth(50.0f);
-		meshActor4.setPosition(800, 600);
-		meshActor4.setColor(new Color(Color.GRAY));
-		meshActor4.setMesh(Geometry.createOctahedron());
-		meshActor4.setMaterial(material);
-		meshActor4.addAction(
-			forever(
-				rotateBy(360, 2.0f)
-			)
-		);
-		meshActor4.setRotationAxis(new Vector3(Vector3.X).add(Vector3.Y).nor());
-		mStage.addActor(meshActor4);
-
-//		for (int i = 0; i < 50;i++) {
-		MeshActor mA5 = new MeshActor();
-		mA5.setWidth(50.0f);
-		mA5.setHeight(50.0f);
-		mA5.setDepth(50.0f);
-//		mA5.setPosition(100 + 20 * i, 500);
-		mA5.setPosition(100, 500);
-		mA5.setColor(new Color(Color.GREEN));
-		mA5.setMesh(Geometry.createBicolorBipyramid(4, new Color(Color.ORANGE), new Color(Color.MAGENTA)));
-//		mA5.setMesh(Geometry.createOctahedron());
-		mA5.setMaterial(material);
-		mA5.addAction(
-			forever(
-				rotateBy(360, 2.0f)
-			)
-		);
-		mStage.addColorActor(mA5);
-//		}
-		if (mLightingModel == LightingModel.PHONG) {
+		if (Game.lightingModel == LightingModel.PHONG) {
 			mColorShaderProgram = Shader.createColorPhongShaderProgram();
-		} else if (mLightingModel == LightingModel.LAMBERT) {
+		} else if (Game.lightingModel == LightingModel.LAMBERT) {
 			mColorShaderProgram = Shader.createColorLambertShaderProgram();
 		}
 		mStage.setColorShaderProgram(mColorShaderProgram);
 
-
-		AmbientLight aLight = new AmbientLight();
-		aLight.setColor(0.25f, 0.25f, 0.25f, 1.0f);
-		mStage.addLight(aLight);
-
-		pLight = new PointLight();
-		pLight.setColor(new Color(Color.RED));
-		pLight.setPosition(200, Gdx.graphics.getHeight() / 2 + 50, 100);
-		pLight.setWidth(3);
-		pLight.setHeight(3);
-		pLight.addAction(
-			forever(
-				sequence(
-					moveBy(600, 0, 3.0f, Interpolation.pow2),
-					moveBy(-600, 0, 3.0f, Interpolation.pow2)
-				)
-			)
-		);
-		pLight.setDistance(600);
-		mStage.addLight(pLight);
-
-		PointLight pLight2 = new PointLight();
-		pLight2 = new PointLight();
-		pLight2.setColor(new Color(Color.BLUE));
-		pLight2.setPosition(800, Gdx.graphics.getHeight() / 2, 100);
-		pLight2.setWidth(3);
-		pLight2.setHeight(3);
-		pLight2.setDistance(800);
-		mStage.addLight(pLight2);
-
-		PointLight pLight3 = new PointLight();
-		pLight3 = new PointLight();
-		pLight3.setColor(new Color(Color.GREEN));
-		pLight3.setPosition(500, Gdx.graphics.getHeight() / 2 - 200, 100);
-		pLight3.setWidth(3);
-		pLight3.setHeight(3);
-		pLight3.setDistance(8000);
-		mStage.addLight(pLight3);
-
-		PointLight pLight4 = new PointLight();
-		pLight4 = new PointLight();
-		pLight4.setColor(new Color(Color.WHITE));
-		pLight4.setPosition(500, Gdx.graphics.getHeight() / 2 + 200, 100);
-		pLight4.setWidth(3);
-		pLight4.setHeight(3);
-		pLight4.setDistance(2000);
-		mStage.addLight(pLight4);
+		OriginalStageTest test = new OriginalStageTest();
+		test.load(mStage);
 
 		mPlayer = new Player();
 		mLevelLoader = new LevelLoader();
@@ -335,8 +192,6 @@ public class Game implements ApplicationListener {
 	public void update() {
 		float delta = Math.min(Gdx.graphics.getDeltaTime(), 1 / 30.0f);
 		mStage.act(delta);
-//		pLight.setPosition(Gdx.input.getX(), -Gdx.input.getY() + Gdx.graphics.getHeight() + 100, -10);
-//		pLight.setPosition(Gdx.input.getX(), -Gdx.input.getY() + Gdx.graphics.getHeight(), 0);
 
 		if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
 
@@ -347,14 +202,14 @@ public class Game implements ApplicationListener {
 		if (mShaderProgramNeedsUpdate) {
 			mShaderProgramNeedsUpdate = false;
 			mShaderProgram.dispose();
-			if (mLightingModel == LightingModel.PHONG) {
+			if (Game.lightingModel == LightingModel.PHONG) {
 				mShaderProgram = Shader.createPhongShaderProgram();
-			} else if (mLightingModel == LightingModel.LAMBERT) {
+			} else if (Game.lightingModel == LightingModel.LAMBERT) {
 				mShaderProgram = Shader.createLambertShaderProgram();
 			}
-			if (mLightingModel == LightingModel.PHONG) {
+			if (Game.lightingModel == LightingModel.PHONG) {
 				mColorShaderProgram = Shader.createColorPhongShaderProgram();
-			} else if (mLightingModel == LightingModel.LAMBERT) {
+			} else if (Game.lightingModel == LightingModel.LAMBERT) {
 				mColorShaderProgram = Shader.createColorLambertShaderProgram();
 			}
 			mStage.setShaderProgram(mShaderProgram);

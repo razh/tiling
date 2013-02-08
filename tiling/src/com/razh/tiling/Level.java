@@ -24,6 +24,10 @@ public class Level {
 		return mActors;
 	}
 
+	public MeshActor getActorAt(int index) {
+		return mActors.get(index);
+	}
+
 	public void setActors(ArrayList<MeshActor> actors) {
 		mActors = actors;
 	}

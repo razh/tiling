@@ -308,6 +308,7 @@
     }
   ],
   "lights": [],
+  "graph": [],
   "backgroundColor": {
     "r": 0,
     "g": 0,

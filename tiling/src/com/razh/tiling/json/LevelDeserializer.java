@@ -12,6 +12,7 @@ import com.google.gson.JsonParseException;
 import com.razh.tiling.Level;
 import com.razh.tiling.MeshActor;
 import com.razh.tiling.PointLight;
+import com.razh.tiling.logic.GraphEntity;
 
 public class LevelDeserializer implements JsonDeserializer<Level> {
 
@@ -46,6 +47,12 @@ public class LevelDeserializer implements JsonDeserializer<Level> {
 			if (light != null) {
 				level.addLight(light);
 			}
+		}
+
+		JsonArray jsonGraph = object.get("graph").getAsJsonArray();
+		GraphEntity graphEntity;
+		for (int i = 0, n = jsonGraph.size(); i < n; i++) {
+			graphEntity = new GraphEntity();
 		}
 
 		return level;

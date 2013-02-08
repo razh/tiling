@@ -112,17 +112,10 @@ Graph.prototype.removeIndex = function( index ) {
 };
 
 Graph.prototype.fromJSON = function( json ) {
-  var jsonObject = JSON.parse( json );
-
-  this._edges = jsonObject.edges || [];
-
+  this._edges = JSON.parse( json ) || [];
   return this;
 };
 
 Graph.prototype.toJSON = function() {
-  var object = {};
-
-  object.edges = this.getEdges();
-
-  return object;
+  return this.getEdges();
 };
