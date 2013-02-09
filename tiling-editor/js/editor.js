@@ -456,7 +456,7 @@ Editor.prototype.loadLevelInspector = function( level ) {
     name:   'stroke',
     getter: 'getStroke',
     setter: 'setStroke',
-    min:    0.1,
+    min:    0.0,
     max:    20.0,
     step:   0.1,
     digits: 1
