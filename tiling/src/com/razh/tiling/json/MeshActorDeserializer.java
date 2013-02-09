@@ -34,16 +34,18 @@ public class MeshActorDeserializer implements JsonDeserializer<MeshActor> {
 
 		MeshMaterial material = new MeshMaterial(new Color(0.33f, 0.33f, 0.33f, 1.0f), new Color(Color.WHITE), new Color(Color.BLACK), 50);
 		Mesh mesh = Geometry.createBicolorBipyramid(sides, new Color(color), new Color(altColor));
+		float[] vertices = Geometry.calculateVertices2D(sides);
 
 		MeshActor actor = new MeshActor();
 		actor.setWidth(width);
 		actor.setHeight(height);
-		actor.setDepth(width);
+		actor.setDepth(0.5f * width);
 		actor.setPosition(x, y);
 		actor.setOrientation(rotation);
 		actor.setColor(color);
 		actor.setMesh(mesh);
 		actor.setMaterial(material);
+		actor.setVertices(vertices);
 
 		return actor;
 	}

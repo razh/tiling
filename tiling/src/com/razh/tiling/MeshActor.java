@@ -25,13 +25,15 @@ public class MeshActor extends Actor3D {
 
 	private Entity mEntity;
 
+	private float[] mVertices;
+
 	public MeshActor() {
 		super();
 
 		mModelMatrix = new Matrix4();
 		mNormalMatrix = new Matrix3();
 
-		setRotationAxis(new Vector3(0.0f, 1.0f, 0.0f));
+		setRotationAxis(Vector3.Y);
 		setOrientation(0.0f);
 	}
 
@@ -80,16 +82,66 @@ public class MeshActor extends Actor3D {
 			return null;
 		}
 
-		if (Math.abs(x - getX()) <= getWidth() && Math.abs(y - getY()) <= getHeight()) {
+		if (getVertices() == null) {
+			// Default to simple AABB hit-testing if no vertex data.
+			if (Math.abs(x - getX()) <= getWidth() && Math.abs(y - getY()) <= getHeight()) {
+				return this;
+			}
+
+			return null;
+		}
+
+		if (contains(x, y)) {
 			return this;
 		}
 
 		return null;
 	}
 
+	public boolean contains(float x, float y) {
+		Vector2 point = worldToLocalCoordinates(new Vector2(x, y));
+		x = point.x;
+		y = point.y;
+
+		float[] vertices = getVertices();
+		int vertexCount = vertices.length / 2;
+		boolean contains = false;
+
+		float xi, yi, xj, yj;
+		int i, j;
+		for ( i = 0, j = vertexCount - 1; i < vertexCount; j = i++ ) {
+			xi = vertices[2 * i];
+			yi = vertices[2 * i + 1];
+			xj = vertices[2 * j];
+			yj = vertices[2 * j + 1];
+
+			if (((yi > y) != (yj > y)) &&
+				 (x < (xj - xi) * (y - yi) / (yj - yi) + xi)) {
+				contains = !contains;
+			}
+		}
+
+		return contains;
+	}
+
 	@Override
 	public Vector2 parentToLocalCoordinates(Vector2 parentCoords) {
 		return parentCoords;
+	}
+
+	public Vector2 worldToLocalCoordinates(Vector2 worldCoords) {
+		return worldCoords.cpy()
+		     	          .sub(getX(), getY())
+		                  .rotate(getOrientation())
+		                  .div(getWidth(), getHeight());
+	}
+
+	public Vector2 localToWorldCoordinates(Vector2 localCoords) {
+		return localCoords.cpy()
+		                  .mul(getWidth(), getHeight())
+		                  .rotate(-getOrientation())
+		                  .add(getX(), getY());
+
 	}
 
 	public Vector3 getRotationAxis() {
@@ -120,6 +172,14 @@ public class MeshActor extends Actor3D {
 		return getMesh() != null;
 	}
 
+	public float[] getVertices() {
+		return mVertices;
+	}
+
+	public void setVertices(float[] vertices) {
+		mVertices = vertices;
+	}
+
 	public Material getMaterial() {
 		return mMaterial;
 	}
@@ -146,6 +206,11 @@ public class MeshActor extends Actor3D {
 
 	public void setEntity(Entity entity) {
 		mEntity = entity;
+		mEntity.setActor(this);
+	}
+
+	public boolean hasEntity() {
+		return mEntity != null;
 	}
 
 	public ShaderProgram getShaderProgram() {

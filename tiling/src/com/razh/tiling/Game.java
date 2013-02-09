@@ -85,11 +85,11 @@ public class Game implements ApplicationListener {
 		mStage.setColorShaderProgram(mColorShaderProgram);
 
 		OriginalStageTest test = new OriginalStageTest();
-		test.load(mStage);
+//		test.load(mStage);
 
 		mPlayer = new Player();
 		mLevelLoader = new LevelLoader();
-		mLevelLoader.getLevelByIndex(1).load(mStage);
+		mLevelLoader.getLevelByIndex(2).load(mStage);
 
 		mShaderProgramNeedsUpdate = true;
 

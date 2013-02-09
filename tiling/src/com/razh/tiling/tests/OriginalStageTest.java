@@ -38,6 +38,7 @@ public class OriginalStageTest extends StageTest {
 		meshActor.setMaterial(material);
 		meshActor.setOrientation(180);
 		meshActor.setMesh(Geometry.createTriangularBipyramid());
+		meshActor.setVertices(Geometry.calculateVertices2D(3));
 		meshActor.addAction(
 			parallel(
 				forever(
@@ -62,6 +63,7 @@ public class OriginalStageTest extends StageTest {
 		meshActor2.setPosition(200, 200);
 		meshActor2.setColor(new Color(Color.RED).add(new Color(0.0f, 0.0f, 0.25f, 0.0f)));
 		meshActor2.setMesh(Geometry.createOctagonalBipyramid());
+		meshActor2.setVertices(Geometry.calculateVertices2D(8));
 		meshActor2.setMaterial(material);
 		meshActor2.addAction(
 			forever(
@@ -83,6 +85,7 @@ public class OriginalStageTest extends StageTest {
 		meshActor3.setPosition(800, 200);
 		meshActor3.setColor(new Color(Color.WHITE));
 		meshActor3.setMesh(Geometry.createOctagonalBipyramid());
+		meshActor3.setVertices(Geometry.calculateVertices2D(8));
 		meshActor3.setMaterial(material);
 		stage.addActor(meshActor3);
 
@@ -93,6 +96,7 @@ public class OriginalStageTest extends StageTest {
 		meshActor4.setPosition(800, 600);
 		meshActor4.setColor(new Color(Color.GRAY));
 		meshActor4.setMesh(Geometry.createOctahedron());
+		meshActor4.setVertices(Geometry.calculateVertices2D(4));
 		meshActor4.setMaterial(material);
 		meshActor4.addAction(
 			forever(
@@ -111,6 +115,7 @@ public class OriginalStageTest extends StageTest {
 		mA5.setPosition(100, 500);
 		mA5.setColor(new Color(Color.GREEN));
 		mA5.setMesh(Geometry.createBicolorBipyramid(4, new Color(Color.ORANGE), new Color(Color.MAGENTA)));
+		mA5.setVertices(Geometry.calculateVertices2D(4));
 //		mA5.setMesh(Geometry.createOctahedron());
 		mA5.setMaterial(material);
 		mA5.addAction(

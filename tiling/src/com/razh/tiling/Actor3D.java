@@ -41,4 +41,11 @@ public class Actor3D extends Actor {
 	public void setDepth(float depth) {
 		mDepth = depth;
 	}
+
+	public Vector3 vectorTo(Actor3D actor) {
+		return actor.getPosition()
+		     	    .cpy()
+		            .sub(getPosition())
+		            .nor();
+	}
 }

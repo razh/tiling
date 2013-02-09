@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.razh.tiling.logic.TilingEntity;
 
 public class GameInputProcessor implements InputProcessor {
 	private MeshStage mStage;
@@ -55,9 +56,13 @@ public class GameInputProcessor implements InputProcessor {
 
 		Vector2 point = screenToStageCoordinates(screenX, screenY);
 
-		Actor hit = mStage.hit(point.x, point.y, true);
+		MeshActor hit = (MeshActor) mStage.hit(point.x, point.y, true);
 		if (hit != null) {
 			mPlayer.setSelected(hit);
+			if (mPlayer.getSelected().hasEntity()) {
+				((TilingEntity) mPlayer.getSelected().getEntity()).touch();
+			}
+
 			mOffset.set(point).sub(hit.getX(), hit.getY());
 		}
 
@@ -87,7 +92,7 @@ public class GameInputProcessor implements InputProcessor {
 
 		Actor selected = mPlayer.getSelected();
 		if (selected != null) {
-			selected.setPosition(point.x - mOffset.x, point.y - mOffset.y);
+//			selected.setPosition(point.x - mOffset.x, point.y - mOffset.y);
 		}
 
 		return false;

@@ -2,6 +2,8 @@ package com.razh.tiling.logic;
 
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
 
+import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Action;
 
 public class TilingEntity extends GraphEntity {
@@ -25,9 +27,11 @@ public class TilingEntity extends GraphEntity {
 			return;
 		}
 
+		setFlipping(true);
+
 		getActor().addAction(
 			sequence(
-				rotateBy( 180, 2.0f ),
+				rotateBy( 180, 0.5f, Interpolation.pow2 ),
 				new Action() {
 					@Override
 					public boolean act(float delta) {
@@ -44,10 +48,15 @@ public class TilingEntity extends GraphEntity {
 			return;
 		}
 
+		getActor().setRotationAxis(Vector3.Y.cpy().rotate(Vector3.Z, getActor().getOrientation()));
 		flip();
 
+		TilingEntity neighbor;
 		for (int i = 0, n = getNeighbors().size(); i < n; i++) {
-			((TilingEntity) getNeighbors().get(i)).flip();
+			neighbor = (TilingEntity) getNeighbors().get(i);
+
+			neighbor.getActor().setRotationAxis(neighbor.getActor().vectorTo(getActor()));
+			neighbor.flip();
 		}
 	}
 }

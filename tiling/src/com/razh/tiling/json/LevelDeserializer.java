@@ -63,7 +63,7 @@ public class LevelDeserializer implements JsonDeserializer<Level> {
 				entity = (TilingEntity) level.getActorAt(i).getEntity();
 
 				for (int j = 0, m = jsonEdgeList.size(); j < m; j++) {
-					index = jsonEdgeList.get(i).getAsInt();
+					index = jsonEdgeList.get(j).getAsInt();
 					entity.addNeighbor((GraphEntity) level.getActorAt(index).getEntity());
 				}
 			}

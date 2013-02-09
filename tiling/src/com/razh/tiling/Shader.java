@@ -60,11 +60,13 @@ public class Shader {
 			"  gl_FragColor = vec4(vec3(1.0), opacity);\n" +
 			"  gl_FragColor.xyz *= v_lightFront;\n" +
 			"}";
-		System.out.println(vertex);
-		System.out.println(fragment);
 
 		ShaderProgram shaderProgram = new ShaderProgram(vertex, fragment);
-	 	System.out.println("Compiled: " + shaderProgram.isCompiled() + "----------");
+		if (!shaderProgram.isCompiled()) {
+			System.out.println(vertex);
+			System.out.println(fragment);
+		}
+
 		return shaderProgram;
 	}
 
@@ -125,11 +127,12 @@ public class Shader {
 			"  gl_FragColor.xyz *= v_lightFront;\n" +
 			"}";
 
-		System.out.println(vertex);
-		System.out.println(fragment);
-
 		ShaderProgram shaderProgram = new ShaderProgram(vertex, fragment);
-	 	System.out.println("Compiled: " + shaderProgram.isCompiled() + "----------");
+		if (!shaderProgram.isCompiled()) {
+			System.out.println(vertex);
+			System.out.println(fragment);
+		}
+
 		return shaderProgram;
 	}
 
@@ -201,11 +204,13 @@ public class Shader {
 				"  }\n" +
 				"  gl_FragColor.xyz = gl_FragColor.xyz * (emissive + pointDiffuse + ambientLightColor * ambient) + pointSpecular;\n" +
 				"}";
-			System.out.println(vertex);
-			System.out.println(fragment);
 
 			ShaderProgram shaderProgram = new ShaderProgram(vertex, fragment);
-		 	System.out.println("Compiled: " + shaderProgram.isCompiled() + "----------");
+			if (!shaderProgram.isCompiled()) {
+				System.out.println(vertex);
+				System.out.println(fragment);
+			}
+
 			return shaderProgram;
 	}
 
@@ -279,11 +284,13 @@ public class Shader {
 				"  }\n" +
 				"  gl_FragColor.xyz = gl_FragColor.xyz * (emissive + pointDiffuse + ambientLightColor * ambient) + pointSpecular;\n" +
 				"}";
-			System.out.println(vertex);
-			System.out.println(fragment);
 
 			ShaderProgram shaderProgram = new ShaderProgram(vertex, fragment);
-		 	System.out.println("Compiled: " + shaderProgram.isCompiled() + "----------");
+			if (!shaderProgram.isCompiled()) {
+				System.out.println(vertex);
+				System.out.println(fragment);
+			}
+
 			return shaderProgram;
 	}
 
@@ -312,7 +319,11 @@ public class Shader {
 			"}";
 
 		ShaderProgram shaderProgram = new ShaderProgram(vertex, fragment);
-		System.out.println("PLCompiled: " + shaderProgram.isCompiled() + "----------");
+		if (!shaderProgram.isCompiled()) {
+			System.out.println(vertex);
+			System.out.println(fragment);
+		}
+
 		return shaderProgram;
 	}
 }

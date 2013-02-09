@@ -64,7 +64,7 @@ public class Geometry {
                              VertexAttribute.Normal());
 
 		// Array of unique vertices, with the top vertex at 0, and bottom vertex at end.
-		float[] shapeVertices = getShapeVertices(subdivisions);
+		float[] shapeVertices = calculateVertices(subdivisions);
 		// Three vertex components and three normal components.
 		float[] vertices = new float[numVertices * 6];
 		short[] indices = new short[numIndices];
@@ -199,7 +199,7 @@ public class Geometry {
                                                  ShaderProgram.COLOR_ATTRIBUTE));
 
 		// Array of unique vertices, with the top vertex at 0, and bottom vertex at end.
-		float[] shapeVertices = getShapeVertices(subdivisions);
+		float[] shapeVertices = calculateVertices(subdivisions);
 		// Three vertex components, three normal components, and three color components.
 		float[] vertices = new float[numVertices * 9];
 		short[] indices = new short[numIndices];
@@ -352,7 +352,7 @@ public class Geometry {
 	/**
 	 * Returns the perimeter vertices which define the shape.
 	 */
-	public static float[] getShapeVertices(int subdivisions) {
+	public static float[] calculateVertices(int subdivisions) {
 		if (subdivisions < 3) {
 			return null;
 		}
@@ -380,6 +380,27 @@ public class Geometry {
 		shapeVertices[vtxIndex++] = 0.0f;
 		shapeVertices[vtxIndex++] = 0.0f;
 		shapeVertices[vtxIndex++] = -1.0f;
+
+		return shapeVertices;
+	}
+
+	public static float[] calculateVertices2D(int subdivisions) {
+		if (subdivisions < 3) {
+			return null;
+		}
+
+		float[] shapeVertices = new float[subdivisions * 2];
+
+		// Generate vertices in reverse order (as counterclockwise is front-facing).
+		float subdivAngle = (float) -(Math.PI * 2 / subdivisions);
+		int vtxIndex = 0;
+
+		// Generate the vertices which comprise the shape.
+		// Side vertices.
+		for (int i = 0; i < subdivisions; i++) {
+			shapeVertices[vtxIndex++] = (float) Math.sin(i * subdivAngle);
+			shapeVertices[vtxIndex++] = (float) Math.cos(i * subdivAngle);
+		}
 
 		return shapeVertices;
 	}
