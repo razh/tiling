@@ -244,10 +244,7 @@ var Editor = function() {
   this._canvas.width = this.WIDTH;
   this._canvas.height = this.HEIGHT;
 
-  this._backgroundColor = new Color( 100, 100, 100, 1.0 );
-  this._ambientColor = new Color( 0, 0, 0, 1.0 );
-  this._altColors = false;
-
+  // UI elements.
   this._inspectorPane = $( '#inspector-pane' );
   this._patternPane   = $( '#pattern-pane' );
   this._levelPane     = $( '#level-pane' );
@@ -292,6 +289,11 @@ var Editor = function() {
     x: 0,
     y: 0
   };
+
+  this._stroke = 0.0;
+  this._backgroundColor = new Color( 100, 100, 100, 1.0 );
+  this._ambientColor = new Color( 0, 0, 0, 1.0 );
+  this._altColors = false;
 
   this._running = true;
 
@@ -359,7 +361,7 @@ Editor.prototype.draw = function() {
   // Draw shapes.
   var i, n;
   for ( i = 0, n = this._shapes.length; i < n; i++ ) {
-    this._shapes[i].draw( this._ctx, this._altColors );
+    this._shapes[i].draw( this._ctx, this.getStroke(), this._altColors );
   }
 
   // Draw lights.
@@ -444,6 +446,18 @@ Editor.prototype.loadLevelInspector = function( level ) {
     setter: 'setScale',
     min:    0.1,
     max:    10.0,
+    step:   0.1,
+    digits: 1
+  });
+
+  Form.createFloatForm({
+    $id:    this._levelPane,
+    object: this,
+    name:   'stroke',
+    getter: 'getStroke',
+    setter: 'setStroke',
+    min:    0.1,
+    max:    20.0,
     step:   0.1,
     digits: 1
   });
@@ -643,6 +657,15 @@ Editor.prototype.setOffset = function() {
   }
 };
 
+// Stroke.
+Editor.prototype.getStroke = function() {
+  return this._stroke;
+};
+
+Editor.prototype.setStroke = function( stroke ) {
+  this._stroke = stroke;
+};
+
 // Background color.
 Editor.prototype.getBackgroundColor = function() {
   return this._backgroundColor;
@@ -748,6 +771,7 @@ Editor.prototype.setLevel = function( level ) {
 Editor.prototype.loadLevel = function( level ) {
   this.setLevelName( level.getName() );
   this.setScale( level.getScale() );
+  this.setStroke( level.getStroke() );
   this.setBackgroundColor( level.getBackgroundColor() );
   this.setAmbientColor( level.getAmbientColor() );
 
@@ -778,6 +802,7 @@ Editor.prototype.exportLevel = function() {
 
   level.setName( this.getLevelName() );
   level.setScale( this.getScale() );
+  level.setStroke( this.getStroke() );
   level.setBackgroundColor( this.getBackgroundColor() );
   level.setAmbientColor( this.getAmbientColor() );
   level.setPattern( this.getPattern() );

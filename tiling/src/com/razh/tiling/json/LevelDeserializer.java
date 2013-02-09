@@ -25,6 +25,7 @@ public class LevelDeserializer implements JsonDeserializer<Level> {
 
 		String name = object.get("name").getAsString();
 		float scale = object.get("scale").getAsFloat();
+		float stroke = object.get("stroke").getAsFloat();
 		Color backgroundColor = (Color) context.deserialize(object.get("backgroundColor"), Color.class);
 		Color ambientColor = (Color) context.deserialize(object.get("ambientColor"), Color.class);
 
@@ -39,6 +40,13 @@ public class LevelDeserializer implements JsonDeserializer<Level> {
 		TilingEntity entity;
 		for (int i = 0, n = jsonShapes.size(); i < n; i++) {
 			actor = (MeshActor) context.deserialize(jsonShapes.get(i), MeshActor.class);
+
+			// Add stroke.
+			if (stroke != 0.0f) {
+				actor.setWidth(actor.getWidth() - stroke);
+				actor.setHeight(actor.getHeight() - stroke);
+			}
+
 			if (actor != null) {
 				entity = new TilingEntity();
 				actor.setEntity(entity);

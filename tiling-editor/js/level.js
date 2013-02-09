@@ -2,6 +2,7 @@ var Level = function() {
   this._name = '';
 
   this._scale = 1.0;
+  this._stroke = 0.0;
 
   this._patternURL = '';
   this._pattern = null;
@@ -34,6 +35,14 @@ Level.prototype.getScale = function() {
 
 Level.prototype.setScale = function( scale ) {
   this._scale = scale;
+};
+
+Level.prototype.getStroke = function() {
+  return this._stroke;
+};
+
+Level.prototype.setStroke = function( stroke ) {
+  this._stroke = stroke;
 };
 
 Level.prototype.getPattern = function() {
@@ -141,6 +150,7 @@ Level.prototype.fromJSON = function( json ) {
 
   this.setName( jsonObject.name || '' );
   this.setScale( jsonObject.scale || 1.0 );
+  this.setStroke( jsonObject.stroke || 0.0 );
   this.setBackgroundColor( backgroundColor );
   this.setAmbientColor( ambientColor );
   this.setGraph( graph );
@@ -153,6 +163,7 @@ Level.prototype.toJSON = function( pattern ) {
 
   object.name  = this.getName();
   object.scale = this.getScale();
+  object.stroke = this.getStroke();
 
   if ( pattern ) {
     if ( this._patternURL.length !== 0 ) {

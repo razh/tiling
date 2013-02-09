@@ -18,11 +18,13 @@ var Shape = function() {
 
 Shape.prototype.update = function( elapsedTime ) {};
 
-Shape.prototype.draw = function( ctx, altColor ) {
+Shape.prototype.draw = function( ctx, stroke, altColor ) {
+  stroke = stroke || 0.0;
+
   ctx.save();
   ctx.translate( this.getX(), this.getY() );
   ctx.rotate( this.getRotation() );
-  ctx.scale( this.getWidth(), this.getHeight() );
+  ctx.scale( this.getWidth() - stroke, this.getHeight() - stroke );
 
   ctx.beginPath();
 
