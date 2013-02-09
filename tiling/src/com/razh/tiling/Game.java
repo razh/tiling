@@ -15,6 +15,7 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.SnapshotArray;
 import com.razh.tiling.files.LevelLoader;
+import com.razh.tiling.tests.CollisionStageTest;
 import com.razh.tiling.tests.OriginalStageTest;
 
 public class Game implements ApplicationListener {
@@ -84,8 +85,9 @@ public class Game implements ApplicationListener {
 		}
 		mStage.setColorShaderProgram(mColorShaderProgram);
 
-		OriginalStageTest test = new OriginalStageTest();
-//		test.load(mStage);
+//		OriginalStageTest test = new OriginalStageTest();
+		CollisionStageTest test = new CollisionStageTest();
+		test.load(mStage);
 
 		mPlayer = new Player();
 		mLevelLoader = new LevelLoader();

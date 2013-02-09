@@ -1,5 +1,7 @@
 package com.razh.tiling;
 
+import java.util.ArrayList;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -15,9 +17,11 @@ public class MeshStage extends Stage {
 
 	private MeshGroup mRoot;
 	private MeshGroup mColorRoot;
+	private ArrayList<Light> mTestRoot;
 	private ShaderProgram mShaderProgram;
 	private ShaderProgram mColorShaderProgram;
 	private ShaderProgram mPointLightShaderProgram;
+	private ShaderProgram mTestShaderProgram;
 
 	private SnapshotArray<Light> mLights;
 
@@ -43,6 +47,8 @@ public class MeshStage extends Stage {
 		mColorRoot = new MeshGroup();
 		mColorRoot.setStage(this);
 
+		mTestRoot = new ArrayList<Light>();
+
 		mLights = new SnapshotArray<Light>(Light.class);
 
 		mColorActor = new Actor();
@@ -59,6 +65,10 @@ public class MeshStage extends Stage {
 
 	public void setPointLightShaderProgram(ShaderProgram shaderProgram) {
 		mPointLightShaderProgram = shaderProgram;
+	}
+
+	public void setTestShaderProgram(ShaderProgram shaderProgram) {
+		mTestShaderProgram = shaderProgram;
 	}
 
 	public void draw(ShaderProgram shaderProgram) {
@@ -113,6 +123,15 @@ public class MeshStage extends Stage {
 			mLights.end();
 			mPointLightShaderProgram.end();
 		}
+
+		if (mTestShaderProgram != null) {
+			mTestShaderProgram.begin();
+			mTestShaderProgram.setUniformMatrix("modelViewProjectionMatrix", getCamera().combined);
+			for (int i = 0; i < mTestRoot.size(); i++) {
+				mTestRoot.get(i).draw(mTestShaderProgram, 1.0f);
+			}
+			mTestShaderProgram.end();
+		}
 	}
 
 	public float getScale() {
@@ -137,6 +156,10 @@ public class MeshStage extends Stage {
 		mColorRoot.addActor(actor);
 	}
 
+	public void addTest(Light test) {
+		mTestRoot.add(test);
+	}
+
 	public SnapshotArray<Light> getLights() {
 		return mLights;
 	}
@@ -159,6 +182,18 @@ public class MeshStage extends Stage {
 		mLights.end();
 
 		mColorActor.act(delta);
+
+		for (int i = 0; i < mTestRoot.size(); i++) {
+			float x = 10 * (i % 10);
+			float y = 10 * (i / 10);
+//			mTestRoot.get(i).act(delta);
+//			mTestRoot.get(i).setPosition(i * 2, 200);
+			if (mColorRoot.hit(mTestRoot.get(i).getX(), mTestRoot.get(i).getY(), true) != null) {
+				mTestRoot.get(i).setColor(new Color(Color.GREEN));
+			} else {
+				mTestRoot.get(i).setColor(new Color(Color.RED));
+			}
+		}
 	}
 
 	@Override
