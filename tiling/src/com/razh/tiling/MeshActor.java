@@ -132,14 +132,14 @@ public class MeshActor extends Actor3D {
 	public Vector2 worldToLocalCoordinates(Vector2 worldCoords) {
 		return worldCoords.cpy()
 		     	          .sub(getX(), getY())
-		                  .rotate(getOrientation())
+		                  .rotate(-getOrientation())
 		                  .div(getWidth(), getHeight());
 	}
 
 	public Vector2 localToWorldCoordinates(Vector2 localCoords) {
 		return localCoords.cpy()
 		                  .mul(getWidth(), getHeight())
-		                  .rotate(-getOrientation())
+		                  .rotate(getOrientation())
 		                  .add(getX(), getY());
 
 	}

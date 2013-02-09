@@ -6,6 +6,8 @@ import com.badlogic.gdx.graphics.Color;
 
 public class Level {
 	private String mName;
+	private float mScale;
+
 	private ArrayList<MeshActor> mActors;
 	private ArrayList<Light> mLights;
 
@@ -14,6 +16,7 @@ public class Level {
 
 	public Level() {
 		setName("");
+		setScale(1.0f);
 		setActors(new ArrayList<MeshActor>());
 		setLights(new ArrayList<Light>());
 		setBackgroundColor(new Color());
@@ -56,6 +59,14 @@ public class Level {
 		mName = name;
 	}
 
+	public float getScale() {
+		return mScale;
+	}
+
+	public void setScale(float scale) {
+		mScale = scale;
+	}
+
 	public Color getBackgroundColor() {
 		return mBackgroundColor;
 	}
@@ -73,6 +84,10 @@ public class Level {
 	}
 
 	public void load(MeshStage stage) {
+		if (getScale() != 1.0f) {
+			stage.setScale(getScale());
+		}
+
 		stage.setColor(getBackgroundColor());
 
 		for (int i = 0, n = mActors.size(); i < n; i++) {

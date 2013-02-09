@@ -1,6 +1,8 @@
 var Level = function() {
   this._name = '';
 
+  this._scale = 1.0;
+
   this._patternURL = '';
   this._pattern = null;
 
@@ -24,6 +26,14 @@ Level.prototype.getName = function() {
 
 Level.prototype.setName = function( name ) {
   this._name = name;
+};
+
+Level.prototype.getScale = function() {
+  return this._scale;
+};
+
+Level.prototype.setScale = function( scale ) {
+  this._scale = scale;
 };
 
 Level.prototype.getPattern = function() {
@@ -111,7 +121,7 @@ Level.prototype.fromJSON = function( json ) {
 
   this._lights = [];
   for ( i = 0, n = jsonObject.lights.length; i < n; i++ ) {
-    this.addShape( new Shape().fromJSON( JSON.stringify( jsonObject.shapes[i] ) ) );
+    this.addLight( new Light().fromJSON( JSON.stringify( jsonObject.lights[i] ) ) );
   }
 
   if ( jsonObject.pattern === undefined ) {
@@ -130,6 +140,7 @@ Level.prototype.fromJSON = function( json ) {
   var graph = new Graph().fromJSON( JSON.stringify( jsonObject.graph ) );
 
   this.setName( jsonObject.name || '' );
+  this.setScale( jsonObject.scale || 1.0 );
   this.setBackgroundColor( backgroundColor );
   this.setAmbientColor( ambientColor );
   this.setGraph( graph );
@@ -140,7 +151,9 @@ Level.prototype.fromJSON = function( json ) {
 Level.prototype.toJSON = function( pattern ) {
   var object = {};
 
-  object.name = this.getName();
+  object.name  = this.getName();
+  object.scale = this.getScale();
+
   if ( pattern ) {
     if ( this._patternURL.length !== 0 ) {
       object.patternURL = this._patternURL;
@@ -152,12 +165,12 @@ Level.prototype.toJSON = function( pattern ) {
   object.shapes = [];
   var i, n;
   for ( i = 0, n = this._shapes.length; i < n; i++ ) {
-    object.shapes.push( this._shapes[i].toJSON() );
+    object.shapes.push( this._shapes[i].toJSON( this.getScale() ) );
   }
 
   object.lights = [];
   for ( i = 0, n = this._lights.length; i < n; i++ ) {
-    object.lights.push( this._lights[i].toJSON() );
+    object.lights.push( this._lights[i].toJSON( this.getScale() ) );
   }
 
   object.graph = this.getGraph();

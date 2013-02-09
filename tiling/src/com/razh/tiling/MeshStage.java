@@ -11,6 +11,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.SnapshotArray;
 
 public class MeshStage extends Stage {
+	private float mScale;
+
 	private MeshGroup mRoot;
 	private MeshGroup mColorRoot;
 	private ShaderProgram mShaderProgram;
@@ -32,6 +34,8 @@ public class MeshStage extends Stage {
 			setCamera(new OrthographicCamera());
 			setViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), stretch);
 		}
+
+		setScale(1.0f);
 
 		mRoot = new MeshGroup();
 		mRoot.setStage(this);
@@ -111,6 +115,18 @@ public class MeshStage extends Stage {
 		}
 	}
 
+	public float getScale() {
+		return mScale;
+	}
+
+	public void setScale(float scale) {
+		if ( scale != 1.0f ) {
+			mScale = scale;
+			setViewport(Gdx.graphics.getWidth() / scale, Gdx.graphics.getHeight() / scale, false);
+			getCamera().position.z = 10000.0f;
+		}
+	}
+
 	@Override
 	public void addActor(Actor actor) {
 		mRoot.addActor(actor);
@@ -118,6 +134,10 @@ public class MeshStage extends Stage {
 
 	public void addColorActor(MeshActor actor) {
 		mColorRoot.addActor(actor);
+	}
+
+	public SnapshotArray<Light> getLights() {
+		return mLights;
 	}
 
 	public void addLight(Light light) {
@@ -157,10 +177,6 @@ public class MeshStage extends Stage {
 		mColorActor.setColor(color);
 	}
 
-	public SnapshotArray<Light> getLights() {
-		return mLights;
-	}
-
 	@Override
 	public void addAction(Action action) {
 		mColorActor.addAction(action);
@@ -168,6 +184,9 @@ public class MeshStage extends Stage {
 
 	@Override
 	public Actor hit(float stageX, float stageY, boolean touchable) {
+		stageX /= getScale();
+		stageY /= getScale();
+
 		Vector2 actorCoords = Vector2.tmp;
 		getRoot().parentToLocalCoordinates(actorCoords.set(stageX, stageY));
 		Actor hit = getRoot().hit(actorCoords.x, actorCoords.y, touchable);

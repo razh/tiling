@@ -281,6 +281,7 @@ var Editor = function() {
   this._lights = [];
   this._levelName = '';
 
+  this._scale = 1.0;
   this._translate = {
     x: 0,
     y: 0
@@ -415,6 +416,18 @@ Editor.prototype.loadLevelInspector = function( level ) {
     setter: 'setLevelName'
   });
 
+  Form.createFloatForm({
+    $id:    this._levelPane,
+    object: this,
+    name:   'scale',
+    getter: 'getScale',
+    setter: 'setScale',
+    min:    0.1,
+    max:    10.0,
+    step:   0.1,
+    digits: 1
+  });
+
   Form.createColorForm({
     $id:    this._levelPane,
     object: this,
@@ -496,6 +509,15 @@ Editor.prototype.removeLight = function( light ) {
   if ( index !== -1 ) {
     this._lights.splice( index, 1 );
   }
+};
+
+// Scale.
+Editor.prototype.getScale = function() {
+  return this._scale;
+};
+
+Editor.prototype.setScale = function( scale ) {
+  this._scale = scale;
 };
 
 // Translate.
@@ -695,6 +717,7 @@ Editor.prototype.setLevel = function( level ) {
 
 Editor.prototype.loadLevel = function( level ) {
   this.setLevelName( level.getName() );
+  this.setScale( level.getScale() );
   this.setBackgroundColor( level.getBackgroundColor() );
   this.setAmbientColor( level.getAmbientColor() );
 
@@ -724,6 +747,7 @@ Editor.prototype.exportLevel = function() {
   var level = new Level();
 
   level.setName( this.getLevelName() );
+  level.setScale( this.getScale() );
   level.setBackgroundColor( this.getBackgroundColor() );
   level.setAmbientColor( this.getAmbientColor() );
   level.setPattern( this.getPattern() );
