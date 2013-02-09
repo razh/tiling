@@ -396,6 +396,16 @@ Editor.prototype.loadInspector = function( object, prototypical ) {
   this._inspectorPane.empty();
 
   object.createInspector( this._inspectorPane, prototypical );
+
+  // Prevent shape inspector form inputs from triggering key commands.
+  this._inspectorPane.find( ':input' ).on({
+    focus: function() {
+      _editor.setState( EditorState.TEXT_EDITING );
+    },
+    blur: function() {
+      _editor.setState( EditorState.DEFAULT );
+    }
+  });
 };
 
 Editor.prototype.loadPatternInspector = function( pattern ) {
@@ -439,6 +449,16 @@ Editor.prototype.loadLevelInspector = function( level ) {
     object: this,
     getter: 'getAmbientColor',
     prefix: 'amb'
+  });
+
+  // Prevent level inspector form inputs from triggering key commands.
+  this._levelPane.find( ':input' ).on({
+    focus: function() {
+      _editor.setState( EditorState.TEXT_EDITING );
+    },
+    blur: function() {
+      _editor.setState( EditorState.DEFAULT );
+    }
   });
 };
 

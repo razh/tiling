@@ -39,7 +39,7 @@ public class MeshActorDeserializer implements JsonDeserializer<MeshActor> {
 		MeshActor actor = new MeshActor();
 		actor.setWidth(width);
 		actor.setHeight(height);
-		actor.setDepth(0.5f * width);
+		actor.setDepth(0.75f * width);
 		actor.setPosition(x, y);
 		actor.setOrientation(rotation);
 		actor.setColor(color);
