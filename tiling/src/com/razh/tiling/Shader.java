@@ -303,7 +303,6 @@ public class Shader {
 			"\n" +
 			"void main()\n" +
 			"{\n" +
-			"  gl_PointSize = 5.0;\n" +
 			"  gl_Position = modelViewProjectionMatrix * vec4(scale * a_position + translate, 1.0);\n" +
 			"}";
 

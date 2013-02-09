@@ -120,11 +120,12 @@ public class MeshStage extends Stage {
 	}
 
 	public void setScale(float scale) {
-		if ( scale != 1.0f ) {
-			mScale = scale;
+		if ( mScale != scale ) {
 			setViewport(Gdx.graphics.getWidth() / scale, Gdx.graphics.getHeight() / scale, false);
 			getCamera().position.z = 10000.0f;
 		}
+
+		mScale = scale;
 	}
 
 	@Override
@@ -184,8 +185,10 @@ public class MeshStage extends Stage {
 
 	@Override
 	public Actor hit(float stageX, float stageY, boolean touchable) {
-		stageX /= getScale();
-		stageY /= getScale();
+		if (getScale() != 1.0f) {
+			stageX /= getScale();
+			stageY /= getScale();
+		}
 
 		Vector2 actorCoords = Vector2.tmp;
 		getRoot().parentToLocalCoordinates(actorCoords.set(stageX, stageY));
