@@ -59,8 +59,8 @@ public class GameInputProcessor implements InputProcessor {
 		MeshActor hit = (MeshActor) mStage.hit(point.x, point.y, true);
 		if (hit != null) {
 			mPlayer.setSelected(hit);
-			if (mPlayer.getSelected().hasEntity()) {
-				((TilingEntity) mPlayer.getSelected().getEntity()).touch();
+			if (hit.hasEntity()) {
+				((TilingEntity) hit.getEntity()).touch();
 			}
 
 			mOffset.set(point).sub(hit.getX(), hit.getY());
@@ -84,17 +84,6 @@ public class GameInputProcessor implements InputProcessor {
 
 	@Override
 	public boolean touchDragged(int screenX, int screenY, int pointer) {
-		if (mStage == null || mPlayer == null) {
-			return false;
-		}
-
-		Vector2 point = screenToStageCoordinates(screenX, screenY);
-
-		Actor selected = mPlayer.getSelected();
-		if (selected != null) {
-//			selected.setPosition(point.x - mOffset.x, point.y - mOffset.y);
-		}
-
 		return false;
 	}
 

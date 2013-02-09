@@ -31,7 +31,7 @@ public class TilingEntity extends GraphEntity {
 
 		getActor().addAction(
 			sequence(
-				rotateBy( 180, 0.5f, Interpolation.pow2 ),
+				rotateBy( 180, 0.4f, Interpolation.pow2 ),
 				new Action() {
 					@Override
 					public boolean act(float delta) {
