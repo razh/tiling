@@ -348,11 +348,21 @@ Editor.prototype.draw = function() {
   // Coordinates are reversed in the OpenGL game.
   this._ctx.scale( 1, -1 );
 
+  // Show outline of camera/stage boundaries.
+  if ( this.getBackgroundColor().getBrightness() < 186 ) {
+    this._ctx.strokeStyle = 'rgba( 255, 255, 255, 1.0 )';
+  } else {
+    this._ctx.strokeStyle = 'rgba( 0, 0, 0, 1.0 )';
+  }
+  this._ctx.strokeRect( 0, 0, 1280 / this.getScale(), 720 / this.getScale() );
+
+  // Draw shapes.
   var i, n;
   for ( i = 0, n = this._shapes.length; i < n; i++ ) {
     this._shapes[i].draw( this._ctx, this._altColors );
   }
 
+  // Draw lights.
   for ( i = 0, n = this._lights.length; i < n; i++ ) {
     this._lights[i].draw( this._ctx, this._altColors );
   }

@@ -23,14 +23,7 @@ Graph.prototype.draw = function( ctx, shapes ) {
   }
   ctx.closePath();
 
-  // See Mark Ransom's answer on StackOverflow.
-  // http://stackoverflow.com/questions/946544/good-text-foreground-color-for-a-given-background-color
-  var backgroundColor = _editor.getBackgroundColor();
-  var brightness = 0.299 * backgroundColor.getRed()   +
-                   0.587 * backgroundColor.getGreen() +
-                   0.114 * backgroundColor.getBlue();
-
-  if ( brightness < 186 ) {
+  if ( _editor.getBackgroundColor().getBrightness() < 186 ) {
     ctx.strokeStyle = 'rgba( 255, 255, 255, 1.0 )';
   } else {
     ctx.strokeStyle = 'rgba( 0, 0, 0, 1.0 )';

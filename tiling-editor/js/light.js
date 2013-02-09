@@ -20,8 +20,8 @@ Light.prototype.constructor = Light;
 // Approximate difference in scales.
 Light.scaleFactor = 10;
 
-Light.prototype.draw = function( ctx, altColor ) {
-  Shape.prototype.draw.call( this, ctx, altColor );
+Light.prototype.draw = function( ctx ) {
+  Shape.prototype.draw.call( this, ctx );
 
   ctx.save();
   ctx.translate( this.getX(), this.getY() );

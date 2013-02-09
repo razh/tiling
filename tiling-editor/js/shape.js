@@ -631,6 +631,14 @@ Color.prototype.setAlpha = function( alpha ) {
   return this;
 };
 
+Color.prototype.getBrightness = function() {
+  // See Mark Ransom's answer on StackOverflow.
+  // http://stackoverflow.com/questions/946544/good-text-foreground-color-for-a-given-background-color
+  return 0.299 * this.getRed()   +
+         0.587 * this.getGreen() +
+         0.114 * this.getBlue();
+};
+
 Color.prototype.toString = function() {
   return 'rgba( ' + ( ( 0.5 + this.getRed() )   << 0 ) +
          ', '     + ( ( 0.5 + this.getGreen() ) << 0 ) +
