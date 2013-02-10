@@ -45,20 +45,22 @@ public class MeshActor extends Actor3D {
 		}
 	}
 
-	public void draw(ShaderProgram shaderProgram, float parentAlpha) {
+	public void draw(ShaderProgram shaderProgram, float stroke) {
 		if (mShaderProgram != shaderProgram) {
 			setShaderProgram(shaderProgram);
 		}
 
-		draw(parentAlpha);
+		draw(stroke);
 	}
 
-	public void draw(float parentAlpha) {
+	public void draw(float stroke) {
 		mModelMatrix.idt()
 		            .translate(getPosition())
 		            .rotate(getRotationAxis(), getRotation())
 		            .rotate(Vector3.Z, getOrientation())
-		            .scale(getWidth(), getHeight(), getDepth());
+		            .scale(getWidth() - stroke,
+		                   getHeight() - stroke,
+		                   getDepth() - stroke );
 		mShaderProgram.setUniformMatrix("modelMatrix", mModelMatrix);
 
 		mNormalMatrix.set(mModelMatrix.cpy().inv()).transpose();

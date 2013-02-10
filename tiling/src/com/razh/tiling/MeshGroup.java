@@ -11,22 +11,23 @@ public class MeshGroup extends Group {
 	private ShaderProgram mShaderProgram;
 	private MeshStage mStage;
 
-	public void draw(ShaderProgram shaderProgram, float parentAlpha) {
-		mShaderProgram = shaderProgram;
+	public void draw(ShaderProgram shaderProgram, float stroke) {
+		if (mShaderProgram != shaderProgram) {
+			setShaderProgram(shaderProgram);
+		}
 
-		draw(parentAlpha);
+		draw(stroke);
 	}
-	
-	public void draw(float parentAlpha) {
+
+	public void draw(float stroke) {
 		if (mShaderProgram == null) {
 			return;
 		}
 
-		drawChildren(parentAlpha);
+		drawChildren(stroke);
 	}
 
-	protected void drawChildren(float parentAlpha) {
-		parentAlpha *= getColor().a;
+	protected void drawChildren(float stroke) {
 		SnapshotArray<Actor> children = getChildren();
 		Actor[] actors = children.begin();
 
@@ -38,9 +39,9 @@ public class MeshGroup extends Group {
 
 			// Because MeshGroup does not inherit from MeshActor.
 			if (child instanceof MeshActor)
-				((MeshActor) child).draw(mShaderProgram, parentAlpha);
+				((MeshActor) child).draw(mShaderProgram, stroke);
 			if (child instanceof MeshGroup)
-				((MeshGroup) child).draw(mShaderProgram, parentAlpha);
+				((MeshGroup) child).draw(mShaderProgram, stroke);
 		}
 
 		children.end();
@@ -52,9 +53,9 @@ public class MeshGroup extends Group {
 		 * The original order of Group.act() has the Group Actor acting first,
 		 * and then its children Actors acting. If a child Actor is removed, this results
 		 * in a null reference to the given Actor. The order is reversed here as
-		 * a fix.  
+		 * a fix.
 		 */
-		
+
 		// Actor.act().
 		for (int i = 0, n = getActions().size; i < n; i++) {
 			Action action = getActions().get(i);
@@ -117,5 +118,13 @@ public class MeshGroup extends Group {
 		children.end();
 
 		return null;
+	}
+
+	public ShaderProgram getShaderProgram() {
+		return mShaderProgram;
+	}
+
+	public void setShaderProgram(ShaderProgram shaderProgram) {
+		mShaderProgram = shaderProgram;
 	}
 }

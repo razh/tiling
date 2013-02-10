@@ -12,6 +12,7 @@ import com.badlogic.gdx.utils.SnapshotArray;
 
 public class MeshStage extends Stage {
 	private float mScale;
+	private float mStroke;
 
 	private MeshGroup mRoot;
 	private MeshGroup mColorRoot;
@@ -77,7 +78,7 @@ public class MeshStage extends Stage {
 			mShaderProgram.setUniformMatrix("projectionMatrix", getCamera().projection);
 			mShaderProgram.setUniformMatrix("viewMatrix", getCamera().view);
 
-			mRoot.draw(mShaderProgram, 1.0f);
+			mRoot.draw(mShaderProgram, getStroke());
 
 			mShaderProgram.end();
 		}
@@ -89,7 +90,7 @@ public class MeshStage extends Stage {
 			mColorShaderProgram.setUniformMatrix("projectionMatrix", getCamera().projection);
 			mColorShaderProgram.setUniformMatrix("viewMatrix", getCamera().view);
 
-			mColorRoot.draw(mColorShaderProgram, 1.0f);
+			mColorRoot.draw(mColorShaderProgram, getStroke());
 
 			mColorShaderProgram.end();
 		}
@@ -107,7 +108,7 @@ public class MeshStage extends Stage {
 				}
 
 				if (light instanceof PointLight) {
-					light.draw(mPointLightShaderProgram, 1.0f);
+					light.draw(mPointLightShaderProgram);
 				}
 			}
 			mLights.end();
@@ -126,6 +127,14 @@ public class MeshStage extends Stage {
 		}
 
 		mScale = scale;
+	}
+
+	public float getStroke() {
+		return mStroke;
+	}
+
+	public void setStroke(float stroke) {
+		mStroke = stroke;
 	}
 
 	@Override
