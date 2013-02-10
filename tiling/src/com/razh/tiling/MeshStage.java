@@ -194,12 +194,7 @@ public class MeshStage extends Stage {
 
 	@Override
 	public Actor hit(float stageX, float stageY, boolean touchable) {
-		if (getScale() != 1.0f) {
-			stageX /= getScale();
-			stageY /= getScale();
-		}
-
-		Vector2 actorCoords = new Vector2().set(stageX, stageY);
+		Vector2 actorCoords = new Vector2(stageX, stageY);
 		getRoot().parentToLocalCoordinates(actorCoords);
 		Actor hit = getRoot().hit(actorCoords.x, actorCoords.y, touchable);
 		if (hit == null) {

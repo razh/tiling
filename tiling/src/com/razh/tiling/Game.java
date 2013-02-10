@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
@@ -15,10 +15,13 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.SnapshotArray;
 import com.razh.tiling.files.LevelLoader;
+import com.razh.tiling.input.BasicInputProcessor;
+import com.razh.tiling.input.DebugInputProcessor;
+import com.razh.tiling.input.GameInputProcessor;
 import com.razh.tiling.tests.OriginalStageTest;
 
 public class Game implements ApplicationListener {
-	private InputProcessor mInputProcessor;
+	private InputMultiplexer mInputMultiplexer;
 	private Player mPlayer;
 	private LevelLoader mLevelLoader;
 	private MeshStage mStage;
@@ -93,10 +96,19 @@ public class Game implements ApplicationListener {
 
 		mShaderProgramNeedsUpdate = true;
 
-		mInputProcessor = new GameInputProcessor();
-		((GameInputProcessor) mInputProcessor).setPlayer(mPlayer);
-		((GameInputProcessor) mInputProcessor).setStage(mStage);
-		Gdx.input.setInputProcessor(mInputProcessor);
+		mInputMultiplexer = new InputMultiplexer();
+
+		BasicInputProcessor debugInputProcessor = new DebugInputProcessor();
+		debugInputProcessor.setPlayer(mPlayer);
+		debugInputProcessor.setStage(mStage);
+		mInputMultiplexer.addProcessor(debugInputProcessor);
+
+		BasicInputProcessor gameInputProcessor = new GameInputProcessor();
+		gameInputProcessor.setPlayer(mPlayer);
+		gameInputProcessor.setStage(mStage);
+		mInputMultiplexer.addProcessor(gameInputProcessor);
+
+		Gdx.input.setInputProcessor(mInputMultiplexer);
 	}
 
 	public void setupLights() {

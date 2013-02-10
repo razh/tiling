@@ -1,0 +1,90 @@
+package com.razh.tiling.input;
+
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.math.Vector2;
+import com.razh.tiling.Light;
+import com.razh.tiling.PointLight;
+
+public class DebugInputProcessor extends BasicInputProcessor {
+	private int mLightIndex;
+	private Vector2 mPosition;
+
+	public DebugInputProcessor() {
+		// By default, the ambient light is the first light, so we start the index of PointLights at 1.
+		mLightIndex = 1;
+		mPosition = new Vector2();
+	}
+
+	@Override
+	public boolean keyDown(int keycode) {
+		if (Input.Keys.NUM_0 <= keycode && keycode <= Input.Keys.NUM_9) {
+			mLightIndex = keycode - 7;
+			if (mLightIndex == 0) {
+				mLightIndex = 10;
+			}
+
+			return true;
+		}
+
+		if (keycode == Input.Keys.L) {
+			Light[] lights = getStage().getLights().begin();
+			for (int i = 0, n = getStage().getLights().size; i < n; i++) {
+				System.out.println(i + ": " + lights[i].getPosition());
+			}
+			getStage().getLights().end();
+		}
+
+		return false;
+	}
+
+	@Override
+	public boolean keyUp(int keycode) {
+		return false;
+	}
+
+	@Override
+	public boolean keyTyped(char character) {
+		return false;
+	}
+
+	@Override
+	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+		mPosition.set(screenToStageCoordinates(screenX, screenY));
+		return false;
+	}
+
+	@Override
+	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+		return false;
+	}
+
+	@Override
+	public boolean touchDragged(int screenX, int screenY, int pointer) {
+		if (getStage() == null) {
+			return false;
+		}
+
+		Vector2 point = screenToStageCoordinates(screenX, screenY);
+		if (1 <= mLightIndex && mLightIndex < getStage().getLights().size) {
+			Light light = getStage().getLights().get(mLightIndex);
+			if (light instanceof PointLight) {
+				light.translate(point.x - mPosition.x, point.y - mPosition.y);
+			}
+		}
+
+		mPosition.set(point);
+
+		return false;
+	}
+
+	@Override
+	public boolean mouseMoved(int screenX, int screenY) {
+		return false;
+	}
+
+	@Override
+	public boolean scrolled(int amount) {
+		return false;
+	}
+
+}

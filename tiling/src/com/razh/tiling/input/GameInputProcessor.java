@@ -1,36 +1,16 @@
-package com.razh.tiling;
+package com.razh.tiling.input;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.razh.tiling.MeshActor;
 import com.razh.tiling.logic.TilingEntity;
 
-public class GameInputProcessor implements InputProcessor {
-	private MeshStage mStage;
-	private Player mPlayer;
-
+public class GameInputProcessor extends BasicInputProcessor {
 	// Offsets from touch position to object position.
 	private Vector2 mOffset;
 
 	public GameInputProcessor() {
 		mOffset = new Vector2();
-	}
-
-	public MeshStage getStage() {
-		return mStage;
-	}
-
-	public void setStage(MeshStage stage) {
-		mStage = stage;
-	}
-
-	public Player getPlayer() {
-		return mPlayer;
-	}
-
-	public void setPlayer(Player player) {
-		mPlayer = player;
 	}
 
 	@Override
@@ -50,15 +30,15 @@ public class GameInputProcessor implements InputProcessor {
 
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		if (mStage == null || mPlayer == null) {
+		if (getStage() == null || getPlayer() == null) {
 			return false;
 		}
 
 		Vector2 point = screenToStageCoordinates(screenX, screenY);
 
-		MeshActor hit = (MeshActor) mStage.hit(point.x, point.y, true);
+		MeshActor hit = (MeshActor) getStage().hit(point.x, point.y, true);
 		if (hit != null) {
-			mPlayer.setSelected(hit);
+			getPlayer().setSelected(hit);
 			if (hit.hasEntity()) {
 				((TilingEntity) hit.getEntity()).touch();
 			}
@@ -66,17 +46,17 @@ public class GameInputProcessor implements InputProcessor {
 			mOffset.set(point).sub(hit.getX(), hit.getY());
 		}
 
-		return true;
+		return false;
 	}
 
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-		if (mPlayer == null) {
+		if (getPlayer() == null) {
 			return false;
 		}
 
-		if (mPlayer.getSelected() != null) {
-			mPlayer.setSelected(null);
+		if (getPlayer().getSelected() != null) {
+			getPlayer().setSelected(null);
 		}
 
 		return true;
@@ -95,10 +75,5 @@ public class GameInputProcessor implements InputProcessor {
 	@Override
 	public boolean scrolled(int amount) {
 		return false;
-	}
-
-
-	private Vector2 screenToStageCoordinates(int screenX, int screenY) {
-		return new Vector2(screenX, Gdx.graphics.getHeight() - screenY);
 	}
 }
