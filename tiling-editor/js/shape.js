@@ -322,7 +322,8 @@ Shape.prototype.createInspector = function( $id, prototypical ) {
   Form.createColorForm({
     $id:    $id,
     object: this,
-    getter: 'getColor'
+    getter: 'getColor',
+    alpha:  true
   });
 
   // Rotation.
@@ -365,7 +366,8 @@ Shape.prototype.createInspector = function( $id, prototypical ) {
     $id:    $id,
     object: this,
     getter: 'getAltColor',
-    prefix: 'alt'
+    prefix: 'alt',
+    alpha:  true
   });
 };
 

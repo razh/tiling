@@ -162,7 +162,8 @@ var Form = (function() {
       var $id    = options.$id    || $( 'body' ),
           object = options.object || {},
           getter = options.getter || '',
-          prefix = options.prefix || '';
+          prefix = options.prefix || '',
+          alpha  = options.alpha  || false;
 
       var getterFunction = object[ getter ];
 
@@ -204,19 +205,21 @@ var Form = (function() {
 
       Form.createIntegerForm( intOptions );
 
-      // Alpha.
-      var floatOptions = {
-        $id:    $id,
-        object: color,
-        name:   prefix + 'alpha',
-        getter: 'getAlpha',
-        setter: 'setAlpha',
-        min:    0.0,
-        max:    1.0,
-        step:   0.01
-      };
+      if ( alpha ) {
+        // Alpha.
+        var floatOptions = {
+          $id:    $id,
+          object: color,
+          name:   prefix + 'alpha',
+          getter: 'getAlpha',
+          setter: 'setAlpha',
+          min:    0.0,
+          max:    1.0,
+          step:   0.01
+        };
 
-      Form.createFloatForm( floatOptions );
+        Form.createFloatForm( floatOptions );
+      }
     },
 
     createModal: function( options ) {

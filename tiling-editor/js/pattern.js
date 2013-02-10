@@ -166,9 +166,9 @@ Pattern.prototype.setBrushByIndex = function( index ) {
         var pattern = this;
         _editor._inspectorPane.find( 'input' ).change(function() {
           pattern.drawShape( pattern._ctxArray[ index ],
-                          index,
-                          pattern._canvasArray[ index ].width,
-                          pattern._canvasArray[ index ].height );
+                             index,
+                             pattern._canvasArray[ index ].width,
+                             pattern._canvasArray[ index ].height );
         });
     }
 };
