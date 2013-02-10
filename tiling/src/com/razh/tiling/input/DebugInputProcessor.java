@@ -1,5 +1,6 @@
 package com.razh.tiling.input;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
 import com.razh.tiling.Light;
@@ -22,14 +23,14 @@ public class DebugInputProcessor extends BasicInputProcessor {
 			if (mLightIndex == 0) {
 				mLightIndex = 10;
 			}
-
-			return true;
 		}
 
 		if (keycode == Input.Keys.L) {
 			Light[] lights = getStage().getLights().begin();
 			for (int i = 0, n = getStage().getLights().size; i < n; i++) {
-				System.out.println(i + ": " + lights[i].getPosition());
+				if (lights[i] instanceof PointLight) {
+					System.out.println(i + ": " + lights[i].getPosition());
+				}
 			}
 			getStage().getLights().end();
 		}
@@ -68,7 +69,11 @@ public class DebugInputProcessor extends BasicInputProcessor {
 		if (1 <= mLightIndex && mLightIndex < getStage().getLights().size) {
 			Light light = getStage().getLights().get(mLightIndex);
 			if (light instanceof PointLight) {
-				light.translate(point.x - mPosition.x, point.y - mPosition.y);
+				if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+					light.translate(0, 0, point.x - mPosition.x);
+				} else {
+					light.translate(point.x - mPosition.x, point.y - mPosition.y);
+				}
 			}
 		}
 

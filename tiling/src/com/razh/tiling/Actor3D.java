@@ -34,6 +34,11 @@ public class Actor3D extends Actor {
 		setZ(z);
 	}
 
+	public void translate(float x, float y, float z) {
+		super.translate(x, y);
+		setZ(getZ() + z);
+	}
+
 	public float getDepth() {
 		return mDepth;
 	}
