@@ -356,6 +356,7 @@ Editor.prototype.draw = function() {
   } else {
     this._ctx.strokeStyle = 'rgba( 0, 0, 0, 1.0 )';
   }
+  this._ctx.lineWidth = 1;
   this._ctx.strokeRect( 0, 0, 1280 / this.getScale(), 720 / this.getScale() );
 
   // Draw shapes.

@@ -33,6 +33,7 @@ Light.prototype.draw = function( ctx ) {
   ctx.closePath();
 
   ctx.strokeStyle = this.getColor().toString();
+  ctx.lineWidth = 1;
   ctx.stroke();
 
   // Draw z (height).
@@ -50,6 +51,7 @@ Light.prototype.draw = function( ctx ) {
   } else {
     ctx.strokeStyle = 'rgba( 0, 0, 0, 1.0 )';
   }
+  ctx.lineWidth = 0.5;
   ctx.stroke();
 
   ctx.restore();
