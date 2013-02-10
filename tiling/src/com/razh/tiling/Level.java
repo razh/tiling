@@ -3,11 +3,9 @@ package com.razh.tiling;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.math.Vector2;
 
 public class Level {
 	private String mName;
-	private Vector2 mStagePosition;
 	private float mScale;
 	private float mStroke;
 
@@ -19,7 +17,6 @@ public class Level {
 
 	public Level() {
 		setName("");
-		setStagePosition(new Vector2());
 		setScale(1.0f);
 		setActors(new ArrayList<MeshActor>());
 		setLights(new ArrayList<Light>());
@@ -63,35 +60,6 @@ public class Level {
 		mName = name;
 	}
 
-	public float getStageX() {
-		return mStagePosition.x;
-	}
-
-	public void setStageX(float stageX) {
-		mStagePosition.x = stageX;
-	}
-
-	public float getStageY() {
-		return mStagePosition.y;
-	}
-
-	public void setStageY(float stageY) {
-		mStagePosition.y = stageY;
-	}
-
-	public Vector2 getStagePosition() {
-		return mStagePosition;
-	}
-
-	public void setStagePosition(Vector2 position) {
-		mStagePosition = position;
-	}
-
-	public void setStagePosition(float x, float y) {
-		setStageX(x);
-		setStageY(y);
-	}
-
 	public float getScale() {
 		return mScale;
 	}
@@ -129,7 +97,6 @@ public class Level {
 			stage.setScale(getScale());
 		}
 
-		stage.setPosition(getStagePosition());
 		stage.setStroke(getStroke());
 		stage.setColor(getBackgroundColor());
 

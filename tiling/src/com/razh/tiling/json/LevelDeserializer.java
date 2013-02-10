@@ -35,7 +35,6 @@ public class LevelDeserializer implements JsonDeserializer<Level> {
 
 		Level level = new Level();
 		level.setName(name);
-		level.setStagePosition(stageX, stageY);
 		level.setScale(scale);
 		level.setStroke(stroke);
 		level.setBackgroundColor(backgroundColor);
@@ -46,6 +45,7 @@ public class LevelDeserializer implements JsonDeserializer<Level> {
 		TilingEntity entity;
 		for (int i = 0, n = jsonShapes.size(); i < n; i++) {
 			actor = (MeshActor) context.deserialize(jsonShapes.get(i), MeshActor.class);
+			actor.translate(-stageX, -stageY);
 			if (actor != null) {
 				entity = new TilingEntity();
 				actor.setEntity(entity);
@@ -58,6 +58,7 @@ public class LevelDeserializer implements JsonDeserializer<Level> {
 		PointLight light = null;
 		for (int i = 0, n = jsonLights.size(); i < n; i++) {
 			light = (PointLight) context.deserialize(jsonLights.get(i), PointLight.class);
+			light.translate(-stageX, -stageY);
 			if (light != null) {
 				level.addLight(light);
 			}
