@@ -19,12 +19,13 @@ public class PointLightDeserializer implements JsonDeserializer<PointLight> {
 
 		float x = object.get("x").getAsFloat();
 		float y = object.get("y").getAsFloat();
+		float z = object.get("z").getAsFloat();
 		float distance = object.get("distance").getAsFloat();
 
 		Color color = (Color) context.deserialize(object.get("color"), Color.class);
 
 		PointLight light = new PointLight();
-		light.setPosition(x, y, 100);
+		light.setPosition(x, y, z);
 		light.setWidth(3);
 		light.setHeight(3);
 		light.setColor(color);

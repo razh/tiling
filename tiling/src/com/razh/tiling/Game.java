@@ -185,7 +185,13 @@ public class Game implements ApplicationListener {
 		mStage.act(delta);
 
 		if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-
+			float x = Gdx.input.getX();
+			SnapshotArray<Light> children = mStage.getLights();
+			Light[] lights = children.begin();
+			for (int i = 0, n = children.size; i < n; i++) {
+				lights[i].setZ(x);
+			}
+			System.out.println(x);
 		}
 
 		setupLights();
