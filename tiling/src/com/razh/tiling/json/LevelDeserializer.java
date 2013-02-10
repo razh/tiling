@@ -24,13 +24,18 @@ public class LevelDeserializer implements JsonDeserializer<Level> {
 		JsonObject object = json.getAsJsonObject();
 
 		String name = object.get("name").getAsString();
+
+		float stageX = object.get("x").getAsFloat();
+		float stageY = object.get("y").getAsFloat();
 		float scale = object.get("scale").getAsFloat();
 		float stroke = object.get("stroke").getAsFloat();
+
 		Color backgroundColor = (Color) context.deserialize(object.get("backgroundColor"), Color.class);
 		Color ambientColor = (Color) context.deserialize(object.get("ambientColor"), Color.class);
 
 		Level level = new Level();
 		level.setName(name);
+		level.setStagePosition(stageX, stageY);
 		level.setScale(scale);
 		level.setStroke(stroke);
 		level.setBackgroundColor(backgroundColor);

@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.SnapshotArray;
 
 public class MeshStage extends Stage {
+	private Vector2 mPosition;
 	private float mScale;
 	private float mStroke;
 
@@ -36,6 +37,7 @@ public class MeshStage extends Stage {
 			setViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), stretch);
 		}
 
+		mPosition = new Vector2();
 		setScale(1.0f);
 
 		mRoot = new MeshGroup();
@@ -114,6 +116,41 @@ public class MeshStage extends Stage {
 			mLights.end();
 			mPointLightShaderProgram.end();
 		}
+	}
+
+	public float getX() {
+		return getPosition().x;
+	}
+
+	public void setX(float x) {
+		getCamera().position.x -= getX();
+		getPosition().x = x;
+		getCamera().position.x += getX();
+	}
+
+	public float getY() {
+		return getPosition().x;
+	}
+
+	public void setY(float y) {
+		getCamera().position.y -= getY();
+		getPosition().y = y;
+		getCamera().position.y += getY();
+	}
+
+	public Vector2 getPosition() {
+		return mPosition;
+	}
+
+	public void setPosition(Vector2 position) {
+		if (position != null) {
+			setPosition(position.x, position.y);
+		}
+	}
+
+	public void setPosition(float x, float y) {
+		setX(x);
+		setY(y);
 	}
 
 	public float getScale() {
@@ -199,8 +236,8 @@ public class MeshStage extends Stage {
 			stageY /= getScale();
 		}
 
-		Vector2 actorCoords = Vector2.tmp;
-		getRoot().parentToLocalCoordinates(actorCoords.set(stageX, stageY));
+		Vector2 actorCoords = new Vector2().set(stageX, stageY);
+		getRoot().parentToLocalCoordinates(actorCoords);
 		Actor hit = getRoot().hit(actorCoords.x, actorCoords.y, touchable);
 		if (hit == null) {
 			return getColorRoot().hit(actorCoords.x, actorCoords.y, touchable);

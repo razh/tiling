@@ -278,13 +278,20 @@ var Editor = function() {
   this._lights = [];
   this._levelName = '';
 
-  this._scale = 1.0;
   this._translate = {
     x: 0,
     y: 0
   };
   this._rotation = 0;
 
+  // Stage attributes.
+  this._scale = 1.0;
+  this._stagePosition = {
+    x: 0,
+    y: 0
+  };
+
+  // Input offset.
   this._offset = {
     x: 0,
     y: 0
@@ -351,6 +358,9 @@ Editor.prototype.draw = function() {
   this._ctx.scale( 1, -1 );
 
   // Show outline of camera/stage boundaries.
+  this._ctx.save();
+  this._ctx.translate( this.getStageX(), this.getStageY() );
+
   if ( this.getBackgroundColor().getBrightness() < 186 ) {
     this._ctx.strokeStyle = 'rgba( 255, 255, 255, 1.0 )';
   } else {
@@ -358,6 +368,8 @@ Editor.prototype.draw = function() {
   }
   this._ctx.lineWidth = 1;
   this._ctx.strokeRect( 0, 0, 1280 / this.getScale(), 720 / this.getScale() );
+
+  this._ctx.restore();
 
   // Draw shapes.
   var i, n;
@@ -437,6 +449,30 @@ Editor.prototype.loadLevelInspector = function( level ) {
     name:   'level-name',
     getter: 'getLevelName',
     setter: 'setLevelName'
+  });
+
+  Form.createFloatForm({
+    $id:    this._levelPane,
+    object: this,
+    name:   'stage-x',
+    getter: 'getStageX',
+    setter: 'setStageX',
+    min:    -Math.max( this.WIDTH, this.HEIGHT ),
+    max:    Math.max( this.WIDTH, this.HEIGHT ),
+    step:   0.1,
+    digits: 1
+  });
+
+  Form.createFloatForm({
+    $id:    this._levelPane,
+    object: this,
+    name:   'stage-y',
+    getter: 'getStageY',
+    setter: 'setStageY',
+    min:    -Math.max( this.WIDTH, this.HEIGHT ),
+    max:    Math.max( this.WIDTH, this.HEIGHT ),
+    step:   0.1,
+    digits: 1
   });
 
   Form.createFloatForm({
@@ -553,6 +589,37 @@ Editor.prototype.removeLight = function( light ) {
   var index = this._lights.indexOf( light );
   if ( index !== -1 ) {
     this._lights.splice( index, 1 );
+  }
+};
+
+// Stage.
+Editor.prototype.getStageX = function() {
+  return this.getStagePosition().x;
+};
+
+Editor.prototype.setStageX = function( stageX ) {
+  this._stagePosition.x = stageX;
+};
+
+Editor.prototype.getStageY = function() {
+  return this.getStagePosition().y;
+};
+
+Editor.prototype.setStageY = function( stageY ) {
+  this._stagePosition.y = stageY;
+};
+
+Editor.prototype.getStagePosition = function() {
+  return this._stagePosition;
+};
+
+Editor.prototype.setStagePosition = function( stagePosition ) {
+  if ( arguments.length === 1 ) {
+    this.setStageX( arguments[0].x );
+    this.setStageY( arguments[0].y );
+  } else if ( arguments.length === 2 ) {
+    this.setStageX( arguments[0] );
+    this.setStageY( arguments[1] );
   }
 };
 
@@ -771,6 +838,7 @@ Editor.prototype.setLevel = function( level ) {
 
 Editor.prototype.loadLevel = function( level ) {
   this.setLevelName( level.getName() );
+  this.setStagePosition( level.getStagePosition() );
   this.setScale( level.getScale() );
   this.setStroke( level.getStroke() );
   this.setBackgroundColor( level.getBackgroundColor() );
@@ -802,6 +870,7 @@ Editor.prototype.exportLevel = function() {
   var level = new Level();
 
   level.setName( this.getLevelName() );
+  level.setStagePosition( this.getStagePosition() );
   level.setScale( this.getScale() );
   level.setStroke( this.getStroke() );
   level.setBackgroundColor( this.getBackgroundColor() );

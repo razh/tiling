@@ -1,6 +1,11 @@
 var Level = function() {
   this._name = '';
 
+  this._stagePosition = {
+    x: 0,
+    y: 0
+  };
+
   this._scale = 1.0;
   this._stroke = 0.0;
 
@@ -21,6 +26,7 @@ var Level = function() {
   }
 };
 
+// Name.
 Level.prototype.getName = function() {
   return this._name;
 };
@@ -29,6 +35,38 @@ Level.prototype.setName = function( name ) {
   this._name = name;
 };
 
+// Stage.
+Level.prototype.getStageX = function() {
+  return this.getStagePosition().x;
+};
+
+Level.prototype.setStageX = function( stageX ) {
+  this._stagePosition.x = stageX;
+};
+
+Level.prototype.getStageY = function() {
+  return this.getStagePosition().y;
+};
+
+Level.prototype.setStageY = function( stageY ) {
+  this._stagePosition.y = stageY;
+};
+
+Level.prototype.getStagePosition = function() {
+  return this._stagePosition;
+};
+
+Level.prototype.setStagePosition = function( stagePosition ) {
+  if ( arguments.length === 1 ) {
+    this.setStageX( arguments[0].x );
+    this.setStageY( arguments[0].y );
+  } else if ( arguments.length === 2 ) {
+    this.setStageX( arguments[0] );
+    this.setStageY( arguments[1] );
+  }
+};
+
+// Scale.
 Level.prototype.getScale = function() {
   return this._scale;
 };
@@ -37,6 +75,7 @@ Level.prototype.setScale = function( scale ) {
   this._scale = scale;
 };
 
+// Stroke.
 Level.prototype.getStroke = function() {
   return this._stroke;
 };
@@ -45,6 +84,7 @@ Level.prototype.setStroke = function( stroke ) {
   this._stroke = stroke;
 };
 
+// Pattern.
 Level.prototype.getPattern = function() {
   return this._pattern;
 };
@@ -53,6 +93,7 @@ Level.prototype.setPattern = function( pattern ) {
   this._pattern = pattern;
 };
 
+// Background color.
 Level.prototype.getBackgroundColor = function() {
   return this._backgroundColor;
 };
@@ -61,6 +102,7 @@ Level.prototype.setBackgroundColor = function( backgroundColor ) {
   this._backgroundColor.set( backgroundColor );
 };
 
+// Ambient color.
 Level.prototype.getAmbientColor = function() {
   return this._ambientColor;
 };
@@ -69,6 +111,7 @@ Level.prototype.setAmbientColor = function( ambientColor ) {
   this._ambientColor.set( ambientColor );
 };
 
+// Shapes.
 Level.prototype.getShapes = function() {
   return this._shapes;
 };
@@ -77,6 +120,7 @@ Level.prototype.addShape = function( shape ) {
   this._shapes.push( shape );
 };
 
+// Lights.
 Level.prototype.getLights = function() {
   return this._lights;
 };
@@ -85,6 +129,7 @@ Level.prototype.addLight = function( light ) {
   this._lights.push( light );
 };
 
+// Graph.
 Level.prototype.getGraph = function() {
   return this._graph;
 };
@@ -149,6 +194,8 @@ Level.prototype.fromJSON = function( json ) {
   var graph = new Graph().fromJSON( JSON.stringify( jsonObject.graph ) );
 
   this.setName( jsonObject.name || '' );
+  this.setStageX( jsonObject.x || 0.0 );
+  this.setStageY( jsonObject.y || 0.0 );
   this.setScale( jsonObject.scale || 1.0 );
   this.setStroke( jsonObject.stroke || 0.0 );
   this.setBackgroundColor( backgroundColor );
@@ -161,8 +208,10 @@ Level.prototype.fromJSON = function( json ) {
 Level.prototype.toJSON = function( pattern ) {
   var object = {};
 
-  object.name  = this.getName();
-  object.scale = this.getScale();
+  object.name   = this.getName();
+  object.x      = this.getStageX();
+  object.y      = this.getStageY();
+  object.scale  = this.getScale();
   object.stroke = this.getStroke();
 
   if ( pattern ) {
