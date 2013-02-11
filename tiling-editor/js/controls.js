@@ -34,7 +34,9 @@ function onMouseDown( event ) {
     onMouseDownRemovingEdge
   ];
 
-  onMouseDownFunctions[ _editor.getState() ].call( this, input );
+  if ( _editor.getState() !== EditorState.TEXT_EDITING ) {
+    onMouseDownFunctions[ _editor.getState() ].call( this, input );
+  }
 }
 
 function onMouseDownDefault( input ) {
