@@ -2,7 +2,7 @@ package com.razh.tiling;
 
 import java.util.ArrayList;
 
-import com.badlogic.gdx.ApplicationListener;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Color;
@@ -19,7 +19,7 @@ import com.razh.tiling.input.DebugInputProcessor;
 import com.razh.tiling.input.GameInputProcessor;
 import com.razh.tiling.tests.OriginalStageTest;
 
-public class Game implements ApplicationListener {
+public class TilingGame extends Game {
 	private InputMultiplexer mInputMultiplexer;
 	private Player mPlayer;
 	private LevelLoader mLevelLoader;
@@ -63,9 +63,9 @@ public class Game implements ApplicationListener {
 
 		mShaderProgramNeedsUpdate = false;
 		mLightUniformsNeedRefresh = false;
-		if (Game.lightingModel == LightingModel.PHONG) {
+		if (TilingGame.lightingModel == LightingModel.PHONG) {
 			mShaderProgram = Shader.createPhongShaderProgram();
-		} else if (Game.lightingModel == LightingModel.LAMBERT) {
+		} else if (TilingGame.lightingModel == LightingModel.LAMBERT) {
 			mShaderProgram = Shader.createLambertShaderProgram();
 		}
 		mUniforms = new Uniforms();
@@ -79,9 +79,9 @@ public class Game implements ApplicationListener {
 		mFont = new BitmapFont();
 		mFont.setColor(Color.WHITE);
 
-		if (Game.lightingModel == LightingModel.PHONG) {
+		if (TilingGame.lightingModel == LightingModel.PHONG) {
 			mColorShaderProgram = Shader.createColorPhongShaderProgram();
-		} else if (Game.lightingModel == LightingModel.LAMBERT) {
+		} else if (TilingGame.lightingModel == LightingModel.LAMBERT) {
 			mColorShaderProgram = Shader.createColorLambertShaderProgram();
 		}
 		mStage.setColorShaderProgram(mColorShaderProgram);
@@ -200,14 +200,14 @@ public class Game implements ApplicationListener {
 		if (mShaderProgramNeedsUpdate) {
 			mShaderProgramNeedsUpdate = false;
 			mShaderProgram.dispose();
-			if (Game.lightingModel == LightingModel.PHONG) {
+			if (TilingGame.lightingModel == LightingModel.PHONG) {
 				mShaderProgram = Shader.createPhongShaderProgram();
-			} else if (Game.lightingModel == LightingModel.LAMBERT) {
+			} else if (TilingGame.lightingModel == LightingModel.LAMBERT) {
 				mShaderProgram = Shader.createLambertShaderProgram();
 			}
-			if (Game.lightingModel == LightingModel.PHONG) {
+			if (TilingGame.lightingModel == LightingModel.PHONG) {
 				mColorShaderProgram = Shader.createColorPhongShaderProgram();
-			} else if (Game.lightingModel == LightingModel.LAMBERT) {
+			} else if (TilingGame.lightingModel == LightingModel.LAMBERT) {
 				mColorShaderProgram = Shader.createColorLambertShaderProgram();
 			}
 			mStage.setShaderProgram(mShaderProgram);

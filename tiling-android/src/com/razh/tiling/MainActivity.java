@@ -14,6 +14,6 @@ public class MainActivity extends AndroidApplication {
         cfg.useGL20 = true;
         cfg.numSamples = 2;
 
-        initialize(new Game(), cfg);
+        initialize(new TilingGame(), cfg);
     }
 }

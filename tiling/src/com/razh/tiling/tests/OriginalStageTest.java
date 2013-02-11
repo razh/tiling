@@ -12,20 +12,20 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector3;
 import com.razh.tiling.AmbientLight;
-import com.razh.tiling.Game;
+import com.razh.tiling.TilingGame;
 import com.razh.tiling.Geometry;
 import com.razh.tiling.MeshActor;
 import com.razh.tiling.MeshMaterial;
 import com.razh.tiling.MeshStage;
 import com.razh.tiling.PointLight;
-import com.razh.tiling.Game.LightingModel;
+import com.razh.tiling.TilingGame.LightingModel;
 
 public class OriginalStageTest extends StageTest {
 
 	@Override
 	public void load(MeshStage stage) {
 		MeshMaterial material = new MeshMaterial(new Color(0.33f, 0.33f, 0.33f, 1.0f), new Color(Color.WHITE), new Color(Color.BLACK), 50);
-		if (Game.lightingModel == LightingModel.PHONG) {
+		if (TilingGame.lightingModel == LightingModel.PHONG) {
 			material.setShiny(true);
 		}
 

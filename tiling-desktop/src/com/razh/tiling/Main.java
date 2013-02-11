@@ -13,6 +13,6 @@ public class Main {
 		cfg.samples = 4;
 		cfg.useCPUSynch = false;
 
-		new LwjglApplication(new Game(), cfg);
+		new LwjglApplication(new TilingGame(), cfg);
 	}
 }
