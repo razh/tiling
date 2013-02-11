@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.FPSLogger;
@@ -72,7 +71,7 @@ public class Game implements ApplicationListener {
 		mUniforms = new Uniforms();
 
 		mStage.setShaderProgram(mShaderProgram);
-		mStage.setPointLightShaderProgram(Shader.createPointLightShaderProgram());
+		mStage.setPointLightShaderProgram(Shader.createBillboardShaderProgram());
 		mStage.getCamera().position.z = 10000.0f;
 		mStage.getCamera().far = 15000.0f;
 

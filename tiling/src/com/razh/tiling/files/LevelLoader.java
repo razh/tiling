@@ -14,7 +14,7 @@ import com.razh.tiling.json.MeshActorDeserializer;
 import com.razh.tiling.json.PointLightDeserializer;
 
 public class LevelLoader {
-	private static String sLevelsFileName = "levels.json";
+	private static final String LEVELS_FILE = "levels.json";
 
 	private Gson mGson;
 	private String[] mFileNames;
@@ -28,7 +28,7 @@ public class LevelLoader {
 		.registerTypeAdapter(Color.class, new ColorDeserializer())
 		.create();
 
-		FileHandle levelsFile = Gdx.files.internal(sLevelsFileName);
+		FileHandle levelsFile = Gdx.files.internal(LEVELS_FILE);
 		mFileNames = mGson.fromJson(levelsFile.readString(), String[].class);
 	}
 

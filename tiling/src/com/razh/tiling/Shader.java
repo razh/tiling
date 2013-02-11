@@ -294,7 +294,7 @@ public class Shader {
 			return shaderProgram;
 	}
 
-	public static ShaderProgram createPointLightShaderProgram() {
+	public static ShaderProgram createBillboardShaderProgram() {
 		String vertex =
 			"uniform mat4 modelViewProjectionMatrix;\n" +
 			"uniform vec3 translate;\n" +
