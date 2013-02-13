@@ -35,6 +35,12 @@ var Geometry = (function() {
 
     createOctagon: function() {
       return Geometry.createRegularPolygon(8);
+    },
+
+    createPyramid: function( sides ) {
+      var subdivAngle = -( Math.PI * 2 / scale );
+
+      var vertices = [];
     }
   };
 }) ();

@@ -12,7 +12,7 @@ public class DebugInputProcessor extends BasicInputProcessor {
 
 	public DebugInputProcessor() {
 		// By default, the ambient light is the first light, so we start the index of PointLights at 1.
-		mLightIndex = 1;
+		mLightIndex = -1;
 		mPosition = new Vector2();
 	}
 
