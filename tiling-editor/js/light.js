@@ -32,7 +32,7 @@ Light.prototype.update = function( elapsedTime ) {
   this._webGLObject.position.y = this.getY();
   this._webGLObject.position.z = this.getZ();
 
-  this._webGLObject.color.set( this.getColor().toHexString() );
+  this._webGLObject.color.set( this.getColor().toHex() );
 
   this._webGLObject.distance = this.getDistance();
 };

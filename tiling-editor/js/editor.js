@@ -246,6 +246,9 @@ var Editor = function() {
   this._renderer.setSize( this.WIDTH, this.HEIGHT );
   this._canvasContainer.append( this._renderer.domElement );
 
+  this._ambientLight = new THREE.AmbientLight( 0xFFFFFF );
+  this._scene.add( this._ambientLight );
+
   // Canvas.
   this._canvas = document.createElement( 'canvas' );
   this._ctx = this._canvas.getContext( '2d' );
@@ -347,11 +350,12 @@ Editor.prototype.update = function() {
   this._prevTime = this._currTime;
 
   // Update camera.
-  this._camera.x = this.getTranslateX();
-  this._camera.y = this.getTranslateY();
+  this._camera.position.x = this.getTranslateX();
+  this._camera.position.y = this.getTranslateY();
 
   var i, n;
   for ( i = 0, n = this._shapes.length; i < n; i++ ) {
+    this._shapes[i].setStroke( this.getStroke() );
     this._shapes[i].update( elapsedTime );
   }
 
@@ -370,9 +374,8 @@ Editor.prototype.draw = function() {
 };
 
 Editor.prototype.drawCanvas = function() {
-  this._canvas.style.backgroundColor = this.getBackgroundColor().toHexString();
-
-  this._ctx.clearRect( 0, 0, this.WIDTH, this.HEIGHT );
+  this._ctx.fillStyle = this.getBackgroundColor().toString();
+  this._ctx.fillRect( 0, 0, this.WIDTH, this.HEIGHT );
 
   // Show ambient color.
   this._ctx.fillStyle = this.getAmbientColor().toString();
@@ -403,11 +406,16 @@ Editor.prototype.drawCanvas = function() {
 };
 
 Editor.prototype.drawWebGL = function() {
+  this._renderer.setClearColorHex( this.getBackgroundColor().toHex(), 1.0 );
   this._renderer.render( this._scene, this._camera );
 };
 
 Editor.prototype.drawCanvasOverlay = function() {
   this._ctx.clearRect( 0, 0, this.WIDTH, this.HEIGHT );
+
+  // Show ambient color.
+  this._ctx.fillStyle = this.getAmbientColor().toString();
+  this._ctx.fillRect( 0, 0, this.WIDTH, 14 ); // 14 px is height of the various UI elements.
 
   this._ctx.save();
   this._ctx.translate( this.getTranslateX(), this.HEIGHT + this.getTranslateY() );

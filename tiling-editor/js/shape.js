@@ -21,7 +21,8 @@ var Shape = function() {
   this._mesh = new THREE.Mesh(
     new THREE.CubeGeometry( 1, 1, 1 ),
     new THREE.MeshLambertMaterial({
-      color: new THREE.Color()
+      color:   new THREE.Color(),
+      shading: THREE.FlatShading
     })
   );
   this._mesh.geometry.dynamic = true;
@@ -35,9 +36,10 @@ Shape.prototype.update = function( elapsedTime ) {
 
   this._mesh.scale.x = this.getWidth()  - this.getStroke();
   this._mesh.scale.y = this.getHeight() - this.getStroke();
+  this._mesh.scale.z = 0.5 * Math.max( this.getWidth(), this.getHeight() ) - this.getStroke();
 
   // Update material.
-  this._mesh.material.color.set( this.getColor().toHexString() );
+  this._mesh.material.color.set( this.getColor().toHex() );
 };
 
 Shape.prototype.draw = function( ctx, stroke, altColor ) {
@@ -688,11 +690,13 @@ Color.prototype.toString = function() {
 };
 
 Color.prototype.toHexString = function() {
-    return "#" +
-           ( ( 1 << 24 ) +
-           ( ( ( 0.5 + this.getRed() )   << 0 ) << 16 ) +
-           ( ( ( 0.5 + this.getGreen() ) << 0 ) << 8 ) +
-           ( ( 0.5 + this.getBlue() )    << 0 ) ).toString( 16 ).slice(1);
+  return "#" + ( ( 1 << 24 ) + this.toHex() ).toString( 16 ).slice(1);
+};
+
+Color.prototype.toHex = function() {
+  return ( ( ( 0.5 + this.getRed()   ) << 0 ) << 16 ) +
+         ( ( ( 0.5 + this.getGreen() ) << 0 ) << 8 ) +
+         ( (   0.5 + this.getBlue()  ) << 0 );
 };
 
 Color.prototype.fromJSON = function( json ) {
