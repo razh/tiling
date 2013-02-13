@@ -233,11 +233,21 @@ var Editor = function() {
   this.WIDTH = this._canvasContainer.width();
   this.HEIGHT = this._canvasContainer.height();
 
+  // Background canvas.
+  this._backgroundCanvas = document.createElement( 'canvas' );
+  this._backgroundCtx = this._backgroundCanvas.getContext( '2d' );
+  this._canvasContainer.append( this._backgroundCanvas );
+
+  this._backgroundCanvas.width = this.WIDTH;
+  this._backgroundCanvas.height = this.HEIGHT;
+
   // WebGL.
   this._usingWebGL = false;
 
   this._scene = new THREE.Scene();
-  this._renderer = new THREE.WebGLRenderer();
+  this._renderer = new THREE.WebGLRenderer({
+    antialias: true
+  });
   this._camera = new THREE.OrthographicCamera( 0, this.WIDTH, this.HEIGHT, 0, 0.1, 15000 );
 
   this._scene.add( this._camera );
@@ -367,7 +377,7 @@ Editor.prototype.update = function() {
 };
 
 Editor.prototype.draw = function() {
-  this._canvas.style.backgroundColor = this.getBackgroundColor().toHexString();
+  this._backgroundCanvas.style.backgroundColor = this.getBackgroundColor().toHexString();
 
   this._ctx.clearRect( 0, 0, this.WIDTH, this.HEIGHT );
 
@@ -390,6 +400,7 @@ Editor.prototype.draw = function() {
   }
 
   this._graph.draw( this._ctx, this._shapes );
+  this.drawLightOverlays();
 
   this._ctx.restore();
 };
@@ -399,11 +410,6 @@ Editor.prototype.drawCanvas = function() {
   var i, n;
   for ( i = 0, n = this._shapes.length; i < n; i++ ) {
     this._shapes[i].draw( this._ctx, this.getStroke(), this.showingAltColors() );
-  }
-
-  // Draw lights.
-  for ( i = 0, n = this._lights.length; i < n; i++ ) {
-    this._lights[i].draw( this._ctx );
   }
 };
 
@@ -436,6 +442,14 @@ Editor.prototype.drawCameraOverlay = function() {
   this._ctx.strokeRect( 0, 0, 1280 / this.getScale(), 720 / this.getScale() );
 
   this._ctx.restore();
+};
+
+Editor.prototype.drawLightOverlays = function() {
+  // Draw lights.
+  for ( var i = 0, n = this._lights.length; i < n; i++ ) {
+    this._lights[i].draw( this._ctx );
+    this._lights[i].drawOverlay( this._ctx );
+  }
 };
 
 Editor.prototype.hit = function( x, y ) {

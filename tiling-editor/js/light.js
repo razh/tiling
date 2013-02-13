@@ -29,9 +29,7 @@ Light.scaleFactor = 10;
 
 Light.prototype.update = function( elapsedTime ) {};
 
-Light.prototype.draw = function( ctx ) {
-  Shape.prototype.draw.call( this, ctx );
-
+Light.prototype.drawOverlay = function( ctx ) {
   ctx.save();
   ctx.translate( this.getX(), this.getY() );
 
