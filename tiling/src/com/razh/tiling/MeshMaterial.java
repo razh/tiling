@@ -19,6 +19,18 @@ public class MeshMaterial extends Material {
 		     30);
 	}
 
+	// Lambertian material.
+	public MeshMaterial(Color ambient, Color emissive ) {
+		super();
+
+		setAmbient(ambient);
+		setEmissive(emissive);
+
+		setSpecular(new Color(Color.BLACK));
+		setShininess(0.0f);
+		setShiny(false);
+	}
+
 	public MeshMaterial(Color ambient, Color specular, Color emissive, float shininess) {
 		super();
 

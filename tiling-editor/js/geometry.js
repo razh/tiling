@@ -40,7 +40,24 @@ var Geometry = (function() {
     createPyramid: function( sides ) {
       var subdivAngle = -( Math.PI * 2 / scale );
 
-      var vertices = [];
+      var geometry = new THREE.Geometry();
+
+      // Top vertex.
+      geometry.vertices.push( new THREE.Vector3( 0, 0, 1 ) );
+
+      for ( var i = 0; i < sides; i++ ) {
+        geometry.vertices.push(
+          new THREE.Vector3(
+            Math.sin( i * subdivAngle ),
+            Math.cos( i * subdivAngle ),
+            0
+          )
+        );
+
+        geometry.faces.push( new THREE.Face3( 0, i + 1, ( i + 1 ) % sides + 1 ) );
+      }
+
+      return geometry;
     }
   };
 }) ();

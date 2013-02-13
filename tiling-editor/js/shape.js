@@ -14,17 +14,35 @@ var Shape = function() {
 
   this._color = new Color();
   this._altColor = new Color();
+
+  this._stroke = 0;
+
+  // For WebGL.
+  this._mesh = new THREE.Mesh(
+    new THREE.CubeGeometry(),
+    new THREE.MeshLambertMaterial()
+  );
+  this._mesh.geometry.dynamic = true;
 };
 
-Shape.prototype.update = function( elapsedTime ) {};
+Shape.prototype.update = function( elapsedTime ) {
+  this._mesh.position.x = this.getX();
+  this._mesh.position.y = this.getY();
+
+  this._mesh.rotation.z = this.getRotation();
+
+  this._mesh.scale.x = this.getWidth()  - this.getStroke();
+  this._mesh.scale.y = this.getHeight() - this.getStroke();
+};
 
 Shape.prototype.draw = function( ctx, stroke, altColor ) {
-  stroke = stroke || 0.0;
+  this.setStroke( stroke || 0 );
 
   ctx.save();
   ctx.translate( this.getX(), this.getY() );
   ctx.rotate( this.getRotation() );
-  ctx.scale( this.getWidth() - stroke, this.getHeight() - stroke );
+  ctx.scale( this.getWidth()  - this.getStroke(),
+             this.getHeight() - this.getStroke() );
 
   ctx.beginPath();
 
@@ -49,6 +67,10 @@ Shape.prototype.draw = function( ctx, stroke, altColor ) {
   ctx.fill();
 
   ctx.restore();
+};
+
+Shape.prototype.getWebGLObject = function() {
+  return this._mesh;
 };
 
 Shape.prototype.hit = function( x, y ) {
@@ -237,6 +259,14 @@ Shape.prototype.setEdges = function( edges ) {
   return this;
 };
 
+Shape.prototype.getStroke = function() {
+  return this._stroke;
+};
+
+Shape.prototype.setStroke = function( stroke ) {
+  this._stroke = stroke;
+};
+
 Shape.prototype.calculateRadius = function() {
   var max = {
     x: 0,
@@ -383,6 +413,8 @@ Shape.prototype.fromJSON = function( json ) {
     vertices = geometry.vertices;
     edges = geometry.edges;
   }
+
+  this.getWebGLObject().geometry = Geometry.createPyramid( sides );
 
   var color    = new Color().fromJSON( JSON.stringify( jsonObject.color ) );
       altColor = new Color().fromJSON( JSON.stringify( jsonObject.altColor ) );

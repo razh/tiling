@@ -174,8 +174,11 @@ function setupGUI() {
   });
 
   // Setup toggling alternative colors button.
-  _editor._altColorsButton.click(function() {
-    _editor._altColors = !_editor._altColors;
+  _editor._toggleButtons.altColors.click(function() {
+    _editor.toggleAltColors();
+  });
+  _editor._toggleButtons.useWebGL.click(function() {
+    _editor.toggleWebGL();
   });
 
   // Prevent inputs from triggering key commands when focused.
@@ -227,19 +230,26 @@ var EditorState = {
 var Editor = function() {
   this._canvasContainer = $( '.canvas-container' );
 
-  this._backgroundCanvas = document.createElement( 'canvas' );
-  this._backgroundCtx = this._backgroundCanvas.getContext( '2d' );
-  this._canvasContainer.append( this._backgroundCanvas );
-
-  this._canvas = document.createElement( 'canvas' );
-  this._ctx = this._canvas.getContext( '2d' );
-  this._canvasContainer.append( this._canvas );
-
   this.WIDTH = this._canvasContainer.width();
   this.HEIGHT = this._canvasContainer.height();
 
-  this._backgroundCanvas.width = this.WIDTH;
-  this._backgroundCanvas.height = this.HEIGHT;
+  // WebGL.
+  this._usingWebGL = false;
+
+  this._scene = new THREE.Scene();
+  this._renderer = new THREE.WebGLRenderer();
+  this._camera = new THREE.OrthographicCamera( 0, 0, this.WIDTH, this.HEIGHT, 0.1, 15000 );
+
+  this._scene.add( this._camera );
+  this._camera.position.z = 10000;
+
+  this._renderer.setSize( this.WIDTH, this.HEIGHT );
+  this._canvasContainer.append( this._renderer.domElement );
+
+  // Canvas.
+  this._canvas = document.createElement( 'canvas' );
+  this._ctx = this._canvas.getContext( '2d' );
+  this._canvasContainer.append( this._canvas );
 
   this._canvas.width = this.WIDTH;
   this._canvas.height = this.HEIGHT;
@@ -269,7 +279,11 @@ var Editor = function() {
     sides:  $( '#add-pattern-shape-sides' ),
     name:   $( '#pattern-name' )
   };
-  this._altColorsButton = $( '#show-alt-colors' );
+  this._toggleButtons = {
+    exportPattern: $( '#export-level-with-pattern' ),
+    altColors:     $( '#show-alt-colors' ),
+    useWebGL:      $( '#use-webGL' )
+  };
 
   this._prevTime = Date.now();
   this._currTime = this._prevTime;
@@ -343,6 +357,15 @@ Editor.prototype.update = function() {
 };
 
 Editor.prototype.draw = function() {
+  if ( !this.usingWebGL() ) {
+    this.drawCanvas();
+  } else {
+    this.drawWebGL();
+    this.drawCanvasOverlay();
+  }
+};
+
+Editor.prototype.drawCanvas = function() {
   this._canvas.style.backgroundColor = this.getBackgroundColor().toHexString();
 
   this._ctx.clearRect( 0, 0, this.WIDTH, this.HEIGHT );
@@ -374,17 +397,28 @@ Editor.prototype.draw = function() {
   // Draw shapes.
   var i, n;
   for ( i = 0, n = this._shapes.length; i < n; i++ ) {
-    this._shapes[i].draw( this._ctx, this.getStroke(), this._altColors );
+    this._shapes[i].draw( this._ctx, this.getStroke(), this.showingAltColors() );
   }
 
   // Draw lights.
   for ( i = 0, n = this._lights.length; i < n; i++ ) {
-    this._lights[i].draw( this._ctx, this._altColors );
+    this._lights[i].draw( this._ctx );
   }
 
   this._graph.draw( this._ctx, this._shapes );
 
   this._ctx.restore();
+};
+
+Editor.prototype.drawWebGL = function() {
+  this._renderer.render( this._scene, this._camera );
+};
+
+Editor.prototype.drawCanvasOverlay = function() {
+  this._ctx.clearRect( 0, 0, this.WIDTH, this.HEIGHT );
+
+  this._ctx.save();
+  this._ctx.translate( this.getTranslateX(), this.HEIGHT + this.getTranslateY() );
 };
 
 Editor.prototype.hit = function( x, y ) {
@@ -556,6 +590,7 @@ Editor.prototype.getShapes = function() {
 
 Editor.prototype.addShape = function( shape ) {
   this._shapes.push( shape );
+  this._scene.add( shape.getWebGLObject() );
 };
 
 Editor.prototype.removeShape = function( shape ) {
@@ -734,6 +769,19 @@ Editor.prototype.setStroke = function( stroke ) {
   this._stroke = stroke;
 };
 
+// Alternative colors.
+Editor.prototype.showingAltColors = function() {
+  return this._altColors;
+};
+
+Editor.prototype.setShowingAltColors = function( altColors ) {
+  this._altColors = altColors;
+};
+
+Editor.prototype.toggleAltColors = function() {
+  this.setShowingAltColors( !this.showingAltColors() );
+};
+
 // Background color.
 Editor.prototype.getBackgroundColor = function() {
   return this._backgroundColor;
@@ -805,6 +853,19 @@ Editor.prototype.setSelected = function( selected ) {
 
 Editor.prototype.hasSelected = function() {
   return this._selected !== undefined && this._selected !== null;
+};
+
+// WebGL.
+Editor.prototype.usingWebGL = function() {
+  return this._usingWebGL;
+};
+
+Editor.prototype.setUsingWebGL = function( webGL ) {
+  this._usingWebGL = webGL;
+};
+
+Editor.prototype.toggleWebGL = function() {
+  this.setUsingWebGL( !this.usingWebGL() );
 };
 
 // Graphs.
@@ -880,5 +941,5 @@ Editor.prototype.exportLevel = function() {
   level._shapes = this.getShapes();
   level._lights = this.getLights();
 
-  return level.toJSON( $( '#export-level-with-pattern' ).hasClass( 'active' ) );
+  return level.toJSON( this._toggleButtons.exportPattern.hasClass( 'active' ) );
 };
