@@ -346,6 +346,10 @@ Editor.prototype.update = function() {
   var elapsedTime = this._currTime - this._prevTime;
   this._prevTime = this._currTime;
 
+  // Update camera.
+  this._camera.x = this.getTranslateX();
+  this._camera.y = this.getTranslateY();
+
   var i, n;
   for ( i = 0, n = this._shapes.length; i < n; i++ ) {
     this._shapes[i].update( elapsedTime );
@@ -380,19 +384,7 @@ Editor.prototype.drawCanvas = function() {
   // Coordinates are reversed in the OpenGL game.
   this._ctx.scale( 1, -1 );
 
-  // Show outline of camera/stage boundaries.
-  this._ctx.save();
-  this._ctx.translate( this.getStageX(), this.getStageY() );
-
-  if ( this.getBackgroundColor().getBrightness() < 186 ) {
-    this._ctx.strokeStyle = 'rgba( 255, 255, 255, 1.0 )';
-  } else {
-    this._ctx.strokeStyle = 'rgba( 0, 0, 0, 1.0 )';
-  }
-  this._ctx.lineWidth = 1;
-  this._ctx.strokeRect( 0, 0, 1280 / this.getScale(), 720 / this.getScale() );
-
-  this._ctx.restore();
+  this.drawCameraOverlay();
 
   // Draw shapes.
   var i, n;
@@ -419,6 +411,29 @@ Editor.prototype.drawCanvasOverlay = function() {
 
   this._ctx.save();
   this._ctx.translate( this.getTranslateX(), this.HEIGHT + this.getTranslateY() );
+  this._ctx.rotate( this.getRotation() );
+  this._ctx.scale( 1, -1 );
+
+  this.drawCameraOverlay();
+  this._graph.draw( this._ctx, this._shapes );
+
+  this._ctx.restore();
+};
+
+Editor.prototype.drawCameraOverlay = function() {
+    // Show outline of camera/stage boundaries.
+  this._ctx.save();
+  this._ctx.translate( this.getStageX(), this.getStageY() );
+
+  if ( this.getBackgroundColor().getBrightness() < 186 ) {
+    this._ctx.strokeStyle = 'rgba( 255, 255, 255, 1.0 )';
+  } else {
+    this._ctx.strokeStyle = 'rgba( 0, 0, 0, 1.0 )';
+  }
+  this._ctx.lineWidth = 1;
+  this._ctx.strokeRect( 0, 0, 1280 / this.getScale(), 720 / this.getScale() );
+
+  this._ctx.restore();
 };
 
 Editor.prototype.hit = function( x, y ) {
@@ -599,6 +614,8 @@ Editor.prototype.removeShape = function( shape ) {
     this._shapes.splice( index, 1 );
     this._graph.removeIndex( index );
   }
+
+  this._scene.remove( shape.getWebGLObject() );
 };
 
 Editor.prototype.indexOfShape = function( shape ) {
@@ -618,6 +635,7 @@ Editor.prototype.getLights = function() {
 
 Editor.prototype.addLight = function( light ) {
   this._lights.push( light );
+  this._scene.add( light.getWebGLObject() );
 };
 
 Editor.prototype.removeLight = function( light ) {
@@ -625,6 +643,8 @@ Editor.prototype.removeLight = function( light ) {
   if ( index !== -1 ) {
     this._lights.splice( index, 1 );
   }
+
+  this._scene.remove( light.getWebGLObject() );
 };
 
 // Stage.

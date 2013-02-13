@@ -19,8 +19,10 @@ var Shape = function() {
 
   // For WebGL.
   this._mesh = new THREE.Mesh(
-    new THREE.CubeGeometry(),
-    new THREE.MeshLambertMaterial()
+    new THREE.CubeGeometry( 1, 1, 1 ),
+    new THREE.MeshLambertMaterial({
+      color: new THREE.Color()
+    })
   );
   this._mesh.geometry.dynamic = true;
 };
@@ -33,6 +35,9 @@ Shape.prototype.update = function( elapsedTime ) {
 
   this._mesh.scale.x = this.getWidth()  - this.getStroke();
   this._mesh.scale.y = this.getHeight() - this.getStroke();
+
+  // Update material.
+  this._mesh.material.color.set( this.getColor().toHexString() );
 };
 
 Shape.prototype.draw = function( ctx, stroke, altColor ) {
@@ -238,6 +243,8 @@ Shape.prototype.getNumSides = function() {
 
 Shape.prototype.setNumSides = function( numSides ) {
   this._numSides = numSides;
+  this.getWebGLObject().geometry = Geometry.createPyramid( numSides );
+
   return this;
 };
 
@@ -413,8 +420,6 @@ Shape.prototype.fromJSON = function( json ) {
     vertices = geometry.vertices;
     edges = geometry.edges;
   }
-
-  this.getWebGLObject().geometry = Geometry.createPyramid( sides );
 
   var color    = new Color().fromJSON( JSON.stringify( jsonObject.color ) );
       altColor = new Color().fromJSON( JSON.stringify( jsonObject.altColor ) );

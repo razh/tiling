@@ -12,6 +12,12 @@ var Light = function() {
 
   this._z = 100;
   this._distance = 0;
+
+  this._webGLObject = new THREE.PointLight(
+    this.getColor().toHexString(),
+    1,
+    this.getDistance()
+  );
 };
 
 Light.prototype = new Shape();
@@ -20,6 +26,16 @@ Light.prototype.constructor = Light;
 // Fall-off distance in the Java code is not the same.
 // Approximate difference in scales.
 Light.scaleFactor = 10;
+
+Light.prototype.update = function( elapsedTime ) {
+  this._webGLObject.position.x = this.getX();
+  this._webGLObject.position.y = this.getY();
+  this._webGLObject.position.z = this.getZ();
+
+  this._webGLObject.color.set( this.getColor().toHexString() );
+
+  this._webGLObject.distance = this.getDistance();
+};
 
 Light.prototype.draw = function( ctx ) {
   Shape.prototype.draw.call( this, ctx );
@@ -145,6 +161,10 @@ Light.prototype.getDistance = function() {
 Light.prototype.setDistance = function( distance ) {
   this._distance = distance;
   return this;
+};
+
+Light.prototype.getWebGLObject = function() {
+  return this._webGLObject;
 };
 
 Light.prototype.fromJSON = function( json ) {
