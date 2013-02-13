@@ -238,16 +238,13 @@ var Editor = function() {
 
   this._scene = new THREE.Scene();
   this._renderer = new THREE.WebGLRenderer();
-  this._camera = new THREE.OrthographicCamera( 0, 0, this.WIDTH, this.HEIGHT, 0.1, 15000 );
+  this._camera = new THREE.OrthographicCamera( 0, this.WIDTH, this.HEIGHT, 0, 0.1, 15000 );
 
   this._scene.add( this._camera );
   this._camera.position.z = 10000;
 
   this._renderer.setSize( this.WIDTH, this.HEIGHT );
   this._canvasContainer.append( this._renderer.domElement );
-
-  this._ambientLight = new THREE.AmbientLight( 0xFFFFFF );
-  this._scene.add( this._ambientLight );
 
   // Canvas.
   this._canvas = document.createElement( 'canvas' );
@@ -319,6 +316,9 @@ var Editor = function() {
   this._ambientColor = new Color( 0, 0, 0, 1.0 );
   this._altColors = false;
 
+  this._ambientLight = new THREE.AmbientLight( this.getAmbientColor().toHex() );
+  this._scene.add( this._ambientLight );
+
   this._running = true;
 
   this._pattern = new Pattern();
@@ -350,12 +350,14 @@ Editor.prototype.update = function() {
   this._prevTime = this._currTime;
 
   // Update camera.
-  this._camera.position.x = this.getTranslateX();
+  this._camera.position.x = -this.getTranslateX();
   this._camera.position.y = this.getTranslateY();
+
+  // Update ambient light.
+  this._ambientLight.color.set( this.getAmbientColor().toHex() );
 
   var i, n;
   for ( i = 0, n = this._shapes.length; i < n; i++ ) {
-    this._shapes[i].setStroke( this.getStroke() );
     this._shapes[i].update( elapsedTime );
   }
 
@@ -365,17 +367,9 @@ Editor.prototype.update = function() {
 };
 
 Editor.prototype.draw = function() {
-  if ( !this.usingWebGL() ) {
-    this.drawCanvas();
-  } else {
-    this.drawWebGL();
-    this.drawCanvasOverlay();
-  }
-};
+  this._canvas.style.backgroundColor = this.getBackgroundColor().toHexString();
 
-Editor.prototype.drawCanvas = function() {
-  this._ctx.fillStyle = this.getBackgroundColor().toString();
-  this._ctx.fillRect( 0, 0, this.WIDTH, this.HEIGHT );
+  this._ctx.clearRect( 0, 0, this.WIDTH, this.HEIGHT );
 
   // Show ambient color.
   this._ctx.fillStyle = this.getAmbientColor().toString();
@@ -389,6 +383,18 @@ Editor.prototype.drawCanvas = function() {
 
   this.drawCameraOverlay();
 
+  if ( this.usingWebGL() ) {
+    this.drawWebGL();
+  } else {
+    this.drawCanvas();
+  }
+
+  this._graph.draw( this._ctx, this._shapes );
+
+  this._ctx.restore();
+};
+
+Editor.prototype.drawCanvas = function() {
   // Draw shapes.
   var i, n;
   for ( i = 0, n = this._shapes.length; i < n; i++ ) {
@@ -399,33 +405,21 @@ Editor.prototype.drawCanvas = function() {
   for ( i = 0, n = this._lights.length; i < n; i++ ) {
     this._lights[i].draw( this._ctx );
   }
-
-  this._graph.draw( this._ctx, this._shapes );
-
-  this._ctx.restore();
 };
 
 Editor.prototype.drawWebGL = function() {
-  this._renderer.setClearColorHex( this.getBackgroundColor().toHex(), 1.0 );
+  // Update shapes.
+  var i, n;
+  for ( i = 0, n = this._shapes.length; i < n; i++ ) {
+    this._shapes[i].drawWebGL( this.getStroke(), this.showingAltColors() );
+  }
+
+  // Update lights.
+  for ( i = 0, n = this._lights.length; i < n; i++ ) {
+    this._lights[i].drawWebGL();
+  }
+
   this._renderer.render( this._scene, this._camera );
-};
-
-Editor.prototype.drawCanvasOverlay = function() {
-  this._ctx.clearRect( 0, 0, this.WIDTH, this.HEIGHT );
-
-  // Show ambient color.
-  this._ctx.fillStyle = this.getAmbientColor().toString();
-  this._ctx.fillRect( 0, 0, this.WIDTH, 14 ); // 14 px is height of the various UI elements.
-
-  this._ctx.save();
-  this._ctx.translate( this.getTranslateX(), this.HEIGHT + this.getTranslateY() );
-  this._ctx.rotate( this.getRotation() );
-  this._ctx.scale( 1, -1 );
-
-  this.drawCameraOverlay();
-  this._graph.draw( this._ctx, this._shapes );
-
-  this._ctx.restore();
 };
 
 Editor.prototype.drawCameraOverlay = function() {

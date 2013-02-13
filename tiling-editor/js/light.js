@@ -27,15 +27,7 @@ Light.prototype.constructor = Light;
 // Approximate difference in scales.
 Light.scaleFactor = 10;
 
-Light.prototype.update = function( elapsedTime ) {
-  this._webGLObject.position.x = this.getX();
-  this._webGLObject.position.y = this.getY();
-  this._webGLObject.position.z = this.getZ();
-
-  this._webGLObject.color.set( this.getColor().toHex() );
-
-  this._webGLObject.distance = this.getDistance();
-};
+Light.prototype.update = function( elapsedTime ) {};
 
 Light.prototype.draw = function( ctx ) {
   Shape.prototype.draw.call( this, ctx );
@@ -71,6 +63,16 @@ Light.prototype.draw = function( ctx ) {
   ctx.stroke();
 
   ctx.restore();
+};
+
+Light.prototype.drawWebGL = function() {
+  this._webGLObject.position.x = this.getX();
+  this._webGLObject.position.y = this.getY();
+  this._webGLObject.position.z = this.getZ();
+
+  this._webGLObject.color.set( this.getColor().toHex() );
+
+  this._webGLObject.distance = this.getDistance();
 };
 
 Light.prototype.createInspector = function( $id ) {

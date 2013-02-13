@@ -15,8 +15,6 @@ var Shape = function() {
   this._color = new Color();
   this._altColor = new Color();
 
-  this._stroke = 0;
-
   // For WebGL.
   this._mesh = new THREE.Mesh(
     new THREE.CubeGeometry( 1, 1, 1 ),
@@ -28,28 +26,16 @@ var Shape = function() {
   this._mesh.geometry.dynamic = true;
 };
 
-Shape.prototype.update = function( elapsedTime ) {
-  this._mesh.position.x = this.getX();
-  this._mesh.position.y = this.getY();
-
-  this._mesh.rotation.z = this.getRotation();
-
-  this._mesh.scale.x = this.getWidth()  - this.getStroke();
-  this._mesh.scale.y = this.getHeight() - this.getStroke();
-  this._mesh.scale.z = 0.5 * Math.max( this.getWidth(), this.getHeight() ) - this.getStroke();
-
-  // Update material.
-  this._mesh.material.color.set( this.getColor().toHex() );
-};
+Shape.prototype.update = function( elapsedTime ) {};
 
 Shape.prototype.draw = function( ctx, stroke, altColor ) {
-  this.setStroke( stroke || 0 );
+  stroke = stroke || 0;
 
   ctx.save();
   ctx.translate( this.getX(), this.getY() );
   ctx.rotate( this.getRotation() );
-  ctx.scale( this.getWidth()  - this.getStroke(),
-             this.getHeight() - this.getStroke() );
+  ctx.scale( this.getWidth()  - stroke,
+             this.getHeight() - stroke );
 
   ctx.beginPath();
 
@@ -74,6 +60,26 @@ Shape.prototype.draw = function( ctx, stroke, altColor ) {
   ctx.fill();
 
   ctx.restore();
+};
+
+Shape.prototype.drawWebGL = function( stroke, altColor ) {
+  stroke = stroke || 0;
+
+  this._mesh.position.x = this.getX();
+  this._mesh.position.y = this.getY();
+
+  this._mesh.rotation.z = this.getRotation();
+
+  this._mesh.scale.x = this.getWidth()  - stroke;
+  this._mesh.scale.y = this.getHeight() - stroke;
+  this._mesh.scale.z = 0.5 * Math.max( this.getWidth(), this.getHeight() ) - stroke;
+
+  // Update material.
+  if ( !altColor ) {
+    this._mesh.material.color.set( this.getColor().toHex() );
+  } else {
+    this._mesh.material.color.set( this.getAltColor().toHex() );
+  }
 };
 
 Shape.prototype.getWebGLObject = function() {
@@ -266,14 +272,6 @@ Shape.prototype.getEdges = function() {
 Shape.prototype.setEdges = function( edges ) {
   this._edges = edges;
   return this;
-};
-
-Shape.prototype.getStroke = function() {
-  return this._stroke;
-};
-
-Shape.prototype.setStroke = function( stroke ) {
-  this._stroke = stroke;
 };
 
 Shape.prototype.calculateRadius = function() {
