@@ -38,9 +38,11 @@ public class PointLight extends Light {
 
 	@Override
 	public void draw(ShaderProgram shaderProgram) {
-		shaderProgram.setUniformf("color", getColor());
-		shaderProgram.setUniformf("translate", getPosition());
-		shaderProgram.setUniformf("scale", getWidth(), getHeight(), getDepth());
-		sMesh.render(shaderProgram, GL20.GL_TRIANGLE_STRIP);
+		if (TilingGame.DEBUG) {
+			shaderProgram.setUniformf("color", getColor());
+			shaderProgram.setUniformf("translate", getPosition());
+			shaderProgram.setUniformf("scale", getWidth(), getHeight(), getDepth());
+			sMesh.render(shaderProgram, GL20.GL_TRIANGLE_STRIP);
+		}
 	}
 }

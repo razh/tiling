@@ -41,6 +41,7 @@ public class TilingGame extends Game {
 		PHONG
 	};
 	public static LightingModel lightingModel = LightingModel.LAMBERT;
+	public static boolean DEBUG = false;
 
 	@Override
 	public void create() {

@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
 import com.razh.tiling.Light;
 import com.razh.tiling.PointLight;
+import com.razh.tiling.TilingGame;
 
 public class DebugInputProcessor extends BasicInputProcessor {
 	private int mLightIndex;
@@ -33,6 +34,10 @@ public class DebugInputProcessor extends BasicInputProcessor {
 				}
 			}
 			getStage().getLights().end();
+		}
+
+		if (keycode == Input.Keys.D) {
+			TilingGame.DEBUG = !TilingGame.DEBUG;
 		}
 
 		return false;

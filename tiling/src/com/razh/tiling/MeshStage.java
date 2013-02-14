@@ -207,6 +207,6 @@ public class MeshStage extends Stage {
 	public void clearActors() {
 		mRoot.clear();
 		mColorRoot.clear();
-		mLights = new SnapshotArray<Light>(Light.class);
+		mLights.clear();
 	}
 }
