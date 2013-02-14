@@ -2,8 +2,6 @@ package com.razh.tiling;
 
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Mesh;
-import com.badlogic.gdx.graphics.VertexAttribute;
-import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 
 public class PointLight extends Light {
@@ -15,16 +13,7 @@ public class PointLight extends Light {
 
 		setDistance(0.0f);
 		if (sMesh == null) {
-			sMesh = new Mesh(Mesh.VertexDataType.VertexBufferObject,
-			                true, 4, 4,
-			                new VertexAttribute(Usage.Position, 3,
-	                                            ShaderProgram.POSITION_ATTRIBUTE));
-
-			sMesh.setVertices(new float[]{-1.0f, -1.0f, 0.0f,
-			                               1.0f, -1.0f, 0.0f,
-			                              -1.0f,  1.0f, 0.0f,
-			                               1.0f,  1.0f, 0.0f});
-			sMesh.setIndices(new short[]{0, 1, 2, 3});
+			sMesh = Geometry.createBillboard();
 		}
 	}
 

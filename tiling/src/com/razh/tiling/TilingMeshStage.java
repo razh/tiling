@@ -78,27 +78,6 @@ public class TilingMeshStage extends MeshStage {
 		}
 	}
 
-	public float getScale() {
-		return mScale;
-	}
-
-	public void setScale(float scale) {
-		if ( mScale != scale ) {
-			setViewport(Gdx.graphics.getWidth() / scale, Gdx.graphics.getHeight() / scale, false);
-			getCamera().position.z = 10000.0f;
-		}
-
-		mScale = scale;
-	}
-
-	public float getStroke() {
-		return mStroke;
-	}
-
-	public void setStroke(float stroke) {
-		mStroke = stroke;
-	}
-
 	@Override
 	public void act(float delta) {
 		super.act(delta);
@@ -123,6 +102,27 @@ public class TilingMeshStage extends MeshStage {
 		} else {
 			return hit;
 		}
+	}
+
+	public float getScale() {
+		return mScale;
+	}
+
+	public void setScale(float scale) {
+		if ( mScale != scale ) {
+			setViewport(Gdx.graphics.getWidth() / scale, Gdx.graphics.getHeight() / scale, false);
+			getCamera().position.z = 10000.0f;
+		}
+
+		mScale = scale;
+	}
+
+	public float getStroke() {
+		return mStroke;
+	}
+
+	public void setStroke(float stroke) {
+		mStroke = stroke;
 	}
 
 	public MeshGroup getColorRoot() {

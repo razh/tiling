@@ -29,5 +29,4 @@ public class MainMenuScreen extends DefaultScreen {
 	@Override
 	public void dispose() {
 	}
-
 }

@@ -11,10 +11,28 @@ import com.badlogic.gdx.math.Vector3;
  * Factory class for generating geometry for various MeshActors.
  */
 public class Geometry {
+	private static Mesh mBillboard;
 	private static Mesh mTriangularBipyramid;
 	private static Mesh mOctahedron;
 	private static Mesh mHexagonalBipyramid;
 	private static Mesh mOctagonalBipyramid;
+
+	public static Mesh createBillboard() {
+		if (mBillboard == null) {
+			mBillboard = new Mesh(Mesh.VertexDataType.VertexBufferObject,
+	                     true, 4, 4,
+	                     new VertexAttribute(Usage.Position, 3,
+	                                         ShaderProgram.POSITION_ATTRIBUTE));
+
+			mBillboard.setVertices(new float[]{-0.5f, -0.5f, 0.0f,
+			                                    0.5f, -0.5f, 0.0f,
+			                                   -0.5f,  0.5f, 0.0f,
+			                                    0.5f,  0.5f, 0.0f});
+			mBillboard.setIndices(new short[]{0, 1, 2, 3});
+		}
+
+		return mBillboard;
+	}
 
 	public static Mesh createTriangularBipyramid() {
 		if (mTriangularBipyramid == null) {

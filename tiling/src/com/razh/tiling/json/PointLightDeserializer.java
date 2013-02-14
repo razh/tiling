@@ -26,8 +26,8 @@ public class PointLightDeserializer implements JsonDeserializer<PointLight> {
 
 		PointLight light = new PointLight();
 		light.setPosition(x, y, z);
-		light.setWidth(3);
-		light.setHeight(3);
+		light.setWidth(6);
+		light.setHeight(6);
 		light.setColor(color);
 		light.setDistance(distance);
 

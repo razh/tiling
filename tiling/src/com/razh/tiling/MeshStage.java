@@ -80,7 +80,6 @@ public class MeshStage extends Stage {
 		return mRoot;
 	}
 
-
 	public Color getColor() {
 		return mColorActor.getColor();
 	}
