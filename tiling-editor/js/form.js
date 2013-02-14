@@ -103,7 +103,7 @@ var Form = (function() {
       $id.append( form );
       $id.find( '#' + name ).change(function() {
         var $this = $( this );
-        var temp = parseFloat( $this.val() ).toFixed( digits );
+        var temp = Number( parseFloat( $this.val() ).toFixed( digits ) );
 
         if ( temp < min ) {
           temp = min;
