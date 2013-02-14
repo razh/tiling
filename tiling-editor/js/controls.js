@@ -235,6 +235,9 @@ function onKeyDown( event ) {
 
     // Space.
     case 32:
+      event.preventDefault();
+      _editor.toggleAltColors();
+      _editor._toggleButtons.altColors.button( 'toggle' );
       break;
 
     // A.
