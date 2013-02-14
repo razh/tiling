@@ -19,6 +19,10 @@ public class MeshGroup extends Group {
 		draw(stroke);
 	}
 
+	public void draw(ShaderProgram shaderProgram) {
+		draw(shaderProgram, 0.0f);
+	}
+
 	public void draw(float stroke) {
 		if (mShaderProgram == null) {
 			return;

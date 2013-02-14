@@ -22,7 +22,7 @@ public class TilingGame extends Game {
 	private InputMultiplexer mInputMultiplexer;
 	private Player mPlayer;
 	private LevelLoader mLevelLoader;
-	private MeshStage mStage;
+	private TilingMeshStage mStage;
 	private FPSLogger mFPSLogger;
 	private boolean mGL20;
 
@@ -47,7 +47,7 @@ public class TilingGame extends Game {
 	public void create() {
 		Gdx.graphics.setVSync(true);
 
-		mStage = new MeshStage();
+		mStage = new TilingMeshStage();
 		mFPSLogger = new FPSLogger();
 
 		mGL20 = Gdx.graphics.isGL20Available();

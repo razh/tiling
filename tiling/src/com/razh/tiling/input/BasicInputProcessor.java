@@ -3,18 +3,18 @@ package com.razh.tiling.input;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector2;
-import com.razh.tiling.MeshStage;
 import com.razh.tiling.Player;
+import com.razh.tiling.TilingMeshStage;
 
 public abstract class BasicInputProcessor implements InputProcessor {
-	private MeshStage mStage;
+	private TilingMeshStage mStage;
 	private Player mPlayer;
 
-	public MeshStage getStage() {
+	public TilingMeshStage getStage() {
 		return mStage;
 	}
 
-	public void setStage(MeshStage stage) {
+	public void setStage(TilingMeshStage stage) {
 		mStage = stage;
 	}
 

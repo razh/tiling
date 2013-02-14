@@ -1,7 +1,7 @@
 package com.razh.tiling.tests;
 
-import com.razh.tiling.MeshStage;
+import com.razh.tiling.TilingMeshStage;
 
 public abstract class StageTest {
-	public abstract void load(MeshStage stage);
+	public abstract void load(TilingMeshStage stage);
 }

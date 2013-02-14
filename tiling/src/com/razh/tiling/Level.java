@@ -92,7 +92,7 @@ public class Level {
 		mAmbientColor = ambientColor;
 	}
 
-	public void load(MeshStage stage) {
+	public void load(TilingMeshStage stage) {
 		if (getScale() != 1.0f) {
 			stage.setScale(getScale());
 		}

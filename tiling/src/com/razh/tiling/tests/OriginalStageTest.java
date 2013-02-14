@@ -16,14 +16,14 @@ import com.razh.tiling.TilingGame;
 import com.razh.tiling.Geometry;
 import com.razh.tiling.MeshActor;
 import com.razh.tiling.MeshMaterial;
-import com.razh.tiling.MeshStage;
 import com.razh.tiling.PointLight;
 import com.razh.tiling.TilingGame.LightingModel;
+import com.razh.tiling.TilingMeshStage;
 
 public class OriginalStageTest extends StageTest {
 
 	@Override
-	public void load(MeshStage stage) {
+	public void load(TilingMeshStage stage) {
 		MeshMaterial material = new MeshMaterial(new Color(0.33f, 0.33f, 0.33f, 1.0f), new Color(Color.WHITE), new Color(Color.BLACK), 50);
 		if (TilingGame.lightingModel == LightingModel.PHONG) {
 			material.setShiny(true);
