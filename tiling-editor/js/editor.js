@@ -328,6 +328,7 @@ var Editor = function() {
 
   this._ambientLight = new THREE.AmbientLight( this.getAmbientColor().toHex() );
   this._scene.add( this._ambientLight );
+  this._materialNeedsUpdate = false; // Update shader on upon adding light.
 
   this._running = true;
 
@@ -417,7 +418,7 @@ Editor.prototype.drawWebGL = function() {
   // Update shapes.
   var i, n;
   for ( i = 0, n = this._shapes.length; i < n; i++ ) {
-    this._shapes[i].drawWebGL( this.getStroke(), this.showingAltColors() );
+    this._shapes[i].drawWebGL( this.getStroke(), this.showingAltColors(), this._materialNeedsUpdate );
   }
 
   // Update lights.
@@ -426,6 +427,7 @@ Editor.prototype.drawWebGL = function() {
   }
 
   this._renderer.render( this._scene, this._camera );
+  this._materialNeedsUpdate = false;
 };
 
 Editor.prototype.drawCameraOverlay = function() {
@@ -652,6 +654,7 @@ Editor.prototype.getLights = function() {
 Editor.prototype.addLight = function( light ) {
   this._lights.push( light );
   this._scene.add( light.getWebGLObject() );
+  this._materialNeedsUpdate = true;
 };
 
 Editor.prototype.removeLight = function( light ) {
@@ -661,6 +664,7 @@ Editor.prototype.removeLight = function( light ) {
   }
 
   this._scene.remove( light.getWebGLObject() );
+  this._materialNeedsUpdate = true;
 };
 
 // Stage.
@@ -898,6 +902,9 @@ Editor.prototype.usingWebGL = function() {
 
 Editor.prototype.setUsingWebGL = function( webGL ) {
   this._usingWebGL = webGL;
+  if ( !webGL ) {
+    this._renderer.clear();
+  }
 };
 
 Editor.prototype.toggleWebGL = function() {

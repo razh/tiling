@@ -62,7 +62,7 @@ Shape.prototype.draw = function( ctx, stroke, altColor ) {
   ctx.restore();
 };
 
-Shape.prototype.drawWebGL = function( stroke, altColor ) {
+Shape.prototype.drawWebGL = function( stroke, altColor, materialNeedsUpdate ) {
   stroke = stroke || 0;
 
   this._mesh.position.x = this.getX();
@@ -79,6 +79,11 @@ Shape.prototype.drawWebGL = function( stroke, altColor ) {
     this._mesh.material.color.set( this.getColor().toHex() );
   } else {
     this._mesh.material.color.set( this.getAltColor().toHex() );
+  }
+
+  // Update material when light is added.
+  if ( materialNeedsUpdate ) {
+    this._mesh.material.needsUpdate = true;
   }
 };
 

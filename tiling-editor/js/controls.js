@@ -94,7 +94,7 @@ function onMouseDownRemovingLight( input ) {
     _editor.removeLight( hit );
   }
 
-  _editor.setState( EditorState.Default );
+  _editor.setState( EditorState.DEFAULT );
 }
 
 function onMouseDownCopyingLight( input ) {
