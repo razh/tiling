@@ -13,6 +13,7 @@ import com.razh.tiling.input.BasicInputProcessor;
 import com.razh.tiling.input.DebugInputProcessor;
 import com.razh.tiling.input.GameInputProcessor;
 import com.razh.tiling.ui.GameScreen;
+import com.razh.tiling.ui.SplashScreen;
 
 public class TilingGame extends Game {
 	private InputMultiplexer mInputMultiplexer;
@@ -51,8 +52,11 @@ public class TilingGame extends Game {
 		mFont = new BitmapFont();
 		mFont.setColor(Color.WHITE);
 
+		SplashScreen splashScreen = new SplashScreen();
+		setScreen(splashScreen);
+
 		GameScreen gameScreen = new GameScreen();
-		setScreen(gameScreen);
+//		setScreen(gameScreen);
 
 		TilingMeshStage stage = (TilingMeshStage) gameScreen.getStage();
 

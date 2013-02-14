@@ -55,9 +55,8 @@ public class MeshStage extends Stage {
 		// Render normal objects.
 		if (mShaderProgram != null) {
 			mShaderProgram.begin();
-			mShaderProgram.setUniformMatrix("projectionMatrix", getCamera().projection);
-			mShaderProgram.setUniformMatrix("viewMatrix", getCamera().view);
 
+			mShaderProgram.setUniformMatrix("modelViewProjectionMatrix", getCamera().combined);
 			mRoot.draw(mShaderProgram);
 
 			mShaderProgram.end();
