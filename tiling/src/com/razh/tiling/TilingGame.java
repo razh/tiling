@@ -61,17 +61,6 @@ public class TilingGame extends Game {
 		Gdx.gl20.glEnable(GL20.GL_CULL_FACE);
 		Gdx.gl20.glCullFace(GL20.GL_BACK);
 
-		mShaderProgramNeedsUpdate = false;
-		mLightUniformsNeedRefresh = false;
-		if (TilingGame.lightingModel == LightingModel.PHONG) {
-			mShaderProgram = Shader.createPhongShaderProgram();
-		} else if (TilingGame.lightingModel == LightingModel.LAMBERT) {
-			mShaderProgram = Shader.createLambertShaderProgram();
-		}
-		mUniforms = new Uniforms();
-
-		mStage.setShaderProgram(mShaderProgram);
-		mStage.setPointLightShaderProgram(Shader.createBillboardShaderProgram());
 		mStage.getCamera().position.z = 10000.0f;
 		mStage.getCamera().far = 15000.0f;
 
@@ -79,22 +68,11 @@ public class TilingGame extends Game {
 		mFont = new BitmapFont();
 		mFont.setColor(Color.WHITE);
 
-		if (TilingGame.lightingModel == LightingModel.PHONG) {
-			mColorShaderProgram = Shader.createColorPhongShaderProgram();
-		} else if (TilingGame.lightingModel == LightingModel.LAMBERT) {
-			mColorShaderProgram = Shader.createColorLambertShaderProgram();
-		}
-		mStage.setColorShaderProgram(mColorShaderProgram);
-
-		OriginalStageTest test = new OriginalStageTest();
-//		test.load(mStage);
-
 		mPlayer = new Player();
 		mLevelLoader = new LevelLoader();
 		mLevelLoader.getLevelByIndex(2).load(mStage);
 
-		mShaderProgramNeedsUpdate = true;
-
+		// Input.
 		mInputMultiplexer = new InputMultiplexer();
 
 		BasicInputProcessor debugInputProcessor = new DebugInputProcessor();
@@ -108,6 +86,21 @@ public class TilingGame extends Game {
 		mInputMultiplexer.addProcessor(gameInputProcessor);
 
 		Gdx.input.setInputProcessor(mInputMultiplexer);
+
+		// Set shader programs.
+		if (TilingGame.lightingModel == LightingModel.PHONG) {
+			mShaderProgram = Shader.createPhongShaderProgram();
+			mColorShaderProgram = Shader.createColorPhongShaderProgram();
+		} else if (TilingGame.lightingModel == LightingModel.LAMBERT) {
+			mShaderProgram = Shader.createLambertShaderProgram();
+			mColorShaderProgram = Shader.createColorLambertShaderProgram();
+		}
+		mUniforms = new Uniforms();
+
+		mStage.setShaderProgram(mShaderProgram);
+		mStage.setPointLightShaderProgram(Shader.createBillboardShaderProgram());
+		mStage.setColorShaderProgram(mColorShaderProgram);
+		mShaderProgramNeedsUpdate = true;
 	}
 
 	public void setupLights() {
@@ -200,16 +193,16 @@ public class TilingGame extends Game {
 		if (mShaderProgramNeedsUpdate) {
 			mShaderProgramNeedsUpdate = false;
 			mShaderProgram.dispose();
+			mColorShaderProgram.dispose();
+
 			if (TilingGame.lightingModel == LightingModel.PHONG) {
 				mShaderProgram = Shader.createPhongShaderProgram();
-			} else if (TilingGame.lightingModel == LightingModel.LAMBERT) {
-				mShaderProgram = Shader.createLambertShaderProgram();
-			}
-			if (TilingGame.lightingModel == LightingModel.PHONG) {
 				mColorShaderProgram = Shader.createColorPhongShaderProgram();
 			} else if (TilingGame.lightingModel == LightingModel.LAMBERT) {
+				mShaderProgram = Shader.createLambertShaderProgram();
 				mColorShaderProgram = Shader.createColorLambertShaderProgram();
 			}
+
 			mStage.setShaderProgram(mShaderProgram);
 			mStage.setColorShaderProgram(mColorShaderProgram);
 		}
