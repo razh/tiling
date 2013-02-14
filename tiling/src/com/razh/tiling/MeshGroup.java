@@ -42,10 +42,15 @@ public class MeshGroup extends Group {
 				continue;
 
 			// Because MeshGroup does not inherit from MeshActor.
-			if (child instanceof MeshActor)
+			if (child instanceof MeshActor) {
 				((MeshActor) child).draw(mShaderProgram, stroke);
-			if (child instanceof MeshGroup)
+			} else if (child instanceof MeshGroup) {
 				((MeshGroup) child).draw(mShaderProgram, stroke);
+			} if (child instanceof BillboardActor) {
+				// Very hacky.
+				((BillboardActor) child).draw(mShaderProgram);
+			}
+
 		}
 
 		children.end();
