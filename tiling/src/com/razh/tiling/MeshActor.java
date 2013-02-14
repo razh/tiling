@@ -133,7 +133,7 @@ public class MeshActor extends Actor3D {
 
 	public Vector2 worldToLocalCoordinates(Vector2 worldCoords) {
 		return worldCoords.cpy()
-		     	          .sub(getX(), getY())
+		                  .sub(getX(), getY())
 		                  .rotate(-getOrientation())
 		                  .div(getWidth(), getHeight());
 	}

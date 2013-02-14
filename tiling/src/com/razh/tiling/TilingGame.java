@@ -17,7 +17,6 @@ import com.razh.tiling.files.LevelLoader;
 import com.razh.tiling.input.BasicInputProcessor;
 import com.razh.tiling.input.DebugInputProcessor;
 import com.razh.tiling.input.GameInputProcessor;
-import com.razh.tiling.tests.OriginalStageTest;
 
 public class TilingGame extends Game {
 	private InputMultiplexer mInputMultiplexer;

@@ -1,6 +1,5 @@
 package com.razh.tiling.input;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.razh.tiling.MeshActor;
 import com.razh.tiling.logic.TilingEntity;
