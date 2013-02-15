@@ -20,8 +20,8 @@ public class TilingGame extends Game {
 	private FPSLogger mFPSLogger;
 	private boolean mGL20;
 
-	private BitmapFont mFont;
 	private SpriteBatch mSpriteBatch;
+	private BitmapFont mFont;
 
 	public enum LightingModel {
 		LAMBERT,
@@ -57,7 +57,6 @@ public class TilingGame extends Game {
 
 		mSpriteBatch = new SpriteBatch();
 		mFont = new BitmapFont();
-		mFont.setColor(Color.WHITE);
 
 		mScreens = new BasicScreen[4];
 

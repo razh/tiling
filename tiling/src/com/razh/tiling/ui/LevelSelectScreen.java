@@ -28,6 +28,7 @@ public class LevelSelectScreen extends BasicScreen {
 
 	@Override
 	public void dispose() {
+		super.dispose();
 	}
 
 }

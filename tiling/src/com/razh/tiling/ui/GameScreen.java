@@ -189,6 +189,7 @@ public class GameScreen extends BasicScreen {
 
 	@Override
 	public void dispose() {
+		super.dispose();
 		mShaderProgram.dispose();
 		mColorShaderProgram.dispose();
 	}

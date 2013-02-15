@@ -3,6 +3,8 @@ package com.razh.tiling.ui;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -14,13 +16,15 @@ import com.razh.tiling.TilingGame;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
 
 public class SplashScreen extends BasicScreen {
+	private SpriteBatch mSpriteBatch;
+	private BitmapFont mFont;
 
 	public SplashScreen() {
 		setStage(new MeshStage());
 		setInputProcessor(getStage());
 
 		final BillboardActor backgroundActor = new BillboardActor();
-		backgroundActor.setColor(new Color(0.75f, 0.25f, 0.25f, 1.0f));
+		backgroundActor.setColor(new Color(Color.DARK_GRAY));
 		backgroundActor.setPosition(Gdx.graphics.getWidth() * 0.5f, Gdx.graphics.getHeight() * 0.5f);
 		backgroundActor.setWidth(Gdx.graphics.getWidth());
 		backgroundActor.setHeight(Gdx.graphics.getHeight());
@@ -29,7 +33,7 @@ public class SplashScreen extends BasicScreen {
 			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
 				backgroundActor.addAction(
 					sequence(
-						fadeOut(1.0f),
+						fadeOut(0.5f),
 						new Action() {
 							@Override
 							public boolean act(float delta) {
@@ -43,8 +47,12 @@ public class SplashScreen extends BasicScreen {
 				return true;
 			}
 		});
-
 		getStage().addActor(backgroundActor);
+
+		mSpriteBatch = new SpriteBatch();
+		mFont = new BitmapFont(Gdx.files.internal("fonts/helv-neue-96-bold.fnt"),
+		                       Gdx.files.internal("fonts/helv-neue-96-bold.png"),
+		                       false);
 
 		getMeshStage().setShaderProgram(Shader.createBillboardShaderProgram());
 	}
@@ -62,6 +70,10 @@ public class SplashScreen extends BasicScreen {
 		Gdx.gl20.glEnable(GL20.GL_CULL_FACE);
 		getStage().draw();
 		Gdx.gl20.glDisable(GL20.GL_CULL_FACE);
+
+		mSpriteBatch.begin();
+		mFont.draw(mSpriteBatch, "antiprism", Gdx.graphics.getWidth() * 0.5f, Gdx.graphics.getHeight() * 0.5f);
+		mSpriteBatch.end();
 	}
 
 	@Override
@@ -86,6 +98,7 @@ public class SplashScreen extends BasicScreen {
 
 	@Override
 	public void dispose() {
+		super.dispose();
 	}
 
 }
