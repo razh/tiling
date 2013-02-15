@@ -1,5 +1,6 @@
 package com.razh.tiling.input;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector2;
@@ -8,8 +9,17 @@ import com.razh.tiling.Player;
 import com.razh.tiling.TilingMeshStage;
 
 public abstract class BasicInputProcessor implements InputProcessor {
+	private Game mGame;
 	private MeshStage mStage;
 	private Player mPlayer;
+
+	public Game getGame() {
+		return mGame;
+	}
+
+	public void setGame(Game game) {
+		mGame = game;
+	}
 
 	public MeshStage getStage() {
 		return mStage;

@@ -41,7 +41,7 @@ public class GameScreen extends DefaultScreen {
 		}
 		mUniforms = new Uniforms();
 
-		getStage().setShaderProgram(mShaderProgram);
+		getMeshStage().setShaderProgram(mShaderProgram);
 		((TilingMeshStage) getStage()).setPointLightShaderProgram(Shader.createBillboardShaderProgram());
 		((TilingMeshStage) getStage()).setColorShaderProgram(mColorShaderProgram);
 		mShaderProgramNeedsUpdate = true;
@@ -51,7 +51,7 @@ public class GameScreen extends DefaultScreen {
 	public void render(float delta) {
 		update(delta);
 
-		Color backgroundColor = getStage().getColor();
+		Color backgroundColor = getMeshStage().getColor();
 
 		Gdx.gl.glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -80,7 +80,7 @@ public class GameScreen extends DefaultScreen {
 				mColorShaderProgram = Shader.createColorLambertShaderProgram();
 			}
 
-			getStage().setShaderProgram(mShaderProgram);
+			getMeshStage().setShaderProgram(mShaderProgram);
 			((TilingMeshStage) getStage()).setColorShaderProgram(mColorShaderProgram);
 		}
 

@@ -2,7 +2,7 @@ package com.razh.tiling.input;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.razh.tiling.MeshActor;
+import com.razh.tiling.TilingGame;
 
 public class MenuInputProcessor extends BasicInputProcessor {
 	// Offsets from touch position to object position.
@@ -53,6 +53,9 @@ public class MenuInputProcessor extends BasicInputProcessor {
 
 		if (getPlayer().getSelected() != null) {
 			getPlayer().setSelected(null);
+			if (getGame() != null) {
+				((TilingGame) getGame()).setState(TilingGame.State.GAME);
+			}
 		}
 
 		return false;

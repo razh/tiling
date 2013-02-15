@@ -3,11 +3,11 @@ package com.razh.tiling.ui;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.razh.tiling.BillboardActor;
 import com.razh.tiling.MeshStage;
 import com.razh.tiling.Shader;
+import com.razh.tiling.input.BasicInputProcessor;
+import com.razh.tiling.input.MenuInputProcessor;
 
 public class SplashScreen extends DefaultScreen {
 
@@ -22,12 +22,18 @@ public class SplashScreen extends DefaultScreen {
 
 		getStage().addActor(backgroundActor);
 
-		getStage().setShaderProgram(Shader.createBillboardShaderProgram());
+		getMeshStage().setShaderProgram(Shader.createBillboardShaderProgram());
+
+		BasicInputProcessor menuInputProcessor = new MenuInputProcessor();
+		menuInputProcessor.setGame(null);
+		menuInputProcessor.setPlayer(null);
+//		menuInputProcessor.setStage(mScreens[State.SPLASH.ordinal()].getStage());
+//		mInputMultiplexer.addProcessor(menuInputProcessor);
 	}
 
 	@Override
 	public void render(float delta) {
-		Color backgroundColor = getStage().getColor();
+		Color backgroundColor = getMeshStage().getColor();
 
 		Gdx.gl.glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);

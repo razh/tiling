@@ -2,11 +2,12 @@ package com.razh.tiling.ui;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.razh.tiling.MeshStage;
 
 public abstract class DefaultScreen implements Screen {
 	private Game mGame;
-	private MeshStage mStage;
+	private Stage mStage;
 
 	public Game getGame() {
 		return mGame;
@@ -16,11 +17,19 @@ public abstract class DefaultScreen implements Screen {
 		mGame = game;
 	}
 
-	public MeshStage getStage() {
+	public Stage getStage() {
 		return mStage;
 	}
 
-	public void setStage(MeshStage stage) {
+	public MeshStage getMeshStage() {
+		if (getStage() instanceof MeshStage) {
+			return (MeshStage) getStage();
+		}
+
+		return null;
+	}
+
+	public void setStage(Stage stage) {
 		mStage = stage;
 	}
 

@@ -13,6 +13,7 @@ import com.razh.tiling.input.BasicInputProcessor;
 import com.razh.tiling.input.DebugInputProcessor;
 import com.razh.tiling.input.GameInputProcessor;
 import com.razh.tiling.input.MenuInputProcessor;
+import com.razh.tiling.ui.DefaultScreen;
 import com.razh.tiling.ui.GameScreen;
 import com.razh.tiling.ui.SplashScreen;
 
@@ -32,6 +33,15 @@ public class TilingGame extends Game {
 	};
 	public static LightingModel lightingModel = LightingModel.LAMBERT;
 	public static boolean DEBUG = false;
+
+	public enum State {
+		SPLASH,
+		MAIN_MENU,
+		LEVEL_SELECT,
+		GAME
+	};
+	private State mState;
+	private DefaultScreen[] mScreens;
 
 	@Override
 	public void create() {
@@ -53,13 +63,11 @@ public class TilingGame extends Game {
 		mFont = new BitmapFont();
 		mFont.setColor(Color.WHITE);
 
-		SplashScreen splashScreen = new SplashScreen();
-		setScreen(splashScreen);
+		mScreens = new DefaultScreen[4];
+		mScreens[State.SPLASH.ordinal()] = new SplashScreen();
+		mScreens[State.GAME.ordinal()] = new GameScreen();
 
-		GameScreen gameScreen = new GameScreen();
-//		setScreen(gameScreen);
-
-		TilingMeshStage stage = (TilingMeshStage) gameScreen.getStage();
+		TilingMeshStage stage = (TilingMeshStage) mScreens[State.GAME.ordinal()].getStage();
 
 		mPlayer = new Player();
 		mLevelLoader = new LevelLoader();
@@ -67,11 +75,6 @@ public class TilingGame extends Game {
 
 		// Input.
 		mInputMultiplexer = new InputMultiplexer();
-
-		BasicInputProcessor menuInputProcessor = new MenuInputProcessor();
-		menuInputProcessor.setPlayer(mPlayer);
-		menuInputProcessor.setStage(splashScreen.getStage());
-		mInputMultiplexer.addProcessor(menuInputProcessor);
 
 		BasicInputProcessor debugInputProcessor = new DebugInputProcessor();
 		debugInputProcessor.setPlayer(mPlayer);
@@ -84,6 +87,8 @@ public class TilingGame extends Game {
 		mInputMultiplexer.addProcessor(gameInputProcessor);
 
 		Gdx.input.setInputProcessor(mInputMultiplexer);
+
+		setState(State.SPLASH);
 	}
 
 	@Override
@@ -102,5 +107,20 @@ public class TilingGame extends Game {
 		mSpriteBatch.end();
 
 		mFPSLogger.log();
+	}
+
+	public State getState() {
+		return mState;
+	}
+
+	public void setState(State state) {
+		if (mState != state) {
+			mState = state;
+			setScreen(mScreens[state.ordinal()]);
+		}
+	}
+
+	public InputMultiplexer getInputMultiplexer() {
+		return mInputMultiplexer;
 	}
 }
