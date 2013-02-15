@@ -6,7 +6,6 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector2;
 import com.razh.tiling.MeshStage;
 import com.razh.tiling.Player;
-import com.razh.tiling.TilingMeshStage;
 
 public abstract class BasicInputProcessor implements InputProcessor {
 	private Game mGame;
@@ -38,11 +37,6 @@ public abstract class BasicInputProcessor implements InputProcessor {
 	}
 
 	public Vector2 screenToStageCoordinates(int screenX, int screenY) {
-		if (mStage != null && mStage instanceof TilingMeshStage && ((TilingMeshStage) mStage).getScale() != 1.0f) {
-			float scaleInverse = 1.0f / ((TilingMeshStage) mStage).getScale();
-			return new Vector2(screenX * scaleInverse, (Gdx.graphics.getHeight() - screenY) * scaleInverse);
-		}
-
 		return new Vector2(screenX, Gdx.graphics.getHeight() - screenY);
 	}
 }

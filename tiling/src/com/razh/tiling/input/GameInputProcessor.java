@@ -2,6 +2,7 @@ package com.razh.tiling.input;
 
 import com.badlogic.gdx.math.Vector2;
 import com.razh.tiling.MeshActor;
+import com.razh.tiling.TilingMeshStage;
 import com.razh.tiling.logic.TilingEntity;
 
 public class GameInputProcessor extends BasicInputProcessor {
@@ -75,4 +76,16 @@ public class GameInputProcessor extends BasicInputProcessor {
 	public boolean scrolled(int amount) {
 		return false;
 	}
+
+	@Override
+	public Vector2 screenToStageCoordinates(int screenX, int screenY) {
+		Vector2 point = super.screenToStageCoordinates(screenX, screenY);
+
+		if (getStage() != null && getStage() instanceof TilingMeshStage && ((TilingMeshStage) getStage()).getScale() != 1.0f) {
+			point.div(((TilingMeshStage) getStage()).getScale());
+		}
+
+		return point;
+	}
+
 }

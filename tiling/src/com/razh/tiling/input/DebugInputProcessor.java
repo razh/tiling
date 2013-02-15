@@ -8,7 +8,7 @@ import com.razh.tiling.PointLight;
 import com.razh.tiling.TilingGame;
 import com.razh.tiling.TilingMeshStage;
 
-public class DebugInputProcessor extends BasicInputProcessor {
+public class DebugInputProcessor extends GameInputProcessor {
 	private int mLightIndex;
 	private Vector2 mPosition;
 
