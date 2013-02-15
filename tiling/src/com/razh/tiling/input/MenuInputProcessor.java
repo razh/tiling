@@ -1,10 +1,16 @@
 package com.razh.tiling.input;
 
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.razh.tiling.MeshActor;
-import com.razh.tiling.logic.TilingEntity;
 
-public class GameInputProcessor extends BasicInputProcessor {
+public class MenuInputProcessor extends BasicInputProcessor {
+	// Offsets from touch position to object position.
+	private Vector2 mOffset;
+
+	public MenuInputProcessor() {
+		mOffset = new Vector2();
+	}
 
 	@Override
 	public boolean keyDown(int keycode) {
@@ -29,12 +35,11 @@ public class GameInputProcessor extends BasicInputProcessor {
 
 		Vector2 point = screenToStageCoordinates(screenX, screenY);
 
-		MeshActor hit = (MeshActor) getStage().hit(point.x, point.y, true);
+		Actor hit = getStage().hit(point.x, point.y, true);
+		getPlayer().setSelected(hit);
+
 		if (hit != null) {
-			getPlayer().setSelected(hit);
-			if (hit.hasEntity()) {
-				((TilingEntity) hit.getEntity()).touch();
-			}
+			mOffset.set(point).sub(hit.getX(), hit.getY());
 		}
 
 		return false;
@@ -55,6 +60,17 @@ public class GameInputProcessor extends BasicInputProcessor {
 
 	@Override
 	public boolean touchDragged(int screenX, int screenY, int pointer) {
+		if (getStage() == null || getPlayer() == null) {
+			return false;
+		}
+
+		Vector2 point = screenToStageCoordinates(screenX, screenY);
+
+		Actor selected = getPlayer().getSelected();
+		if (selected != null) {
+			selected.setPosition(point.x - mOffset.x, point.y - mOffset.y);
+		}
+
 		return false;
 	}
 
@@ -67,4 +83,5 @@ public class GameInputProcessor extends BasicInputProcessor {
 	public boolean scrolled(int amount) {
 		return false;
 	}
+
 }

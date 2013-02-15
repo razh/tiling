@@ -12,6 +12,7 @@ import com.razh.tiling.files.LevelLoader;
 import com.razh.tiling.input.BasicInputProcessor;
 import com.razh.tiling.input.DebugInputProcessor;
 import com.razh.tiling.input.GameInputProcessor;
+import com.razh.tiling.input.MenuInputProcessor;
 import com.razh.tiling.ui.GameScreen;
 import com.razh.tiling.ui.SplashScreen;
 
@@ -66,6 +67,11 @@ public class TilingGame extends Game {
 
 		// Input.
 		mInputMultiplexer = new InputMultiplexer();
+
+		BasicInputProcessor menuInputProcessor = new MenuInputProcessor();
+		menuInputProcessor.setPlayer(mPlayer);
+		menuInputProcessor.setStage(splashScreen.getStage());
+		mInputMultiplexer.addProcessor(menuInputProcessor);
 
 		BasicInputProcessor debugInputProcessor = new DebugInputProcessor();
 		debugInputProcessor.setPlayer(mPlayer);

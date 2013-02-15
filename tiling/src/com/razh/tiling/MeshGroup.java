@@ -46,7 +46,7 @@ public class MeshGroup extends Group {
 				((MeshActor) child).draw(mShaderProgram, stroke);
 			} else if (child instanceof MeshGroup) {
 				((MeshGroup) child).draw(mShaderProgram, stroke);
-			} if (child instanceof BillboardActor) {
+			} else if (child instanceof BillboardActor) {
 				// Very hacky.
 				((BillboardActor) child).draw(mShaderProgram);
 			}

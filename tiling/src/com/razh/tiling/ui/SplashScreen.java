@@ -3,6 +3,8 @@ package com.razh.tiling.ui;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.razh.tiling.BillboardActor;
 import com.razh.tiling.MeshStage;
 import com.razh.tiling.Shader;
@@ -12,8 +14,8 @@ public class SplashScreen extends DefaultScreen {
 	public SplashScreen() {
 		setStage(new MeshStage());
 
-		BillboardActor backgroundActor = new BillboardActor();
-		backgroundActor.setColor(new Color(Color.RED));
+		final BillboardActor backgroundActor = new BillboardActor();
+		backgroundActor.setColor(new Color(0.75f, 0.25f, 0.25f, 1.0f));
 		backgroundActor.setPosition(Gdx.graphics.getWidth() * 0.5f, Gdx.graphics.getHeight() * 0.5f);
 		backgroundActor.setWidth(Gdx.graphics.getWidth());
 		backgroundActor.setHeight(Gdx.graphics.getHeight());
