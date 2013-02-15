@@ -112,7 +112,7 @@ Light.prototype.createInspector = function( $id ) {
     getter: 'getZ',
     setter: 'setZ',
     min:    0,
-    max:    Math.max( _editor.WIDTH, _editor.HEIGHT ),
+    max:    Light.scaleFactor * Math.max( _editor.WIDTH, _editor.HEIGHT ),
     step:   1
   });
 
@@ -131,7 +131,7 @@ Light.prototype.createInspector = function( $id ) {
     getter: 'getDistance',
     setter: 'setDistance',
     min:    0,
-    max:    Math.max( _editor.WIDTH, _editor.HEIGHT ) * Light.scaleFactor,
+    max:    Light.scaleFactor * Math.max( _editor.WIDTH, _editor.HEIGHT ) * Light.scaleFactor,
     step:   Light.scaleFactor
   });
 

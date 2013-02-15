@@ -1,9 +1,12 @@
 package com.razh.tiling.ui;
 
+import com.razh.tiling.MeshStage;
+
 public class LevelSelectScreen extends BasicScreen {
 
 	@Override
 	public void render(float delta) {
+		setStage(new MeshStage());
 	}
 
 	@Override
