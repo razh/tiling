@@ -12,8 +12,7 @@ import com.razh.tiling.files.LevelLoader;
 import com.razh.tiling.input.BasicInputProcessor;
 import com.razh.tiling.input.DebugInputProcessor;
 import com.razh.tiling.input.GameInputProcessor;
-import com.razh.tiling.input.MenuInputProcessor;
-import com.razh.tiling.ui.DefaultScreen;
+import com.razh.tiling.ui.BasicScreen;
 import com.razh.tiling.ui.GameScreen;
 import com.razh.tiling.ui.SplashScreen;
 
@@ -41,7 +40,7 @@ public class TilingGame extends Game {
 		GAME
 	};
 	private State mState;
-	private DefaultScreen[] mScreens;
+	private BasicScreen[] mScreens;
 
 	@Override
 	public void create() {
@@ -63,7 +62,7 @@ public class TilingGame extends Game {
 		mFont = new BitmapFont();
 		mFont.setColor(Color.WHITE);
 
-		mScreens = new DefaultScreen[4];
+		mScreens = new BasicScreen[4];
 		mScreens[State.SPLASH.ordinal()] = new SplashScreen();
 		mScreens[State.GAME.ordinal()] = new GameScreen();
 

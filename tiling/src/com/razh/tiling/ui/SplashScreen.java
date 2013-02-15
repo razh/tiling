@@ -9,7 +9,7 @@ import com.razh.tiling.Shader;
 import com.razh.tiling.input.BasicInputProcessor;
 import com.razh.tiling.input.MenuInputProcessor;
 
-public class SplashScreen extends DefaultScreen {
+public class SplashScreen extends BasicScreen {
 
 	public SplashScreen() {
 		setStage(new MeshStage());

@@ -1,6 +1,6 @@
 package com.razh.tiling.ui;
 
-public class MainMenuScreen extends DefaultScreen {
+public class MainMenuScreen extends BasicScreen {
 
 	@Override
 	public void render(float delta) {

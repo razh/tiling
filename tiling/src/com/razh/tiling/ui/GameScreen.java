@@ -17,7 +17,7 @@ import com.razh.tiling.TilingMeshStage;
 import com.razh.tiling.Uniforms;
 import com.razh.tiling.TilingGame.LightingModel;
 
-public class GameScreen extends DefaultScreen {
+public class GameScreen extends BasicScreen {
 	private ShaderProgram mShaderProgram;
 	private ShaderProgram mColorShaderProgram;
 	private Uniforms mUniforms;

@@ -1,6 +1,6 @@
 package com.razh.tiling.ui;
 
-public class LevelSelectScreen extends DefaultScreen {
+public class LevelSelectScreen extends BasicScreen {
 
 	@Override
 	public void render(float delta) {
