@@ -33,12 +33,27 @@ public class SplashScreen extends BasicScreen {
 			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
 				backgroundActor.addAction(
 					sequence(
-						fadeOut(0.5f),
+						parallel(
+							fadeOut(0.5f),
+							new Action() {
+								@Override
+								public boolean act(float delta) {
+									Color color = mFont.getColor();
+									color.a = backgroundActor.getColor().a;
+									mFont.setColor(color);
+									if (color.a == 0.0f) {
+										return true;
+									}
+
+									return false;
+								}
+							}
+						),
 						new Action() {
 							@Override
 							public boolean act(float delta) {
 								((TilingGame) getGame()).setState(TilingGame.State.GAME);
-								return false;
+								return true;
 							}
 						}
 					)
