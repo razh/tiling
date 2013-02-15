@@ -5,6 +5,12 @@ import com.razh.tiling.MeshActor;
 import com.razh.tiling.logic.TilingEntity;
 
 public class GameInputProcessor extends BasicInputProcessor {
+	// Offsets from touch position to object position.
+	private Vector2 mOffset;
+
+	public GameInputProcessor() {
+		mOffset = new Vector2();
+	}
 
 	@Override
 	public boolean keyDown(int keycode) {
@@ -35,6 +41,8 @@ public class GameInputProcessor extends BasicInputProcessor {
 			if (hit.hasEntity()) {
 				((TilingEntity) hit.getEntity()).touch();
 			}
+
+			mOffset.set(point).sub(hit.getX(), hit.getY());
 		}
 
 		return false;

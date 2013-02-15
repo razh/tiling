@@ -3,36 +3,56 @@ package com.razh.tiling.ui;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.scenes.scene2d.Action;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.razh.tiling.BillboardActor;
 import com.razh.tiling.MeshStage;
 import com.razh.tiling.Shader;
-import com.razh.tiling.input.BasicInputProcessor;
-import com.razh.tiling.input.MenuInputProcessor;
+import com.razh.tiling.TilingGame;
+
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
 
 public class SplashScreen extends BasicScreen {
 
 	public SplashScreen() {
 		setStage(new MeshStage());
+		setInputProcessor(getStage());
 
 		final BillboardActor backgroundActor = new BillboardActor();
 		backgroundActor.setColor(new Color(0.75f, 0.25f, 0.25f, 1.0f));
 		backgroundActor.setPosition(Gdx.graphics.getWidth() * 0.5f, Gdx.graphics.getHeight() * 0.5f);
 		backgroundActor.setWidth(Gdx.graphics.getWidth());
 		backgroundActor.setHeight(Gdx.graphics.getHeight());
+		backgroundActor.addListener(new InputListener() {
+			@Override
+			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+				backgroundActor.addAction(
+					sequence(
+						fadeOut(1.0f),
+						new Action() {
+							@Override
+							public boolean act(float delta) {
+								((TilingGame) getGame()).setState(TilingGame.State.GAME);
+								return false;
+							}
+						}
+					)
+				);
+
+				return true;
+			}
+		});
 
 		getStage().addActor(backgroundActor);
 
 		getMeshStage().setShaderProgram(Shader.createBillboardShaderProgram());
-
-		BasicInputProcessor menuInputProcessor = new MenuInputProcessor();
-		menuInputProcessor.setGame(null);
-		menuInputProcessor.setPlayer(null);
-//		menuInputProcessor.setStage(mScreens[State.SPLASH.ordinal()].getStage());
-//		mInputMultiplexer.addProcessor(menuInputProcessor);
 	}
 
 	@Override
 	public void render(float delta) {
+		getStage().act(delta);
+
 		Color backgroundColor = getMeshStage().getColor();
 
 		Gdx.gl.glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a);

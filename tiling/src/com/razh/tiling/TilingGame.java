@@ -9,9 +9,6 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.razh.tiling.files.LevelLoader;
-import com.razh.tiling.input.BasicInputProcessor;
-import com.razh.tiling.input.DebugInputProcessor;
-import com.razh.tiling.input.GameInputProcessor;
 import com.razh.tiling.ui.BasicScreen;
 import com.razh.tiling.ui.GameScreen;
 import com.razh.tiling.ui.SplashScreen;
@@ -63,8 +60,14 @@ public class TilingGame extends Game {
 		mFont.setColor(Color.WHITE);
 
 		mScreens = new BasicScreen[4];
-		mScreens[State.SPLASH.ordinal()] = new SplashScreen();
-		mScreens[State.GAME.ordinal()] = new GameScreen();
+
+		SplashScreen splashScreen = new SplashScreen();
+		splashScreen.setGame(this);
+		mScreens[State.SPLASH.ordinal()] = splashScreen;
+
+		GameScreen gameScreen = new GameScreen();
+		gameScreen.setGame(this);
+		mScreens[State.GAME.ordinal()] = gameScreen;
 
 		TilingMeshStage stage = (TilingMeshStage) mScreens[State.GAME.ordinal()].getStage();
 
@@ -74,17 +77,6 @@ public class TilingGame extends Game {
 
 		// Input.
 		mInputMultiplexer = new InputMultiplexer();
-
-		BasicInputProcessor debugInputProcessor = new DebugInputProcessor();
-		debugInputProcessor.setPlayer(mPlayer);
-		debugInputProcessor.setStage(stage);
-		mInputMultiplexer.addProcessor(debugInputProcessor);
-
-		BasicInputProcessor gameInputProcessor = new GameInputProcessor();
-		gameInputProcessor.setPlayer(mPlayer);
-		gameInputProcessor.setStage(stage);
-		mInputMultiplexer.addProcessor(gameInputProcessor);
-
 		Gdx.input.setInputProcessor(mInputMultiplexer);
 
 		setState(State.SPLASH);
@@ -108,14 +100,24 @@ public class TilingGame extends Game {
 		mFPSLogger.log();
 	}
 
+	public Player getPlayer() {
+		return mPlayer;
+	}
+
 	public State getState() {
 		return mState;
 	}
 
 	public void setState(State state) {
 		if (mState != state) {
+			if (getScreen() != null) {
+				mInputMultiplexer.removeProcessor(((BasicScreen) getScreen()).getInputProcessor());
+			}
+
 			mState = state;
-			setScreen(mScreens[state.ordinal()]);
+			BasicScreen screen = mScreens[state.ordinal()];
+			mInputMultiplexer.addProcessor(screen.getInputProcessor());
+			setScreen(screen);
 		}
 	}
 

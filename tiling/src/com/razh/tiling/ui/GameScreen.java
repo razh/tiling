@@ -3,10 +3,13 @@ package com.razh.tiling.ui;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.SnapshotArray;
 import com.razh.tiling.AmbientLight;
 import com.razh.tiling.Light;
@@ -16,6 +19,9 @@ import com.razh.tiling.TilingGame;
 import com.razh.tiling.TilingMeshStage;
 import com.razh.tiling.Uniforms;
 import com.razh.tiling.TilingGame.LightingModel;
+import com.razh.tiling.input.BasicInputProcessor;
+import com.razh.tiling.input.DebugInputProcessor;
+import com.razh.tiling.input.GameInputProcessor;
 
 public class GameScreen extends BasicScreen {
 	private ShaderProgram mShaderProgram;
@@ -45,6 +51,19 @@ public class GameScreen extends BasicScreen {
 		((TilingMeshStage) getStage()).setPointLightShaderProgram(Shader.createBillboardShaderProgram());
 		((TilingMeshStage) getStage()).setColorShaderProgram(mColorShaderProgram);
 		mShaderProgramNeedsUpdate = true;
+
+		InputMultiplexer inputMultiplexer = new InputMultiplexer();
+
+		DebugInputProcessor debugInputProcessor = new DebugInputProcessor();
+		debugInputProcessor.setStage(getMeshStage());
+
+		GameInputProcessor gameInputProcessor = new GameInputProcessor();
+		gameInputProcessor.setStage(getMeshStage());
+
+		inputMultiplexer.addProcessor(debugInputProcessor);
+		inputMultiplexer.addProcessor(gameInputProcessor);
+
+		setInputProcessor(inputMultiplexer);
 	}
 
 	@Override
@@ -149,7 +168,15 @@ public class GameScreen extends BasicScreen {
 	public void resize(int width, int height) {}
 
 	@Override
-	public void show() {}
+	public void show() {
+		Array<InputProcessor> inputProcessors = ((InputMultiplexer) getInputProcessor()).getProcessors();
+		BasicInputProcessor inputProcessor;
+		for (int i = 0; i < inputProcessors.size; i++) {
+			inputProcessor = (BasicInputProcessor) inputProcessors.get(i);
+			inputProcessor.setGame(getGame());
+			inputProcessor.setPlayer(((TilingGame) getGame()).getPlayer());
+		}
+	}
 
 	@Override
 	public void hide() {}
