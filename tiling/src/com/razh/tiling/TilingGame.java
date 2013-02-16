@@ -1,5 +1,8 @@
 package com.razh.tiling;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
@@ -9,6 +12,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.razh.tiling.files.LevelLoader;
+import com.razh.tiling.ui.BasicScreen;
 import com.razh.tiling.ui.GameScreen;
 import com.razh.tiling.ui.LevelSelectScreen;
 import com.razh.tiling.ui.MainMenuScreen;
@@ -31,10 +35,7 @@ public class TilingGame extends Game {
 	public static LightingModel lightingModel = LightingModel.LAMBERT;
 	public static boolean DEBUG = false;
 
-	public SplashScreen splashScreen;
-	public MainMenuScreen mainMenuScreen;
-	public LevelSelectScreen levelSelectScreen;
-	public GameScreen gameScreen;
+	private Map<String, BasicScreen> mScreens;
 
 	@Override
 	public void create() {
@@ -57,19 +58,20 @@ public class TilingGame extends Game {
 
 		mPlayer = new Player();
 
-		splashScreen = new SplashScreen(this);
-		mainMenuScreen = new MainMenuScreen(this);
-		levelSelectScreen = new LevelSelectScreen(this);
-		gameScreen = new GameScreen(this);
+		mScreens = new HashMap<String, BasicScreen>();
+		mScreens.put("SPLASH", new SplashScreen(this));
+		mScreens.put("MAIN_MENU", new MainMenuScreen(this));
+		mScreens.put("LEVEL_SELECT", new LevelSelectScreen(this));
+		mScreens.put("GAME", new GameScreen(this));
 
 		mLevelLoader = new LevelLoader();
-		mLevelLoader.getLevelByIndex(2).load((TilingMeshStage) gameScreen.getMeshStage());
+		mLevelLoader.getLevelByIndex(2).load((TilingMeshStage) getScreens().get("GAME").getMeshStage());
 
 		// Input.
 		mInputMultiplexer = new InputMultiplexer();
 		Gdx.input.setInputProcessor(mInputMultiplexer);
 
-		setScreen(mainMenuScreen);
+		setScreen(getScreens().get("MAIN_MENU"));
 	}
 
 	@Override
@@ -88,6 +90,10 @@ public class TilingGame extends Game {
 		mSpriteBatch.end();
 
 		mFPSLogger.log();
+	}
+
+	public Map<String, BasicScreen> getScreens() {
+		return mScreens;
 	}
 
 	public Player getPlayer() {
