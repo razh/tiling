@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.razh.tiling.files.LevelLoader;
 import com.razh.tiling.ui.BasicScreen;
 import com.razh.tiling.ui.GameScreen;
+import com.razh.tiling.ui.LevelSelectScreen;
 import com.razh.tiling.ui.SplashScreen;
 
 public class TilingGame extends Game {
@@ -64,6 +65,10 @@ public class TilingGame extends Game {
 		splashScreen.setGame(this);
 		mScreens[State.SPLASH.ordinal()] = splashScreen;
 
+		LevelSelectScreen levelSelectScreen = new LevelSelectScreen();
+		levelSelectScreen.setGame(this);
+		mScreens[State.LEVEL_SELECT.ordinal()] = levelSelectScreen;
+
 		GameScreen gameScreen = new GameScreen();
 		gameScreen.setGame(this);
 		mScreens[State.GAME.ordinal()] = gameScreen;
@@ -78,7 +83,7 @@ public class TilingGame extends Game {
 		mInputMultiplexer = new InputMultiplexer();
 		Gdx.input.setInputProcessor(mInputMultiplexer);
 
-		setState(State.SPLASH);
+		setState(State.LEVEL_SELECT);
 	}
 
 	@Override
