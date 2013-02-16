@@ -32,7 +32,7 @@ public class MainMenuScreen extends BasicScreen {
 			@Override
 			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
 				TilingGame game = getGame();
-				game.setScreen(game.getScreens().get("SPLASH"));
+				game.setScreen(game.getScreens().get("GAME"));
 				return true;
 			}
 		});

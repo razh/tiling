@@ -171,16 +171,6 @@ public class GameScreen extends BasicScreen {
 	public void resize(int width, int height) {}
 
 	@Override
-	public void show() {
-		super.show();
-	}
-
-	@Override
-	public void hide() {
-		super.hide();
-	}
-
-	@Override
 	public void pause() {}
 
 	@Override

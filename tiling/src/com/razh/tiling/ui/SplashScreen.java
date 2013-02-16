@@ -56,7 +56,7 @@ public class SplashScreen extends BasicScreen {
 							@Override
 							public boolean act(float delta) {
 								TilingGame game = getGame();
-								game.setScreen(game.getScreens().get("GAME"));
+								game.setScreen(game.getScreens().get("MAIN_MENU"));
 								return true;
 							}
 						}
