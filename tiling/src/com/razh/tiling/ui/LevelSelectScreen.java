@@ -1,5 +1,6 @@
 package com.razh.tiling.ui;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -13,10 +14,11 @@ import com.razh.tiling.TilingGame;
 
 public class LevelSelectScreen extends BasicScreen {
 
-	public LevelSelectScreen() {
-		setStage(new Stage());
+	public LevelSelectScreen(Game game) {
+		super(game);
 
-		Stage stage = getStage();
+		Stage stage = new Stage();
+		setStage(stage);
 		setInputProcessor(stage);
 
 		Skin skin = new Skin();

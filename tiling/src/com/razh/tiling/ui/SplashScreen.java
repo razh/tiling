@@ -1,5 +1,6 @@
 package com.razh.tiling.ui;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -19,7 +20,9 @@ public class SplashScreen extends BasicScreen {
 	private SpriteBatch mSpriteBatch;
 	private BitmapFont mFont;
 
-	public SplashScreen() {
+	public SplashScreen(Game game) {
+		super(game);
+
 		setStage(new MeshStage());
 		setInputProcessor(getStage());
 

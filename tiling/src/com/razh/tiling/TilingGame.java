@@ -61,16 +61,13 @@ public class TilingGame extends Game {
 
 		mScreens = new BasicScreen[4];
 
-		SplashScreen splashScreen = new SplashScreen();
-		splashScreen.setGame(this);
+		SplashScreen splashScreen = new SplashScreen(this);
 		mScreens[State.SPLASH.ordinal()] = splashScreen;
 
-		LevelSelectScreen levelSelectScreen = new LevelSelectScreen();
-		levelSelectScreen.setGame(this);
+		LevelSelectScreen levelSelectScreen = new LevelSelectScreen(this);
 		mScreens[State.LEVEL_SELECT.ordinal()] = levelSelectScreen;
 
-		GameScreen gameScreen = new GameScreen();
-		gameScreen.setGame(this);
+		GameScreen gameScreen = new GameScreen(this);
 		mScreens[State.GAME.ordinal()] = gameScreen;
 
 		TilingMeshStage stage = (TilingMeshStage) mScreens[State.GAME.ordinal()].getStage();

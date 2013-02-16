@@ -2,6 +2,7 @@ package com.razh.tiling.ui;
 
 import java.util.ArrayList;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
@@ -31,7 +32,9 @@ public class GameScreen extends BasicScreen {
 	private boolean mShaderProgramNeedsUpdate;
 	private boolean mLightUniformsNeedRefresh;
 
-	public GameScreen() {
+	public GameScreen(Game game) {
+		super(game);
+
 		setStage(new TilingMeshStage());
 
 		getStage().getCamera().position.z = 10000.0f;

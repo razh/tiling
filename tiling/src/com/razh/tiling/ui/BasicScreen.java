@@ -11,6 +11,10 @@ public abstract class BasicScreen implements Screen {
 	private Stage mStage;
 	private InputProcessor mInputProcessor;
 
+	public BasicScreen(Game game) {
+		setGame(game);
+	}
+
 	public Game getGame() {
 		return mGame;
 	}
