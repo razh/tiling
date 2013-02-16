@@ -31,14 +31,9 @@ public class TilingGame extends Game {
 	public static LightingModel lightingModel = LightingModel.LAMBERT;
 	public static boolean DEBUG = false;
 
-	public enum State {
-		SPLASH,
-		MAIN_MENU,
-		LEVEL_SELECT,
-		GAME
-	};
-	private State mState;
-	private BasicScreen[] mScreens;
+	public SplashScreen splashScreen;
+	public LevelSelectScreen levelSelectScreen;
+	public GameScreen gameScreen;
 
 	@Override
 	public void create() {
@@ -59,28 +54,19 @@ public class TilingGame extends Game {
 		mSpriteBatch = new SpriteBatch();
 		mFont = new BitmapFont();
 
-		mScreens = new BasicScreen[4];
-
-		SplashScreen splashScreen = new SplashScreen(this);
-		mScreens[State.SPLASH.ordinal()] = splashScreen;
-
-		LevelSelectScreen levelSelectScreen = new LevelSelectScreen(this);
-		mScreens[State.LEVEL_SELECT.ordinal()] = levelSelectScreen;
-
-		GameScreen gameScreen = new GameScreen(this);
-		mScreens[State.GAME.ordinal()] = gameScreen;
-
-		TilingMeshStage stage = (TilingMeshStage) mScreens[State.GAME.ordinal()].getStage();
+		splashScreen = new SplashScreen(this);
+		levelSelectScreen = new LevelSelectScreen(this);
+		gameScreen = new GameScreen(this);
 
 		mPlayer = new Player();
 		mLevelLoader = new LevelLoader();
-		mLevelLoader.getLevelByIndex(2).load(stage);
+		mLevelLoader.getLevelByIndex(2).load((TilingMeshStage) gameScreen.getMeshStage());
 
 		// Input.
 		mInputMultiplexer = new InputMultiplexer();
 		Gdx.input.setInputProcessor(mInputMultiplexer);
 
-		setState(State.LEVEL_SELECT);
+		setScreen(levelSelectScreen);
 	}
 
 	@Override
@@ -103,23 +89,6 @@ public class TilingGame extends Game {
 
 	public Player getPlayer() {
 		return mPlayer;
-	}
-
-	public State getState() {
-		return mState;
-	}
-
-	public void setState(State state) {
-		if (mState != state) {
-			if (getScreen() != null) {
-				mInputMultiplexer.removeProcessor(((BasicScreen) getScreen()).getInputProcessor());
-			}
-
-			mState = state;
-			BasicScreen screen = mScreens[state.ordinal()];
-			mInputMultiplexer.addProcessor(screen.getInputProcessor());
-			setScreen(screen);
-		}
 	}
 
 	public InputMultiplexer getInputMultiplexer() {

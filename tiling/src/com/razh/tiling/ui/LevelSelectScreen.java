@@ -1,6 +1,5 @@
 package com.razh.tiling.ui;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -14,7 +13,7 @@ import com.razh.tiling.TilingGame;
 
 public class LevelSelectScreen extends BasicScreen {
 
-	public LevelSelectScreen(Game game) {
+	public LevelSelectScreen(TilingGame game) {
 		super(game);
 
 		Stage stage = new Stage();
@@ -32,7 +31,8 @@ public class LevelSelectScreen extends BasicScreen {
 		button.addListener(new InputListener() {
 			@Override
 			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-				((TilingGame) getGame()).setState(TilingGame.State.SPLASH);
+				TilingGame game = getGame();
+				game.setScreen(game.splashScreen);
 				return true;
 			}
 		});
@@ -64,10 +64,12 @@ public class LevelSelectScreen extends BasicScreen {
 
 	@Override
 	public void show() {
+		super.show();
 	}
 
 	@Override
 	public void hide() {
+		super.hide();
 	}
 
 	@Override

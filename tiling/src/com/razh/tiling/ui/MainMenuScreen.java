@@ -1,10 +1,10 @@
 package com.razh.tiling.ui;
 
-import com.badlogic.gdx.Game;
+import com.razh.tiling.TilingGame;
 
 public class MainMenuScreen extends BasicScreen {
 
-	public MainMenuScreen(Game game) {
+	public MainMenuScreen(TilingGame game) {
 		super(game);
 	}
 
@@ -18,6 +18,7 @@ public class MainMenuScreen extends BasicScreen {
 
 	@Override
 	public void show() {
+		super.show();
 	}
 
 	@Override

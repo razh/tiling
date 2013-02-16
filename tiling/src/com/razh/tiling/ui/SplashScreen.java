@@ -1,6 +1,5 @@
 package com.razh.tiling.ui;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -20,7 +19,7 @@ public class SplashScreen extends BasicScreen {
 	private SpriteBatch mSpriteBatch;
 	private BitmapFont mFont;
 
-	public SplashScreen(Game game) {
+	public SplashScreen(TilingGame game) {
 		super(game);
 
 		setStage(new MeshStage());
@@ -55,7 +54,8 @@ public class SplashScreen extends BasicScreen {
 						new Action() {
 							@Override
 							public boolean act(float delta) {
-								((TilingGame) getGame()).setState(TilingGame.State.GAME);
+								TilingGame game = getGame();
+								game.setScreen(game.gameScreen);
 								return true;
 							}
 						}
@@ -100,10 +100,12 @@ public class SplashScreen extends BasicScreen {
 
 	@Override
 	public void show() {
+		super.show();
 	}
 
 	@Override
 	public void hide() {
+		super.hide();
 	}
 
 	@Override

@@ -1,25 +1,27 @@
 package com.razh.tiling.ui;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.razh.tiling.MeshStage;
+import com.razh.tiling.TilingGame;
 
 public abstract class BasicScreen implements Screen {
-	private Game mGame;
+	private TilingGame mGame;
 	private Stage mStage;
 	private InputProcessor mInputProcessor;
 
-	public BasicScreen(Game game) {
+	public BasicScreen(TilingGame game) {
 		setGame(game);
 	}
 
-	public Game getGame() {
+	public TilingGame getGame() {
 		return mGame;
 	}
 
-	public void setGame(Game game) {
+	public void setGame(TilingGame game) {
 		mGame = game;
 	}
 
@@ -45,6 +47,18 @@ public abstract class BasicScreen implements Screen {
 
 	public void setInputProcessor(InputProcessor inputProcessor) {
 		mInputProcessor = inputProcessor;
+	}
+
+	@Override
+	public void show() {
+		InputMultiplexer inputMultiplexer = getGame().getInputMultiplexer();
+		inputMultiplexer.addProcessor(getInputProcessor());
+	}
+
+	@Override
+	public void hide() {
+		InputMultiplexer inputMultiplexer = getGame().getInputMultiplexer();
+		inputMultiplexer.removeProcessor(getInputProcessor());
 	}
 
 	@Override

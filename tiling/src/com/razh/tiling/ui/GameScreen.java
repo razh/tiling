@@ -2,7 +2,6 @@ package com.razh.tiling.ui;
 
 import java.util.ArrayList;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
@@ -32,7 +31,7 @@ public class GameScreen extends BasicScreen {
 	private boolean mShaderProgramNeedsUpdate;
 	private boolean mLightUniformsNeedRefresh;
 
-	public GameScreen(Game game) {
+	public GameScreen(TilingGame game) {
 		super(game);
 
 		setStage(new TilingMeshStage());
@@ -59,9 +58,13 @@ public class GameScreen extends BasicScreen {
 
 		DebugInputProcessor debugInputProcessor = new DebugInputProcessor();
 		debugInputProcessor.setStage(getMeshStage());
+		debugInputProcessor.setGame(getGame());
+		debugInputProcessor.setPlayer(getGame().getPlayer());
 
 		GameInputProcessor gameInputProcessor = new GameInputProcessor();
 		gameInputProcessor.setStage(getMeshStage());
+		gameInputProcessor.setGame(getGame());
+		gameInputProcessor.setPlayer(getGame().getPlayer());
 
 		inputMultiplexer.addProcessor(debugInputProcessor);
 		inputMultiplexer.addProcessor(gameInputProcessor);
@@ -172,17 +175,13 @@ public class GameScreen extends BasicScreen {
 
 	@Override
 	public void show() {
-		Array<InputProcessor> inputProcessors = ((InputMultiplexer) getInputProcessor()).getProcessors();
-		BasicInputProcessor inputProcessor;
-		for (int i = 0; i < inputProcessors.size; i++) {
-			inputProcessor = (BasicInputProcessor) inputProcessors.get(i);
-			inputProcessor.setGame(getGame());
-			inputProcessor.setPlayer(((TilingGame) getGame()).getPlayer());
-		}
+		super.show();
 	}
 
 	@Override
-	public void hide() {}
+	public void hide() {
+		super.hide();
+	}
 
 	@Override
 	public void pause() {}
