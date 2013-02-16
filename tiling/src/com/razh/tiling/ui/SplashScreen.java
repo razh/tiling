@@ -36,6 +36,7 @@ public class SplashScreen extends BasicScreen {
 				backgroundActor.addAction(
 					sequence(
 						parallel(
+							moveBy(Gdx.graphics.getWidth(), 0.0f, 1.0f),
 							fadeOut(0.5f),
 							new Action() {
 								@Override
