@@ -4,12 +4,10 @@ import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.SnapshotArray;
 import com.razh.tiling.AmbientLight;
 import com.razh.tiling.Light;
@@ -19,7 +17,6 @@ import com.razh.tiling.TilingGame;
 import com.razh.tiling.TilingMeshStage;
 import com.razh.tiling.Uniforms;
 import com.razh.tiling.TilingGame.LightingModel;
-import com.razh.tiling.input.BasicInputProcessor;
 import com.razh.tiling.input.DebugInputProcessor;
 import com.razh.tiling.input.GameInputProcessor;
 

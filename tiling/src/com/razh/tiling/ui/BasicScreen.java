@@ -1,7 +1,5 @@
 package com.razh.tiling.ui;
 
-import com.badlogic.gdx.Game;
-import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -51,14 +49,12 @@ public abstract class BasicScreen implements Screen {
 
 	@Override
 	public void show() {
-		InputMultiplexer inputMultiplexer = getGame().getInputMultiplexer();
-		inputMultiplexer.addProcessor(getInputProcessor());
+		getGame().getInputMultiplexer().addProcessor(getInputProcessor());
 	}
 
 	@Override
 	public void hide() {
-		InputMultiplexer inputMultiplexer = getGame().getInputMultiplexer();
-		inputMultiplexer.removeProcessor(getInputProcessor());
+		getGame().getInputMultiplexer().removeProcessor(getInputProcessor());
 	}
 
 	@Override

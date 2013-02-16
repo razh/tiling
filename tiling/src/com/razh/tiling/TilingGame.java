@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.razh.tiling.files.LevelLoader;
-import com.razh.tiling.ui.BasicScreen;
 import com.razh.tiling.ui.GameScreen;
 import com.razh.tiling.ui.LevelSelectScreen;
 import com.razh.tiling.ui.SplashScreen;
