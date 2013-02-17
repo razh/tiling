@@ -20,12 +20,19 @@ import com.razh.tiling.json.PointLightDeserializer;
 
 public class LevelLoader {
 	private static final String LEVELS_FILE = "levels.json";
+	private String mLevelsFileName;
 
 	private Gson mGson;
 	private LinkedHashMap<String, String> mFileNames;
 	private ArrayList<String> mFileNamesArray;
 
 	public LevelLoader() {
+		this(LEVELS_FILE);
+	}
+
+	public LevelLoader(String levelsFileName) {
+		mLevelsFileName = levelsFileName;
+
 		mGson = new GsonBuilder()
 		.registerTypeAdapter(Level.class, new LevelDeserializer())
 		.registerTypeAdapter(MeshActor.class, new MeshActorDeserializer())
@@ -33,7 +40,7 @@ public class LevelLoader {
 		.registerTypeAdapter(Color.class, new ColorDeserializer())
 		.create();
 
-		FileHandle levelsFile = Gdx.files.internal(LEVELS_FILE);
+		FileHandle levelsFile = Gdx.files.internal(mLevelsFileName);
 
 		Type mapType = new TypeToken<LinkedHashMap<String, String>>() {}.getType();
 		mFileNames = mGson.fromJson(levelsFile.readString(), mapType);
@@ -41,6 +48,7 @@ public class LevelLoader {
 		// Create array.
 		mFileNamesArray = new ArrayList<String>(mFileNames.values());
 	}
+
 
 	public Level getLevelByIndex(int levelIndex) {
 		if (0 <= levelIndex && levelIndex < mFileNamesArray.size()) {
@@ -54,5 +62,9 @@ public class LevelLoader {
 	public Level getLevelByName(String name) {
 		FileHandle file = Gdx.files.internal(mFileNames.get(name));
 		return mGson.fromJson(file.readString(), Level.class);
+	}
+
+	public ArrayList<String> getLevelNames() {
+		return new ArrayList<String>(mFileNames.keySet());
 	}
 }

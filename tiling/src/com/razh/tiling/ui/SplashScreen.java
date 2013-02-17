@@ -12,6 +12,7 @@ import com.razh.tiling.BillboardActor;
 import com.razh.tiling.MeshStage;
 import com.razh.tiling.Shader;
 import com.razh.tiling.TilingGame;
+import com.razh.tiling.TilingMeshStage;
 
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
 
@@ -96,30 +97,19 @@ public class SplashScreen extends BasicScreen {
 	}
 
 	@Override
-	public void resize(int width, int height) {
-	}
+	public void resize(int width, int height) {}
 
 	@Override
-	public void show() {
-		super.show();
-	}
+	public void pause() {}
 
 	@Override
-	public void hide() {
-		super.hide();
-	}
-
-	@Override
-	public void pause() {
-	}
-
-	@Override
-	public void resume() {
-	}
+	public void resume() {}
 
 	@Override
 	public void dispose() {
 		super.dispose();
+		mSpriteBatch.dispose();
+		mFont.dispose();
 	}
 
 }

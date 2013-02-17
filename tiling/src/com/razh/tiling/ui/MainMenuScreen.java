@@ -10,8 +10,11 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.razh.tiling.TilingGame;
+import com.razh.tiling.TilingMeshStage;
+import com.razh.tiling.files.LevelLoader;
 
 public class MainMenuScreen extends BasicScreen {
+	private TilingMeshStage mBackgroundStage;
 
 	public MainMenuScreen(TilingGame game) {
 		super(game);
@@ -19,6 +22,9 @@ public class MainMenuScreen extends BasicScreen {
 		Stage stage = new Stage();
 		setStage(stage);
 		setInputProcessor(stage);
+
+		mBackgroundStage = new TilingMeshStage();
+		LevelLoader levelLoader = new LevelLoader();
 
 		Skin skin = new Skin();
 		skin.add("image", new NinePatch(new Texture(Gdx.files.internal("data/white-square.png")), 1, 1, 1, 1));
@@ -59,16 +65,13 @@ public class MainMenuScreen extends BasicScreen {
 	}
 
 	@Override
-	public void resize(int width, int height) {
-	}
+	public void resize(int width, int height) {}
 
 	@Override
-	public void pause() {
-	}
+	public void pause() {}
 
 	@Override
-	public void resume() {
-	}
+	public void resume() {}
 
 	@Override
 	public void dispose() {
