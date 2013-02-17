@@ -26,8 +26,14 @@ public class TilingMeshStage extends MeshStage {
 
 	private SnapshotArray<Light> mLights;
 
+	private static final float CAMERA_POSITION_Z = 1000.0f;
+	private static final float CAMERA_FAR = 2000.0f;
+
 	public TilingMeshStage() {
 		super();
+
+		getCamera().position.z = CAMERA_POSITION_Z;
+		getCamera().far = CAMERA_FAR;
 
 		setScale(1.0f);
 
@@ -35,9 +41,6 @@ public class TilingMeshStage extends MeshStage {
 		mColorRoot.setStage(this);
 
 		mLights = new SnapshotArray<Light>(Light.class);
-
-		getCamera().position.z = 1000.0f;
-		getCamera().far = 2000.0f;
 
 		// Set shader programs.
 		ShaderProgram shaderProgram = null;
@@ -124,6 +127,7 @@ public class TilingMeshStage extends MeshStage {
 		// Setup lights.
 		setupLights();
 
+		// Setup shaders.
 		ShaderProgram shaderProgram = getShaderProgram();
 		ShaderProgram colorShaderProgram = getColorShaderProgram();
 		if (mShaderProgramNeedsUpdate) {
@@ -169,7 +173,7 @@ public class TilingMeshStage extends MeshStage {
 	public void setScale(float scale) {
 		if ( mScale != scale ) {
 			setViewport(Gdx.graphics.getWidth() / scale, Gdx.graphics.getHeight() / scale, false);
-			getCamera().position.z = 1000.0f;
+			getCamera().position.z = CAMERA_POSITION_Z;
 		}
 
 		mScale = scale;

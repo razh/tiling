@@ -17,6 +17,9 @@ import com.razh.tiling.files.LevelLoader;
 public class MainMenuScreen extends BasicScreen {
 	private TilingMeshStage mBackgroundStage;
 
+	private TextButton mButton;
+	private TextButton mHelpButton;
+
 	public MainMenuScreen(TilingGame game) {
 		super(game);
 
@@ -33,26 +36,25 @@ public class MainMenuScreen extends BasicScreen {
 		skin.add("image", new NinePatch(new Texture(Gdx.files.internal("data/white-square.png")), 1, 1, 1, 1));
 		skin.load(Gdx.files.internal("ui/buttons.json"));
 
-		TextButton button = new TextButton("Start", skin);
-		button.setPosition(0, Gdx.graphics.getHeight() * 0.5f);
-		button.setWidth(Gdx.graphics.getWidth());
-		button.setHeight(100);
-		button.addListener(new InputListener() {
+		mButton = new TextButton("Start", skin);
+		mButton.setPosition(0, Gdx.graphics.getHeight() * 0.5f);
+		mButton.setWidth(Gdx.graphics.getWidth() * 0.5f);
+		mButton.pad(20.0f);
+		mButton.addListener(new InputListener() {
 			@Override
-			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-				TilingGame game = getGame();
-				game.setScreen(game.getScreens().get("GAME"));
+			public boolean touchDown(InputEvent event, float x, float y, int pointer, int mButton) {
+				getGame().setScreenByName("GAME");
 				return true;
 			}
 		});
 
-		TextButton helpButton = new TextButton("Help", skin);
-		helpButton.setPosition(0, button.getTop() - button.getHeight() - 110);
-		helpButton.setWidth(Gdx.graphics.getWidth());
-		helpButton.setHeight(100);
+		mHelpButton = new TextButton("Help", skin);
+		mHelpButton.setPosition(0, mButton.getY() - mButton.getHeight() - mButton.getPadY());
+		mHelpButton.setWidth(Gdx.graphics.getWidth() * 0.5f);
+		mHelpButton.pad(20.0f);
 
-		stage.addActor(button);
-		stage.addActor(helpButton);
+		stage.addActor(mButton);
+		stage.addActor(mHelpButton);
 	}
 
 	@Override
@@ -71,6 +73,7 @@ public class MainMenuScreen extends BasicScreen {
 		Gdx.gl20.glDisable(GL20.GL_CULL_FACE);
 
 		getStage().draw();
+
 	}
 
 	@Override

@@ -97,6 +97,10 @@ public class TilingGame extends Game {
 		return mScreens;
 	}
 
+	public void setScreenByName(String name) {
+		setScreen(getScreens().get(name));
+	}
+
 	public Player getPlayer() {
 		return mPlayer;
 	}

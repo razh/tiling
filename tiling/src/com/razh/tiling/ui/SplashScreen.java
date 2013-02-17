@@ -12,7 +12,6 @@ import com.razh.tiling.BillboardActor;
 import com.razh.tiling.MeshStage;
 import com.razh.tiling.Shader;
 import com.razh.tiling.TilingGame;
-import com.razh.tiling.TilingMeshStage;
 
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
 
@@ -56,8 +55,7 @@ public class SplashScreen extends BasicScreen {
 						new Action() {
 							@Override
 							public boolean act(float delta) {
-								TilingGame game = getGame();
-								game.setScreen(game.getScreens().get("MAIN_MENU"));
+								getGame().setScreenByName("MAIN_MENU");
 								return true;
 							}
 						}
