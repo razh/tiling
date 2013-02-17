@@ -1,6 +1,7 @@
 package com.razh.tiling.ui;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
@@ -20,11 +21,13 @@ public class MainMenuScreen extends BasicScreen {
 		super(game);
 
 		Stage stage = new Stage();
+		stage.getSpriteBatch().setColor(Color.CLEAR);
 		setStage(stage);
 		setInputProcessor(stage);
 
 		mBackgroundStage = new TilingMeshStage();
 		LevelLoader levelLoader = new LevelLoader();
+		levelLoader.getLevelByName("testGraphLevel").load(mBackgroundStage);
 
 		Skin skin = new Skin();
 		skin.add("image", new NinePatch(new Texture(Gdx.files.internal("data/white-square.png")), 1, 1, 1, 1));
@@ -54,13 +57,19 @@ public class MainMenuScreen extends BasicScreen {
 
 	@Override
 	public void render(float delta) {
+		mBackgroundStage.act(delta);
 		getStage().act(delta);
 
-		Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		Color backgroundColor = mBackgroundStage.getColor();
+
+		Gdx.gl.glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		Gdx.gl20.glEnable(GL20.GL_BLEND);
+		Gdx.gl20.glEnable(GL20.GL_CULL_FACE);
+		mBackgroundStage.draw();
 		Gdx.gl20.glDisable(GL20.GL_CULL_FACE);
+
 		getStage().draw();
 	}
 

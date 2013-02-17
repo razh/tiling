@@ -1,10 +1,15 @@
 package com.razh.tiling;
 
+import java.util.ArrayList;
+
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.SnapshotArray;
+import com.razh.tiling.TilingGame.LightingModel;
 
 public class TilingMeshStage extends MeshStage {
 	private float mScale;
@@ -13,6 +18,11 @@ public class TilingMeshStage extends MeshStage {
 	private MeshGroup mColorRoot;
 	private ShaderProgram mColorShaderProgram;
 	private ShaderProgram mPointLightShaderProgram;
+
+	private Uniforms mUniforms;
+
+	private boolean mShaderProgramNeedsUpdate;
+	private boolean mLightUniformsNeedRefresh;
 
 	private SnapshotArray<Light> mLights;
 
@@ -25,6 +35,26 @@ public class TilingMeshStage extends MeshStage {
 		mColorRoot.setStage(this);
 
 		mLights = new SnapshotArray<Light>(Light.class);
+
+		getCamera().position.z = 1000.0f;
+		getCamera().far = 2000.0f;
+
+		// Set shader programs.
+		ShaderProgram shaderProgram = null;
+		ShaderProgram colorShaderProgram = null;
+		if (TilingGame.lightingModel == LightingModel.PHONG) {
+			shaderProgram = Shader.createPhongShaderProgram();
+			colorShaderProgram = Shader.createColorPhongShaderProgram();
+		} else if (TilingGame.lightingModel == LightingModel.LAMBERT) {
+			shaderProgram = Shader.createLambertShaderProgram();
+			colorShaderProgram = Shader.createColorLambertShaderProgram();
+		}
+		mUniforms = new Uniforms();
+
+		setShaderProgram(shaderProgram);
+		setPointLightShaderProgram(Shader.createBillboardShaderProgram());
+		setColorShaderProgram(colorShaderProgram);
+		mShaderProgramNeedsUpdate = true;
 	}
 
 	@Override
@@ -90,6 +120,34 @@ public class TilingMeshStage extends MeshStage {
 			light.act(delta);
 		}
 		mLights.end();
+
+		// Setup lights.
+		setupLights();
+
+		ShaderProgram shaderProgram = getShaderProgram();
+		ShaderProgram colorShaderProgram = getColorShaderProgram();
+		if (mShaderProgramNeedsUpdate) {
+			mShaderProgramNeedsUpdate = false;
+			getShaderProgram().dispose();
+			getColorShaderProgram().dispose();
+
+			if (TilingGame.lightingModel == LightingModel.PHONG) {
+				shaderProgram = Shader.createPhongShaderProgram();
+				colorShaderProgram = Shader.createColorPhongShaderProgram();
+			} else if (TilingGame.lightingModel == LightingModel.LAMBERT) {
+				shaderProgram = Shader.createLambertShaderProgram();
+				colorShaderProgram = Shader.createColorLambertShaderProgram();
+			}
+
+			setShaderProgram(shaderProgram);
+			setColorShaderProgram(colorShaderProgram);
+		}
+
+		if (mLightUniformsNeedRefresh) {
+			mLightUniformsNeedRefresh = false;
+			mUniforms.setUniforms(shaderProgram);
+			mUniforms.setUniforms(colorShaderProgram);
+		}
 	}
 
 	@Override
@@ -141,6 +199,63 @@ public class TilingMeshStage extends MeshStage {
 		mLights.add(light);
 	}
 
+	public void setupLights() {
+		Color ambientLightColor = new Color();
+		ArrayList<Color> pointLightColors = new ArrayList<Color>();
+		ArrayList<Float> pointLightPositions = new ArrayList<Float>();
+		ArrayList<Float> pointLightDistances = new ArrayList<Float>();
+		int pointLightCount = 0;
+
+		SnapshotArray<Light> children = getLights();
+		Light[] lights = children.begin();
+		Vector3 position;
+		for (int i = 0, n = children.size; i < n; i++) {
+			Light light = lights[i];
+
+			if (!light.isVisible()) {
+				continue;
+			}
+
+			// Ambient light color is sum of all ambient lights.
+			if (light instanceof AmbientLight) {
+				ambientLightColor.add(light.getColor());
+			} else if (light instanceof PointLight) {
+				if (!light.isVisible()) {
+					continue;
+				}
+
+				pointLightCount++;
+
+				pointLightColors.add(light.getColor());
+
+				position = light.getPosition();
+				pointLightPositions.add(position.x);
+				pointLightPositions.add(position.y);
+				pointLightPositions.add(position.z);
+
+				pointLightDistances.add(((PointLight) light).getDistance());
+			}
+		}
+		children.end();
+
+		if (Shader.MAX_POINT_LIGHTS != pointLightCount) {
+			mShaderProgramNeedsUpdate = true;
+			Shader.MAX_POINT_LIGHTS = pointLightCount;
+		}
+
+		mUniforms.setAmbientLightColor(ambientLightColor);
+		if (pointLightCount > 0) {
+			mUniforms.setPointLightColors(pointLightColors);
+			mUniforms.setPointLightPositions(pointLightPositions);
+			mUniforms.setPointLightDistances(pointLightDistances);
+			mLightUniformsNeedRefresh = true;
+		}
+	}
+
+	public ShaderProgram getColorShaderProgram() {
+		return mColorShaderProgram;
+	}
+
 	public void setColorShaderProgram(ShaderProgram shaderProgram) {
 		mColorShaderProgram = shaderProgram;
 	}
@@ -154,5 +269,12 @@ public class TilingMeshStage extends MeshStage {
 		super.clearActors();
 		mColorRoot.clear();
 		mLights.clear();
+	}
+
+	@Override
+	public void dispose() {
+		super.dispose();
+		mColorShaderProgram.dispose();
+		mPointLightShaderProgram.dispose();
 	}
 }

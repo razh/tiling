@@ -102,4 +102,10 @@ public class MeshStage extends Stage {
 	public void clearActors() {
 		mRoot.clear();
 	}
+
+	@Override
+	public void dispose() {
+		super.dispose();
+		mShaderProgram.dispose();
+	}
 }
