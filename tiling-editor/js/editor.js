@@ -248,10 +248,10 @@ var Editor = function() {
   this._renderer = new THREE.WebGLRenderer({
     antialias: true
   });
-  this._camera = new THREE.OrthographicCamera( 0, this.WIDTH, this.HEIGHT, 0, 0.1, 15000 );
+  this._camera = new THREE.OrthographicCamera( 0, this.WIDTH, this.HEIGHT, 0, 0.1, 2000 );
 
   this._scene.add( this._camera );
-  this._camera.position.z = 10000;
+  this._camera.position.z = 1000;
 
   this._renderer.setSize( this.WIDTH, this.HEIGHT );
   this._canvasContainer.append( this._renderer.domElement );

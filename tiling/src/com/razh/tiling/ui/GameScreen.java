@@ -33,8 +33,8 @@ public class GameScreen extends BasicScreen {
 
 		setStage(new TilingMeshStage());
 
-		getStage().getCamera().position.z = 10000.0f;
-		getStage().getCamera().far = 15000.0f;
+		getStage().getCamera().position.z = 1000.0f;
+		getStage().getCamera().far = 2000.0f;
 
 		// Set shader programs.
 		if (TilingGame.lightingModel == LightingModel.PHONG) {

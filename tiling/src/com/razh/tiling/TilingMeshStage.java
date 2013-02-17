@@ -111,7 +111,7 @@ public class TilingMeshStage extends MeshStage {
 	public void setScale(float scale) {
 		if ( mScale != scale ) {
 			setViewport(Gdx.graphics.getWidth() / scale, Gdx.graphics.getHeight() / scale, false);
-			getCamera().position.z = 10000.0f;
+			getCamera().position.z = 1000.0f;
 		}
 
 		mScale = scale;
