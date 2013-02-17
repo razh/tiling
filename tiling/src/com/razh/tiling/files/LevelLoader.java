@@ -1,10 +1,15 @@
 package com.razh.tiling.files;
 
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.razh.tiling.Level;
 import com.razh.tiling.MeshActor;
 import com.razh.tiling.PointLight;
@@ -17,8 +22,8 @@ public class LevelLoader {
 	private static final String LEVELS_FILE = "levels.json";
 
 	private Gson mGson;
-	private String[] mFileNames;
-	private FileHandle mFile;
+	private LinkedHashMap<String, String> mFileNames;
+	private ArrayList<String> mFileNamesArray;
 
 	public LevelLoader() {
 		mGson = new GsonBuilder()
@@ -29,16 +34,25 @@ public class LevelLoader {
 		.create();
 
 		FileHandle levelsFile = Gdx.files.internal(LEVELS_FILE);
-		mFileNames = mGson.fromJson(levelsFile.readString(), String[].class);
+
+		Type mapType = new TypeToken<LinkedHashMap<String, String>>() {}.getType();
+		mFileNames = mGson.fromJson(levelsFile.readString(), mapType);
+
+		// Create array.
+		mFileNamesArray = new ArrayList<String>(mFileNames.values());
 	}
 
 	public Level getLevelByIndex(int levelIndex) {
-		if (0 <= levelIndex && levelIndex < mFileNames.length) {
-			mFile = Gdx.files.internal(mFileNames[levelIndex]);
-
-			return mGson.fromJson(mFile.readString(), Level.class);
+		if (0 <= levelIndex && levelIndex < mFileNamesArray.size()) {
+			FileHandle file = Gdx.files.internal(mFileNamesArray.get(levelIndex));
+			return mGson.fromJson(file.readString(), Level.class);
 		}
 
 		return null;
+	}
+
+	public Level getLevelByName(String name) {
+		FileHandle file = Gdx.files.internal(mFileNames.get(name));
+		return mGson.fromJson(file.readString(), Level.class);
 	}
 }
