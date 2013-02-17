@@ -1,5 +1,5 @@
-[
-  "levels/testLevel.json",
-  "levels/testLevelWithLights.json",
-  "levels/testGraphLevel.json"
-]
+{
+  "testLevel": "levels/testLevel.json",
+  "testLevelWithLights": "levels/testLevelWithLights.json",
+  "testGraphLevel": "levels/testGraphLevel.json"
+}

@@ -65,7 +65,8 @@ public class TilingGame extends Game {
 		mScreens.put("GAME", new GameScreen(this));
 
 		mLevelLoader = new LevelLoader();
-		mLevelLoader.getLevelByIndex(2).load((TilingMeshStage) getScreens().get("GAME").getMeshStage());
+		mLevelLoader.getLevelByName("testGraphLevel").load((TilingMeshStage) getScreens().get("GAME").getMeshStage());
+//		mLevelLoader.getLevelByIndex(2).load((TilingMeshStage) getScreens().get("GAME").getMeshStage());
 
 		// Input.
 		mInputMultiplexer = new InputMultiplexer();
