@@ -127,6 +127,43 @@ public class MeshActor extends Actor3D {
 		                  .add(getX(), getY());
 	}
 
+	public Vector2[] getIntersectingEdge(Vector2 point) {
+		point = worldToLocalCoordinates(point);
+
+		ArrayList<Vector2> vertices = getVertices();
+		Vector2 p0, p1;
+		for (int i = 0, n = vertices.size(); i < n; i++) {
+			p0 = vertices.get(i);
+			p1 = vertices.get((i + 1) % n);
+
+			if (Intersector.intersectSegments(Vector2.Zero, point, p0, p1, null)) {
+				Vector2[] segment = new Vector2[]{p0, p1};
+				return segment;
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * @param segment Must be an array of size 2.
+	 * @return Angle of the shortest line from the actor's center to the given segment.
+	 */
+	public float getSegmentBisectorAngle(Vector2[] segment) {
+		if (segment == null || segment.length != 2) {
+			return 0.0f;
+		}
+
+		Vector2 p0 = segment[0];
+		Vector2 p1 = segment[1];
+
+		Vector2 bisection = p0.cpy()
+		                      .add(p1)
+		                      .mul(0.5f);
+
+		return bisection.angle();
+	}
+
 	public Vector3 getRotationAxis() {
 		return mRotationAxis;
 	}
@@ -160,9 +197,9 @@ public class MeshActor extends Actor3D {
 	}
 
 	public void setVertices(float[] vertices) {
-		ArrayList<Vector2> vertexList = new ArrayList<Vector2>();
-
 		int vertexCount = vertices.length / 2;
+		ArrayList<Vector2> vertexList = new ArrayList<Vector2>(vertexCount);
+
 		float x, y;
 		for (int i = 0; i < vertexCount; i++) {
 			x = vertices[2 * i];

@@ -1,5 +1,6 @@
 package com.razh.tiling;
 
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
@@ -13,6 +14,10 @@ public class Actor3D extends Actor {
 
 	public void setZ(float z) {
 		mZ = z;
+	}
+
+	public Vector2 getPosition2D() {
+		return new Vector2(getX(), getY());
 	}
 
 	public Vector3 getPosition() {
