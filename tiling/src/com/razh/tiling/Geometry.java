@@ -431,4 +431,5 @@ public class Geometry {
 		              .crs(ax - bx, ay - by, az - bz)
 		              .nor();
 	}
+
 }

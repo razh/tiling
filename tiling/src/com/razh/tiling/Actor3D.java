@@ -47,6 +47,10 @@ public class Actor3D extends Actor {
 		mDepth = depth;
 	}
 
+	/**
+	 * @param actor
+	 * @return Normalized vector from this to actor.
+	 */
 	public Vector3 vectorTo(Actor3D actor) {
 		return actor.getPosition()
 		     	    .cpy()

@@ -52,9 +52,11 @@ public class LevelSelectScreen extends BasicScreen {
 				subTable.row();
 			}
 			table.add(subTable);
+			System.out.println(table.getCell(subTable).getColumn() + ", " + table.getCell(subTable).getPrefWidth());
 		}
 
 		System.out.println(table.getPrefWidth() + "," + table.getPrefHeight());
+		System.out.println(table.defaults().getSpaceLeft() + ", " + table.defaults().getSpaceRight());
 	}
 
 	@Override

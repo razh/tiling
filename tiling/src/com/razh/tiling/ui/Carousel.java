@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 public class Carousel extends ScrollPane {
 
+	private int mSize;
 	private int mIndex;
 	private float mSpeed;
 
@@ -37,6 +38,10 @@ public class Carousel extends ScrollPane {
 	 */
 	public void next() {
 
+	}
+
+	public int size() {
+		return mSize;
 	}
 
 	public int getIndex() {

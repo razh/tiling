@@ -1,9 +1,12 @@
 package com.razh.tiling;
 
+import java.util.ArrayList;
+
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.g3d.materials.Material;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
@@ -25,7 +28,7 @@ public class MeshActor extends Actor3D {
 
 	private Entity mEntity;
 
-	private float[] mVertices;
+	private ArrayList<Vector2> mVertices;
 
 	public MeshActor() {
 		super();
@@ -102,28 +105,7 @@ public class MeshActor extends Actor3D {
 
 	public boolean contains(float x, float y) {
 		Vector2 point = worldToLocalCoordinates(new Vector2(x, y));
-		x = point.x;
-		y = point.y;
-
-		float[] vertices = getVertices();
-		int vertexCount = vertices.length / 2;
-		boolean contains = false;
-
-		float xi, yi, xj, yj;
-		int i, j;
-		for ( i = 0, j = vertexCount - 1; i < vertexCount; j = i++ ) {
-			xi = vertices[2 * i];
-			yi = vertices[2 * i + 1];
-			xj = vertices[2 * j];
-			yj = vertices[2 * j + 1];
-
-			if (((yi > y) != (yj > y)) &&
-				 (x < (xj - xi) * (y - yi) / (yj - yi) + xi)) {
-				contains = !contains;
-			}
-		}
-
-		return contains;
+		return Intersector.isPointInPolygon(getVertices(), point);
 	}
 
 	@Override
@@ -143,7 +125,6 @@ public class MeshActor extends Actor3D {
 		                  .mul(getWidth(), getHeight())
 		                  .rotate(getOrientation())
 		                  .add(getX(), getY());
-
 	}
 
 	public Vector3 getRotationAxis() {
@@ -174,11 +155,26 @@ public class MeshActor extends Actor3D {
 		return getMesh() != null;
 	}
 
-	public float[] getVertices() {
+	public ArrayList<Vector2> getVertices() {
 		return mVertices;
 	}
 
 	public void setVertices(float[] vertices) {
+		ArrayList<Vector2> vertexList = new ArrayList<Vector2>();
+
+		int vertexCount = vertices.length / 2;
+		float x, y;
+		for (int i = 0; i < vertexCount; i++) {
+			x = vertices[2 * i];
+			y = vertices[2 * i + 1];
+
+			vertexList.add(new Vector2(x, y));
+		}
+
+		mVertices = vertexList;
+	}
+
+	public void setVertices(ArrayList<Vector2> vertices) {
 		mVertices = vertices;
 	}
 
