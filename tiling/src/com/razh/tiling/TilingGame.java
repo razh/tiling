@@ -13,11 +13,11 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.razh.tiling.files.LevelLoader;
-import com.razh.tiling.ui.BasicScreen;
-import com.razh.tiling.ui.GameScreen;
-import com.razh.tiling.ui.LevelSelectScreen;
-import com.razh.tiling.ui.MainMenuScreen;
-import com.razh.tiling.ui.SplashScreen;
+import com.razh.tiling.screens.BasicScreen;
+import com.razh.tiling.screens.GameScreen;
+import com.razh.tiling.screens.LevelSelectScreen;
+import com.razh.tiling.screens.MainMenuScreen;
+import com.razh.tiling.screens.SplashScreen;
 
 public class TilingGame extends Game {
 	private InputMultiplexer mInputMultiplexer;

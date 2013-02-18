@@ -1,4 +1,4 @@
-package com.razh.tiling.ui;
+package com.razh.tiling.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;

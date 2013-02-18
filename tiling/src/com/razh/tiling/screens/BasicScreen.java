@@ -1,4 +1,4 @@
-package com.razh.tiling.ui;
+package com.razh.tiling.screens;
 
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
