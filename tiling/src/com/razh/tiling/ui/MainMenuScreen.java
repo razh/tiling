@@ -1,10 +1,13 @@
 package com.razh.tiling.ui;
 
+import java.util.Random;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
+import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -13,6 +16,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.razh.tiling.TilingGame;
 import com.razh.tiling.TilingMeshStage;
 import com.razh.tiling.files.LevelLoader;
+import com.razh.tiling.MeshActor;
+import com.razh.tiling.logic.TilingEntity;
+
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
 
 public class MainMenuScreen extends BasicScreen {
 	private TilingMeshStage mBackgroundStage;
@@ -33,7 +40,7 @@ public class MainMenuScreen extends BasicScreen {
 		levelLoader.getLevelByName("testGraphLevel").load(mBackgroundStage);
 
 		Skin skin = new Skin();
-		skin.add("image", new NinePatch(new Texture(Gdx.files.internal("data/white-square.png")), 1, 1, 1, 1));
+		skin.add("image", new NinePatch(new Texture(Gdx.files.internal("data/gray-50-alpha-50-square.png")), 1, 1, 1, 1));
 		skin.load(Gdx.files.internal("ui/buttons.json"));
 
 		mStartButton = new TextButton("Start", skin);
@@ -52,6 +59,24 @@ public class MainMenuScreen extends BasicScreen {
 		mHelpButton.setPosition(0, mStartButton.getY() - mStartButton.getHeight() - mStartButton.getPadY());
 		mHelpButton.setWidth(Gdx.graphics.getWidth() * 0.5f);
 		mHelpButton.pad(20.0f);
+
+		mBackgroundStage.addAction(
+			forever(
+				sequence(
+					delay(0.2f),
+					new Action() {
+						@Override
+						public boolean act(float delta) {
+							Random random = new Random();
+							int index = random.nextInt(mBackgroundStage.getColorRoot().getChildren().size);
+							((TilingEntity) ((MeshActor) mBackgroundStage.getColorRoot().getChildren().get(index)).getEntity()).touch();
+
+							return true;
+						}
+					}
+				)
+			)
+		);
 
 		stage.addActor(mStartButton);
 		stage.addActor(mHelpButton);

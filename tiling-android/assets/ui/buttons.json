@@ -6,6 +6,24 @@
       b: 1,
       a: 1
     },
+    gray-25: {
+      r: 0.25,
+      g: 0.25,
+      b: 0.25,
+      a: 1.0
+    },
+    gray-50: {
+      r: 0.5,
+      g: 0.5,
+      b: 0.5,
+      a: 1.0
+    },
+    gray-75: {
+      r: 0.75,
+      g: 0.75,
+      b: 0.75,
+      a: 1.0
+    },
     black: {
       r: 0,
       g: 0,
@@ -14,14 +32,17 @@
     }
   },
   com.badlogic.gdx.graphics.g2d.BitmapFont: {
+    helv-neue-72-ultralight: {
+      file: fonts/helv-neue-72-ultralight.fnt
+    },
     helv-neue-96-bold: {
       file: fonts/helv-neue-96-bold.fnt
     }
   },
   com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
     default: {
-      font: helv-neue-96-bold,
-      fontColor: black,
+      font: helv-neue-72-ultralight,
+      fontColor: gray-75,
       downFontColor: white,
       up: image
     }

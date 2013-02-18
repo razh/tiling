@@ -68,9 +68,7 @@ public class SplashScreen extends BasicScreen {
 		getStage().addActor(backgroundActor);
 
 		mSpriteBatch = new SpriteBatch();
-		mFont = new BitmapFont(Gdx.files.internal("fonts/helv-neue-96-bold.fnt"),
-		                       Gdx.files.internal("fonts/helv-neue-96-bold.png"),
-		                       false);
+		mFont = new BitmapFont(Gdx.files.internal("fonts/helv-neue-72-ultralight.fnt"), false);
 
 		getMeshStage().setShaderProgram(Shader.createBillboardShaderProgram());
 	}
