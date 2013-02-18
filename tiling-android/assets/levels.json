@@ -2,5 +2,6 @@
   "testLevel": "levels/testLevel.json",
   "testLevelWithLights": "levels/testLevelWithLights.json",
   "testGraphLevel": "levels/testGraphLevel.json",
-  "invertedRedTriangle": "levels/invertedRedTriangle.json"
+  "invertedRedTriangle": "levels/invertedRedTriangle.json",
+  "miniTriangleTest": "levels/miniTriangleTest.json"
 }
