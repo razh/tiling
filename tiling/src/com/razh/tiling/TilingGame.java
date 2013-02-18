@@ -37,6 +37,10 @@ public class TilingGame extends Game {
 
 	private Map<String, BasicScreen> mScreens;
 
+	// Virtual screen size.
+	public static float WIDTH = 960.0f;
+	public static float HEIGHT = 720.0f;
+
 	@Override
 	public void create() {
 		Gdx.graphics.setVSync(true);

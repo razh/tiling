@@ -77,15 +77,4 @@ public class GameInputProcessor extends BasicInputProcessor {
 		return false;
 	}
 
-	@Override
-	public Vector2 screenToStageCoordinates(int screenX, int screenY) {
-		Vector2 point = super.screenToStageCoordinates(screenX, screenY);
-
-		if (getStage() != null && getStage() instanceof TilingMeshStage && ((TilingMeshStage) getStage()).getScale() != 1.0f) {
-			point.div(((TilingMeshStage) getStage()).getScale());
-		}
-
-		return point;
-	}
-
 }

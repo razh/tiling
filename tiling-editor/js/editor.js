@@ -228,6 +228,9 @@ var EditorState = {
 };
 
 var Editor = function() {
+  this.STAGE_WIDTH = 960;
+  this.STAGE_HEIGHT = 720;
+
   this._canvasContainer = $( '.canvas-container' );
 
   this.WIDTH = this._canvasContainer.width();
@@ -441,7 +444,7 @@ Editor.prototype.drawCameraOverlay = function() {
     this._ctx.strokeStyle = 'rgba( 0, 0, 0, 1.0 )';
   }
   this._ctx.lineWidth = 1;
-  this._ctx.strokeRect( 0, 0, 1280 / this.getScale(), 720 / this.getScale() );
+  this._ctx.strokeRect( 0, 0, this.STAGE_WIDTH / this.getScale(), this.STAGE_HEIGHT / this.getScale() );
 
   this._ctx.restore();
 };
