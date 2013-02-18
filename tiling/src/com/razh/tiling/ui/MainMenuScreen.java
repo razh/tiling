@@ -17,7 +17,7 @@ import com.razh.tiling.files.LevelLoader;
 public class MainMenuScreen extends BasicScreen {
 	private TilingMeshStage mBackgroundStage;
 
-	private TextButton mButton;
+	private TextButton mStartButton;
 	private TextButton mHelpButton;
 
 	public MainMenuScreen(TilingGame game) {
@@ -36,11 +36,11 @@ public class MainMenuScreen extends BasicScreen {
 		skin.add("image", new NinePatch(new Texture(Gdx.files.internal("data/white-square.png")), 1, 1, 1, 1));
 		skin.load(Gdx.files.internal("ui/buttons.json"));
 
-		mButton = new TextButton("Start", skin);
-		mButton.setPosition(0, Gdx.graphics.getHeight() * 0.5f);
-		mButton.setWidth(Gdx.graphics.getWidth() * 0.5f);
-		mButton.pad(20.0f);
-		mButton.addListener(new InputListener() {
+		mStartButton = new TextButton("Start", skin);
+		mStartButton.setPosition(0, Gdx.graphics.getHeight() * 0.5f);
+		mStartButton.setWidth(Gdx.graphics.getWidth() * 0.5f);
+		mStartButton.pad(20.0f);
+		mStartButton.addListener(new InputListener() {
 			@Override
 			public boolean touchDown(InputEvent event, float x, float y, int pointer, int mButton) {
 				getGame().setScreenByName("GAME");
@@ -49,11 +49,11 @@ public class MainMenuScreen extends BasicScreen {
 		});
 
 		mHelpButton = new TextButton("Help", skin);
-		mHelpButton.setPosition(0, mButton.getY() - mButton.getHeight() - mButton.getPadY());
+		mHelpButton.setPosition(0, mStartButton.getY() - mStartButton.getHeight() - mStartButton.getPadY());
 		mHelpButton.setWidth(Gdx.graphics.getWidth() * 0.5f);
 		mHelpButton.pad(20.0f);
 
-		stage.addActor(mButton);
+		stage.addActor(mStartButton);
 		stage.addActor(mHelpButton);
 	}
 
