@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.razh.tiling.TilingGame;
 import com.razh.tiling.TilingMeshStage;
 import com.razh.tiling.files.LevelLoader;
@@ -25,6 +26,7 @@ public class MainMenuScreen extends BasicScreen {
 	private TilingMeshStage mBackgroundStage;
 
 	private TextButton mStartButton;
+	private TextButton mLevelButton;
 	private TextButton mHelpButton;
 
 	public MainMenuScreen(TilingGame game) {
@@ -47,16 +49,26 @@ public class MainMenuScreen extends BasicScreen {
 		mStartButton.setPosition(0, Gdx.graphics.getHeight() * 0.5f);
 		mStartButton.setWidth(Gdx.graphics.getWidth() * 0.5f);
 		mStartButton.pad(20.0f);
-		mStartButton.addListener(new InputListener() {
+		mStartButton.addListener(new ClickListener() {
 			@Override
-			public boolean touchDown(InputEvent event, float x, float y, int pointer, int mButton) {
+			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
 				getGame().setScreenByName("GAME");
-				return true;
+			}
+		});
+
+		mLevelButton = new TextButton("Level", skin);
+		mLevelButton.setPosition(0, mStartButton.getY() - mStartButton.getHeight() - mStartButton.getPadY());
+		mLevelButton.setWidth(Gdx.graphics.getWidth() * 0.5f);
+		mLevelButton.pad(20.0f);
+		mLevelButton.addListener(new ClickListener() {
+			@Override
+			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+				getGame().setScreenByName("LEVEL_SELECT");
 			}
 		});
 
 		mHelpButton = new TextButton("Help", skin);
-		mHelpButton.setPosition(0, mStartButton.getY() - mStartButton.getHeight() - mStartButton.getPadY());
+		mHelpButton.setPosition(0, mLevelButton.getY() - mLevelButton.getHeight() - mLevelButton.getPadY());
 		mHelpButton.setWidth(Gdx.graphics.getWidth() * 0.5f);
 		mHelpButton.pad(20.0f);
 
@@ -79,6 +91,7 @@ public class MainMenuScreen extends BasicScreen {
 		);
 
 		stage.addActor(mStartButton);
+		stage.addActor(mLevelButton);
 		stage.addActor(mHelpButton);
 	}
 
