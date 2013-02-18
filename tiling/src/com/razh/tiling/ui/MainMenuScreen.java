@@ -69,7 +69,7 @@ public class MainMenuScreen extends BasicScreen {
 						public boolean act(float delta) {
 							Random random = new Random();
 							int index = random.nextInt(mBackgroundStage.getColorRoot().getChildren().size);
-							((TilingEntity) ((MeshActor) mBackgroundStage.getColorRoot().getChildren().get(index)).getEntity()).touch();
+							((TilingEntity) ((MeshActor) mBackgroundStage.getColorRoot().getActorAt(index)).getEntity()).touch();
 
 							return true;
 						}

@@ -129,6 +129,19 @@ public class MeshGroup extends Group {
 		return null;
 	}
 
+	public Actor getActorAt(int index) {
+		SnapshotArray<Actor> children = getChildren();
+		if (0 <= index && index < children.size) {
+			Actor[] actors = children.begin();
+			Actor actor = actors[index];
+			children.end();
+
+			return actor;
+		}
+
+		return null;
+	}
+
 	public ShaderProgram getShaderProgram() {
 		return mShaderProgram;
 	}
