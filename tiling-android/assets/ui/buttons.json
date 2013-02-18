@@ -42,8 +42,8 @@
   com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
     default: {
       font: helv-neue-72-ultralight,
-      fontColor: gray-75,
-      downFontColor: white,
+      fontColor: white,
+      downFontColor: gray-75,
       up: image
     }
   }

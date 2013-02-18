@@ -37,7 +37,7 @@ public class MainMenuScreen extends BasicScreen {
 
 		mBackgroundStage = new TilingMeshStage();
 		LevelLoader levelLoader = new LevelLoader();
-		levelLoader.getLevelByName("testGraphLevel").load(mBackgroundStage);
+		levelLoader.getLevelByName("invertedRedTriangle").load(mBackgroundStage);
 
 		Skin skin = new Skin();
 		skin.add("image", new NinePatch(new Texture(Gdx.files.internal("data/gray-50-alpha-50-square.png")), 1, 1, 1, 1));
