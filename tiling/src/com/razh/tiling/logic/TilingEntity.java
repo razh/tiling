@@ -54,18 +54,23 @@ public class TilingEntity extends GraphEntity {
 		flip();
 
 		TilingEntity neighbor;
-		MeshActor actor;
-		Vector2[] segment;
+		MeshActor neighborActor;
+		Vector2[] edge;
+		float angle;
 		for (int i = 0, n = getNeighbors().size(); i < n; i++) {
 			neighbor = (TilingEntity) getNeighbors().get(i);
-			actor = neighbor.getActor();
-			segment = actor.getIntersectingEdge(getActor().getPosition2D());
-			System.out.println("0:" + neighbor.getActor().vectorTo(getActor()));
-			System.out.println("1:" +Vector3.X.cpy().rotate(Vector3.Z, -getActor().getSegmentBisectorAngle(segment)));
+			neighborActor = neighbor.getActor();
 
-			neighbor.getActor().setRotationAxis(neighbor.getActor().vectorTo(getActor()));
+			// Edge of the neighbor actor which intersects line connecting actors.
+			edge = neighborActor.getIntersectingEdge(getActor().getPosition2D());
 
-			actor.setRotationAxis(Vector3.X.cpy().rotate(Vector3.Z, -actor.getSegmentBisectorAngle(segment)));
+			// Angle of the bisection of that line segment.
+			angle = neighborActor.getSegmentBisectorAngle(edge);
+
+			// Original code, for setting rotation (does not handle polygons with different side lengths.
+			// neighbor.getActor().setRotationAxis(neighbor.getActor().vectorTo(getActor()));
+
+			neighborActor.setRotationAxis(Vector3.X.cpy().rotate(Vector3.Z, angle));
 			neighbor.flip();
 		}
 	}

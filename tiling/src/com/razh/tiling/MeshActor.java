@@ -154,14 +154,15 @@ public class MeshActor extends Actor3D {
 			return 0.0f;
 		}
 
-		Vector2 p0 = segment[0];
-		Vector2 p1 = segment[1];
+		// Midpoint between the two Vector2s.
+		Vector2 bisection = segment[0].cpy()
+		                              .add(segment[1])
+		                              .mul(0.5f);
 
-		Vector2 bisection = p0.cpy()
-		                      .add(p1)
-		                      .mul(0.5f);
-
-		return bisection.angle();
+		// Convert to world coordinates and find distance to actor center.
+		// Calculate the angle from there.
+		return localToWorldCoordinates(bisection).sub(getPosition2D())
+		                                         .angle();
 	}
 
 	public Vector3 getRotationAxis() {
