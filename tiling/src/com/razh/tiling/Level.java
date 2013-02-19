@@ -3,6 +3,7 @@ package com.razh.tiling;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.Vector2;
 
 public class Level {
 	private String mName;
@@ -15,6 +16,9 @@ public class Level {
 	private Color mBackgroundColor;
 	private Color mAmbientColor;
 
+	private Color mShadowColor;
+	private Vector2 mShadowOffset;
+
 	public Level() {
 		setName("");
 		setScale(1.0f);
@@ -22,6 +26,8 @@ public class Level {
 		setLights(new ArrayList<Light>());
 		setBackgroundColor(new Color());
 		setAmbientColor(new Color());
+		setShadowColor(new Color());
+		setShadowOffset(new Vector2());
 	}
 
 	public ArrayList<MeshActor> getActors() {
@@ -92,6 +98,22 @@ public class Level {
 		mAmbientColor = ambientColor;
 	}
 
+	public Color getShadowColor() {
+		return mShadowColor;
+	}
+
+	public void setShadowColor(Color shadowColor) {
+		mShadowColor = shadowColor;
+	}
+
+	public Vector2 getShadowOffset() {
+		return mShadowOffset;
+	}
+
+	public void setShadowOffset(Vector2 shadowOffset) {
+		mShadowOffset = shadowOffset;
+	}
+
 	public void load(TilingMeshStage stage) {
 		if (getScale() != 1.0f) {
 			stage.setScale(getScale());
@@ -111,5 +133,8 @@ public class Level {
 		for (int i = 0, n = mLights.size(); i < n; i++) {
 			stage.addLight(mLights.get(i));
 		}
+
+		stage.setShadowColor(getShadowColor());
+		stage.setShadowOffset(getShadowOffset());
 	}
 }

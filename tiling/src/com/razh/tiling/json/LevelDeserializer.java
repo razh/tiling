@@ -3,6 +3,7 @@ package com.razh.tiling.json;
 import java.lang.reflect.Type;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.Vector2;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
@@ -32,6 +33,9 @@ public class LevelDeserializer implements JsonDeserializer<Level> {
 
 		Color backgroundColor = (Color) context.deserialize(object.get("backgroundColor"), Color.class);
 		Color ambientColor = (Color) context.deserialize(object.get("ambientColor"), Color.class);
+		Color shadowColor = (Color) context.deserialize(object.get("shadowColor"), Color.class);
+
+		Vector2 shadowOffset = (Vector2) context.deserialize(object.get("shadowOffset"), Vector2.class);
 
 		Level level = new Level();
 		level.setName(name);
@@ -39,6 +43,8 @@ public class LevelDeserializer implements JsonDeserializer<Level> {
 		level.setStroke(stroke);
 		level.setBackgroundColor(backgroundColor);
 		level.setAmbientColor(ambientColor);
+		level.setShadowColor(shadowColor);
+		level.setShadowOffset(shadowOffset);
 
 		JsonArray jsonShapes = object.get("shapes").getAsJsonArray();
 		MeshActor actor = null;

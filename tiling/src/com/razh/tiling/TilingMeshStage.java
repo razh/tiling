@@ -99,8 +99,8 @@ public class TilingMeshStage extends MeshStage {
 			mShadowShaderProgram.setUniformMatrix("projectionMatrix", getCamera().projection);
 			mShadowShaderProgram.setUniformMatrix("viewMatrix", getCamera().view);
 
-			mShadowShaderProgram.setUniformf("shadowColor", new Color(0.5f, 0.5f, 0.5f, 0.5f));
-			mShadowShaderProgram.setUniformf("shadowOffset", new Vector2(2.5f, -2.5f));
+			mShadowShaderProgram.setUniformf("shadowColor", getShadowColor());
+			mShadowShaderProgram.setUniformf("shadowOffset", getShadowOffset());
 
 			mColorRoot.drawShadow(mShadowShaderProgram, getStroke());
 
