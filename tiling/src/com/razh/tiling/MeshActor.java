@@ -57,13 +57,7 @@ public class MeshActor extends Actor3D {
 	}
 
 	public void draw(float stroke) {
-		mModelMatrix.idt()
-		            .translate(getPosition())
-		            .rotate(getRotationAxis(), getRotation())
-		            .rotate(Vector3.Z, getOrientation())
-		            .scale(getWidth() - stroke,
-		                   getHeight() - stroke,
-		                   getDepth() - stroke );
+		setupModelMatrix(stroke);
 		mShaderProgram.setUniformMatrix("modelMatrix", mModelMatrix);
 
 		mNormalMatrix.set(mModelMatrix.cpy().inv()).transpose();
@@ -78,6 +72,15 @@ public class MeshActor extends Actor3D {
 
 		if (hasMesh()) {
 			getMesh().render(mShaderProgram, GL20.GL_TRIANGLES);
+		}
+	}
+
+	public void drawShadow(ShaderProgram shadowShaderProgram, float stroke) {
+		setupModelMatrix(stroke);
+		shadowShaderProgram.setUniformMatrix("modelMatrix", mModelMatrix);
+
+		if (hasMesh()) {
+			getMesh().render(shadowShaderProgram, GL20.GL_TRIANGLES);
 		}
 	}
 
@@ -230,6 +233,16 @@ public class MeshActor extends Actor3D {
 
 	public Matrix4 getModelMatrix() {
 		return mModelMatrix;
+	}
+
+	public void setupModelMatrix(float stroke) {
+		mModelMatrix.idt()
+		            .translate(getPosition())
+		            .rotate(getRotationAxis(), getRotation())
+		            .rotate(Vector3.Z, getOrientation())
+		            .scale(getWidth() - stroke,
+		                   getHeight() - stroke,
+		                   getDepth() - stroke );
 	}
 
 	public Matrix3 getNormalMatrix() {
