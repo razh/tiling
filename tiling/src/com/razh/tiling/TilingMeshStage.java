@@ -18,6 +18,7 @@ public class TilingMeshStage extends MeshStage {
 	private MeshGroup mColorRoot;
 	private ShaderProgram mColorShaderProgram;
 	private ShaderProgram mPointLightShaderProgram;
+	private ShaderProgram mShadowShaderProgram;
 
 	private Uniforms mUniforms;
 
@@ -60,8 +61,10 @@ public class TilingMeshStage extends MeshStage {
 		mUniforms = new Uniforms();
 
 		setShaderProgram(shaderProgram);
-		setPointLightShaderProgram(Shader.createBillboardShaderProgram());
 		setColorShaderProgram(colorShaderProgram);
+		setPointLightShaderProgram(Shader.createBillboardShaderProgram());
+		setShadowShaderProgram(Shader.createShadowShaderProgram());
+
 		mShaderProgramNeedsUpdate = true;
 	}
 
@@ -78,6 +81,21 @@ public class TilingMeshStage extends MeshStage {
 			getRoot().draw(getShaderProgram(), getStroke());
 
 			getShaderProgram().end();
+		}
+
+		// Render shadows of multi-color objects.
+		if (mShadowShaderProgram != null) {
+			mShadowShaderProgram.begin();
+
+			mShadowShaderProgram.setUniformMatrix("projectionMatrix", getCamera().projection);
+			mShadowShaderProgram.setUniformMatrix("viewMatrix", getCamera().view);
+
+			mShadowShaderProgram.setUniformf("shadowColor", new Color(0.5f, 0.5f, 0.5f, 0.5f));
+			mShadowShaderProgram.setUniformf("shadowOffset", new Vector2(5f, -5f));
+
+			mColorRoot.drawShadow(mShadowShaderProgram, getStroke());
+
+			mShadowShaderProgram.end();
 		}
 
 		// Render multi-color objects.
@@ -285,6 +303,10 @@ public class TilingMeshStage extends MeshStage {
 		mPointLightShaderProgram = shaderProgram;
 	}
 
+	public void setShadowShaderProgram(ShaderProgram shaderProgram) {
+		mShadowShaderProgram = shaderProgram;
+	}
+
 	@Override
 	public void clearActors() {
 		super.clearActors();
@@ -297,5 +319,6 @@ public class TilingMeshStage extends MeshStage {
 		super.dispose();
 		mColorShaderProgram.dispose();
 		mPointLightShaderProgram.dispose();
+		mShadowShaderProgram.dispose();
 	}
 }

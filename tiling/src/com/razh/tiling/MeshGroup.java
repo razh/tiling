@@ -38,8 +38,9 @@ public class MeshGroup extends Group {
 		for (int i = 0, n = children.size; i < n; i++) {
 			Actor child = actors[i];
 
-			if (!child.isVisible())
+			if (!child.isVisible()) {
 				continue;
+			}
 
 			// Because MeshGroup does not inherit from MeshActor.
 			if (child instanceof MeshActor) {
@@ -51,6 +52,27 @@ public class MeshGroup extends Group {
 				((BillboardActor) child).draw(mShaderProgram);
 			}
 
+		}
+
+		children.end();
+	}
+
+	public void drawShadow(ShaderProgram shadowShaderProgram, float stroke) {
+		SnapshotArray<Actor> children = getChildren();
+		Actor[] actors = children.begin();
+
+		for (int i = 0, n = children.size; i < n; i++) {
+			Actor child = actors[i];
+
+			if (!child.isVisible()) {
+				continue;
+			}
+
+			if (child instanceof MeshActor) {
+				((MeshActor) child).drawShadow(shadowShaderProgram, stroke);
+			} else if (child instanceof MeshGroup) {
+				((MeshGroup) child).drawShadow(shadowShaderProgram, stroke);
+			}
 		}
 
 		children.end();

@@ -303,9 +303,14 @@ public class Shader {
 			"uniform mat4 projectionMatrix;\n" +
 			"uniform mat4 viewMatrix;\n" +
 			"uniform mat4 modelMatrix;\n" +
+			"uniform vec2 shadowOffset;\n" +
+			"attribute vec3 a_position;\n" +
 			"\n" +
 			"void main()\n" +
 			"{\n" +
+			"  gl_Position = modelMatrix * vec4(a_position, 1.0);\n" +
+			"  gl_Position.xy += shadowOffset;\n" +
+			"  gl_Position = projectionMatrix * viewMatrix * gl_Position;\n" +
 			"}";
 
 		String fragment =
