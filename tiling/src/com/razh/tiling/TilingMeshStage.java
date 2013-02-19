@@ -31,6 +31,7 @@ public class TilingMeshStage extends MeshStage {
 
 	// Camera offset for virtual viewport.
 	private Vector2 mCameraOffset;
+	private Vector2 mCameraScale = new Vector2();
 
 	public TilingMeshStage() {
 		super();
@@ -161,6 +162,7 @@ public class TilingMeshStage extends MeshStage {
 	@Override
 	public Actor hit(float stageX, float stageY, boolean touchable) {
 		Vector2 actorCoords = new Vector2(stageX, stageY).div(getScale()).sub(mCameraOffset);
+//		System.out.println(actorCoords);
 		getRoot().parentToLocalCoordinates(actorCoords);
 		Actor hit = getRoot().hit(actorCoords.x, actorCoords.y, touchable);
 		if (hit == null) {
@@ -175,13 +177,20 @@ public class TilingMeshStage extends MeshStage {
 	}
 
 	public void setScale(float scale) {
-		if ( mScale != scale ) {
-			setViewport(Gdx.graphics.getWidth() / scale, Gdx.graphics.getHeight() / scale, false);
-			getCamera().position.set(0.5f * TilingGame.WIDTH / scale,
-			                         0.5f * TilingGame.HEIGHT / scale,
+		if (mScale != scale) {
+			float scaleWidth = TilingGame.WIDTH / scale;
+			float scaleHeight = TilingGame.HEIGHT / scale;
+			setViewport(scaleWidth, scaleHeight, true);
+			getCamera().position.set(0.5f * scaleWidth,
+			                         0.5f * scaleHeight,
 			                         CAMERA_POSITION_Z);
+			// Distance from center of camera position to center of viewport.
 			mCameraOffset.set(0.5f * (Gdx.graphics.getWidth() - TilingGame.WIDTH) / scale,
 			                  0.5f * (Gdx.graphics.getHeight() - TilingGame.HEIGHT) / scale);
+			System.out.println("GUTTER: " + getGutterWidth() + ", " + getGutterHeight());
+			System.out.println("CAMERA: " + getCamera().viewportWidth + ", " + getCamera().viewportHeight);
+			mCameraScale.set(Gdx.graphics.getWidth() / (getCamera().viewportWidth + 2 * getGutterWidth()),
+			                 Gdx.graphics.getHeight() / (getCamera().viewportHeight + 2 * getGutterHeight()));
 		}
 
 		mScale = scale;

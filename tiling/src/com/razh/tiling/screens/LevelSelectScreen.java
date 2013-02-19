@@ -25,6 +25,8 @@ public class LevelSelectScreen extends BasicScreen {
 
 		Stage stage = new Stage();
 		setStage(stage);
+		addInputProcessor(stage);
+
 		stage.addListener(new InputListener() {
 			@Override
 			public boolean keyDown(InputEvent event, int keycode) {
@@ -37,7 +39,6 @@ public class LevelSelectScreen extends BasicScreen {
 				return false;
 			}
 		});
-		addInputProcessor(stage);
 
 		mContainer = new Table();
 		stage.addActor(mContainer);
@@ -52,13 +53,13 @@ public class LevelSelectScreen extends BasicScreen {
 		skin.add("image", new NinePatch(new Texture(Gdx.files.internal("data/gray-50-alpha-50-square.png")), 1, 1, 1, 1));
 		skin.load(Gdx.files.internal("ui/buttons.json"));
 
-		table.pad(10).defaults().space(40);
+		table.pad(10.0f, 100.0f, 10.0f, 100.0f).defaults().space(40.0f);
 		Table subTable;
 		TextButton button;
 		TextButton testButton = null;
 		for (int i = 0; i < 5; i++) {
 			subTable = new Table();
-			subTable.defaults().space(4);
+			subTable.padLeft(50.0f).padRight(50.0f).defaults().space(4);
 			for (int j = 0; j < 5; j++) {
 				for (int k = 0; k < 5; k++) {
 					button = new TextButton(i + "" + j + "" + k, skin);

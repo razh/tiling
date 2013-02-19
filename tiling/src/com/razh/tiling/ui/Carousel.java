@@ -3,6 +3,7 @@ package com.razh.tiling.ui;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 public class Carousel extends ScrollPane {
 
@@ -24,6 +25,15 @@ public class Carousel extends ScrollPane {
 
 	public Carousel(Actor widget, ScrollPaneStyle style) {
 		super(widget, style);
+	}
+
+	@Override
+	public void layout() {
+		super.layout();
+
+		if (getWidget() instanceof Table) {
+
+		}
 	}
 
 	/**
