@@ -113,27 +113,6 @@ public class MainMenuScreen extends BasicScreen {
 	}
 
 	@Override
-	public void show() {
-		super.show();
-
-//		showButton(mStartButton, new ClickListener() {
-//			@Override
-//			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-//				getGame().setScreenByName("GAME");
-//			}
-//		});
-//		showButton(mLevelButton, new ClickListener() {
-//			@Override
-//			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-//				getGame().setScreenByName("LEVEL_SELECT");
-//			}
-//		});
-
-		System.out.println("HELLLO:" + mStartButton.getListeners().size);
-		System.out.println("HELLLO2:" + mLevelButton.getListeners().size);
-	}
-
-	@Override
 	public void resize(int width, int height) {}
 
 	@Override

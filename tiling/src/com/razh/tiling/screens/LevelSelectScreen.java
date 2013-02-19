@@ -2,7 +2,6 @@ package com.razh.tiling.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
@@ -29,7 +28,6 @@ public class LevelSelectScreen extends BasicScreen {
 		stage.addListener(new InputListener() {
 			@Override
 			public boolean keyDown(InputEvent event, int keycode) {
-				System.out.println(keycode + ", " + Keys.BACK + ", " + Keys.ESCAPE);
 				if (keycode == Keys.BACK ||
 				    keycode == Keys.ESCAPE) {
 					getGame().setScreenByName("MAIN_MENU");

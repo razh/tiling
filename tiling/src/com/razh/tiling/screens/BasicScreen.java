@@ -3,10 +3,7 @@ package com.razh.tiling.screens;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.razh.tiling.MeshStage;
 import com.razh.tiling.TilingGame;
 
@@ -63,20 +60,6 @@ public abstract class BasicScreen implements Screen {
 	@Override
 	public void show() {
 		getGame().getInputMultiplexer().addProcessor(getInputMultiplexer());
-	}
-
-	/**
-	 * Refreshes a button's EventListener.
-	 * @param button Button we want to show.
-	 */
-	public void showButton(Button button, EventListener listener) {
-		int size = button.getListeners().size;
-		if (size > 1) {
-			EventListener oldListener = button.getListeners().get(size - 1);
-			button.removeListener(oldListener);
-		}
-
-		button.addListener(listener);
 	}
 
 	@Override
