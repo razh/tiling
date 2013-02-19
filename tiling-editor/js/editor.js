@@ -397,11 +397,7 @@ Editor.prototype.draw = function() {
   this._ctx.fillStyle = this.getAmbientColor().toString();
   this._ctx.fillRect( 0, 0, this.WIDTH, 14 ); // 14 px is height of the various UI elements.
 
-  this._ctx.save();
-  this._ctx.translate( this.getTranslateX(), this.HEIGHT + this.getTranslateY() );
-  this._ctx.rotate( this.getRotation() );
-  // Coordinates are reversed in the OpenGL game.
-  this._ctx.scale( 1, -1 );
+  this.transformCanvas( this._ctx );
 
   this.drawCameraOverlay();
 
@@ -426,15 +422,19 @@ Editor.prototype.drawCanvas = function() {
   }
 };
 
+Editor.prototype.transformCanvas = function( ctx ) {
+  ctx.save();
+  ctx.translate( this.getTranslateX(), this.HEIGHT + this.getTranslateY() );
+  ctx.rotate( this.getRotation() );
+  // Coordinates are reversed in the OpenGL game.
+  ctx.scale( 1, -1 );
+};
+
 Editor.prototype.drawShadows = function() {
   this._backgroundCtx.clearRect( 0, 0, this.WIDTH, this.HEIGHT );
   this._backgroundCtx.globalCompositeOperation = 'multiply';
 
-  this._backgroundCtx.save();
-  this._backgroundCtx.translate( this.getTranslateX(), this.HEIGHT + this.getTranslateY() );
-  this._backgroundCtx.rotate( this.getRotation() );
-  // Coordinates are reversed in the OpenGL game.
-  this._backgroundCtx.scale( 1, -1 );
+  this.transformCanvas( this._backgroundCtx );
 
   var i, n;
   for ( i = 0, n = this._shapes.length; i < n; i++ ) {
