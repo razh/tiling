@@ -18,10 +18,13 @@ var Shape = function() {
   // For WebGL.
   this._mesh = new THREE.Mesh(
     new THREE.CubeGeometry( 1, 1, 1 ),
-    new THREE.MeshLambertMaterial({
-      color:   new THREE.Color(),
-      shading: THREE.FlatShading
-    })
+    new THREE.MeshFaceMaterial([
+      _shadowShader,
+      new THREE.MeshLambertMaterial({
+        color:   new THREE.Color(),
+        shading: THREE.FlatShading
+      })
+    ])
   );
   this._mesh.geometry.dynamic = true;
 };
@@ -76,9 +79,9 @@ Shape.prototype.drawWebGL = function( stroke, altColor, materialNeedsUpdate ) {
 
   // Update material.
   if ( !altColor ) {
-    this._mesh.material.color.set( this.getColor().toHex() );
+    this._mesh.material.materials[1].color.set( this.getColor().toHex() );
   } else {
-    this._mesh.material.color.set( this.getAltColor().toHex() );
+    this._mesh.material.materials[1].color.set( this.getAltColor().toHex() );
   }
 
   // Update material when light is added.

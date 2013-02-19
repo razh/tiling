@@ -333,6 +333,12 @@ var Editor = function() {
   this._scene.add( this._ambientLight );
   this._materialNeedsUpdate = false; // Update shader on upon adding light.
 
+  this._shadowColor = new Color( 127, 127, 127, 0.5 );
+  this._shadowOffset = {
+    x: 0,
+    y: 0
+  };
+
   this._running = true;
 
   this._pattern = new Pattern();
@@ -428,6 +434,10 @@ Editor.prototype.drawWebGL = function() {
   for ( i = 0, n = this._lights.length; i < n; i++ ) {
     this._lights[i].drawWebGL();
   }
+
+  this.getShadowUniforms().shadowColor.value.set( this.getShadowColor().toHex() );
+  this.getShadowUniforms().shadowAlpha.value = this.getShadowColor().getAlpha();
+  this.getShadowUniforms().shadowOffset.value.set( this.getShadowOffsetX(), this.getShadowOffsetY() );
 
   this._renderer.render( this._scene, this._camera );
   this._materialNeedsUpdate = false;
@@ -580,6 +590,38 @@ Editor.prototype.loadLevelInspector = function( level ) {
     object: this,
     getter: 'getAmbientColor',
     prefix: 'amb'
+  });
+
+  Form.createColorForm({
+    $id:    this._levelPane,
+    object: this,
+    getter: 'getShadowColor',
+    prefix: 'shd',
+    alpha:  true
+  });
+
+  Form.createFloatForm({
+    $id:    this._levelPane,
+    object: this,
+    name:   'shadow-offset-x',
+    getter: 'getShadowOffsetX',
+    setter: 'setShadowOffsetX',
+    min:    -Math.max( this.WIDTH, this.HEIGHT ),
+    max:    Math.max( this.WIDTH, this.HEIGHT ),
+    step:   0.1,
+    digits: 1
+  });
+
+  Form.createFloatForm({
+    $id:    this._levelPane,
+    object: this,
+    name:   'shadow-offset-y',
+    getter: 'getShadowOffsetY',
+    setter: 'setShadowOffsetY',
+    min:    -Math.max( this.WIDTH, this.HEIGHT ),
+    max:    Math.max( this.WIDTH, this.HEIGHT ),
+    step:   0.1,
+    digits: 1
   });
 
   // Prevent level inspector form inputs from triggering key commands.
@@ -830,8 +872,8 @@ Editor.prototype.getBackgroundColor = function() {
   return this._backgroundColor;
 };
 
-Editor.prototype.setBackgroundColor = function( backgroundColor ) {
-  this._backgroundColor = backgroundColor;
+Editor.prototype.setBackgroundColor = function() {
+  this.getBackgroundColor().set.apply( this.getBackgroundColor(), arguments );
 };
 
 // Ambient color.
@@ -839,8 +881,57 @@ Editor.prototype.getAmbientColor = function() {
   return this._ambientColor;
 };
 
-Editor.prototype.setAmbientColor = function( ambientColor ) {
-  this._ambientColor = ambientColor;
+Editor.prototype.setAmbientColor = function() {
+  this.getAmbientColor().set.apply( this.getAmbientColor(), arguments );
+};
+
+// Shadow shader.
+Editor.prototype.getShadowShader = function() {
+  return _shadowShader;
+};
+
+Editor.prototype.getShadowUniforms = function() {
+  return _shadowUniforms;
+};
+
+// Shadow color.
+Editor.prototype.getShadowColor = function() {
+  return this._shadowColor;
+};
+
+Editor.prototype.setShadowColor = function() {
+  this.getShadowColor().set.apply( this.getShadowColor(), arguments );
+};
+
+// Shadow offset.
+Editor.prototype.getShadowOffsetX = function() {
+  return this.getShadowOffset().x;
+};
+
+Editor.prototype.setShadowOffsetX = function( shadowOffsetX ) {
+  this._shadowOffset.x = shadowOffsetX;
+};
+
+Editor.prototype.getShadowOffsetY = function() {
+  return this.getShadowOffset().y;
+};
+
+Editor.prototype.setShadowOffsetY = function( shadowOffsetY ) {
+  this._shadowOffset.y = shadowOffsetY;
+};
+
+Editor.prototype.getShadowOffset = function() {
+  return this._shadowOffset;
+};
+
+Editor.prototype.setShadowOffset = function( shadowOffset ) {
+  if ( arguments.length === 1 ) {
+    this.setShadowOffsetX( arguments[0].x );
+    this.setShadowOffsetY( arguments[0].y );
+  } else if ( arguments.length === 2 ) {
+    this.setShadowOffsetX( arguments[0] );
+    this.setShadowOffsetY( arguments[1] );
+  }
 };
 
 // Patterns.
@@ -950,6 +1041,8 @@ Editor.prototype.loadLevel = function( level ) {
   this.setStroke( level.getStroke() );
   this.setBackgroundColor( level.getBackgroundColor() );
   this.setAmbientColor( level.getAmbientColor() );
+  this.setShadowColor( level.getShadowColor() );
+  this.setShadowOffset( level.getShadowOffset() );
 
   if ( level.getPattern() !== null ) {
     this.setPattern( level.getPattern() );
@@ -982,6 +1075,8 @@ Editor.prototype.exportLevel = function() {
   level.setStroke( this.getStroke() );
   level.setBackgroundColor( this.getBackgroundColor() );
   level.setAmbientColor( this.getAmbientColor() );
+  level.setShadowColor( this.getShadowColor() );
+  level.setShadowOffset( this.getShadowOffset() );
   level.setPattern( this.getPattern() );
   level.setGraph( this.getGraph() );
   level._shapes = this.getShapes();

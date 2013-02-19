@@ -15,6 +15,12 @@ var Level = function() {
   this._backgroundColor = new Color( 0, 0, 0, 1.0 );
   this._ambientColor = new Color( 0, 0, 0, 1.0 );
 
+  this._shadowColor = new Color( 128, 128, 128, 0.5 );
+  this._shadowOffset = {
+    x: 0,
+    y: 0
+  };
+
   this._shapes = [];
   this._lights = [];
 
@@ -98,8 +104,8 @@ Level.prototype.getBackgroundColor = function() {
   return this._backgroundColor;
 };
 
-Level.prototype.setBackgroundColor = function( backgroundColor ) {
-  this._backgroundColor.set( backgroundColor );
+Level.prototype.setBackgroundColor = function() {
+  this.getBackgroundColor().set.apply( this.getBackgroundColor(), arguments );
 };
 
 // Ambient color.
@@ -107,8 +113,48 @@ Level.prototype.getAmbientColor = function() {
   return this._ambientColor;
 };
 
-Level.prototype.setAmbientColor = function( ambientColor ) {
-  this._ambientColor.set( ambientColor );
+Level.prototype.setAmbientColor = function() {
+  this.getAmbientColor().set.apply( this.getAmbientColor(), arguments );
+};
+
+// Shadow color.
+Level.prototype.getShadowColor = function() {
+  return this._shadowColor;
+};
+
+Level.prototype.setShadowColor = function() {
+  this.getShadowColor().set.apply( this.getShadowColor(), arguments );
+};
+
+// Shadow offset.
+Level.prototype.getShadowOffsetX = function() {
+  return this.getShadowOffset().x;
+};
+
+Level.prototype.setShadowOffsetX = function( shadowOffsetX ) {
+  this._shadowOffset.x = shadowOffsetX;
+};
+
+Level.prototype.getShadowOffsetY = function() {
+  return this.getShadowOffset().y;
+};
+
+Level.prototype.setShadowOffsetY = function( shadowOffsetY ) {
+  this._shadowOffset.y = shadowOffsetY;
+};
+
+Level.prototype.getShadowOffset = function() {
+  return this._shadowOffset;
+};
+
+Level.prototype.setShadowOffset = function( shadowOffset ) {
+  if ( arguments.length === 1 ) {
+    this.setShadowOffsetX( arguments[0].x );
+    this.setShadowOffsetY( arguments[0].y );
+  } else if ( arguments.length === 2 ) {
+    this.setShadowOffsetX( arguments[0] );
+    this.setShadowOffsetY( arguments[1] );
+  }
 };
 
 // Shapes.
@@ -167,6 +213,9 @@ Level.prototype.fromJSON = function( json ) {
   var ambientColor = new Color();
   ambientColor.fromJSON( JSON.stringify( jsonObject.ambientColor ) );
 
+  var shadowColor = new Color();
+  shadowColor.fromJSON( JSON.stringify( jsonObject.shadowColor ) );
+
   this._shapes = [];
   var i, n;
   for ( i = 0, n = jsonObject.shapes.length; i < n; i++ ) {
@@ -200,6 +249,13 @@ Level.prototype.fromJSON = function( json ) {
   this.setStroke( jsonObject.stroke || 0.0 );
   this.setBackgroundColor( backgroundColor );
   this.setAmbientColor( ambientColor );
+  this.setShadowColor( shadowColor );
+
+  if ( jsonObject.shadowOffset !== undefined ) {
+    this.setShadowOffsetX( jsonObject.shadowOffset.x || 0.0 );
+    this.setShadowOffsetY( jsonObject.shadowOffset.y || 0.0 );
+  }
+
   this.setGraph( graph );
 
   return this;
@@ -237,6 +293,8 @@ Level.prototype.toJSON = function( pattern ) {
 
   object.backgroundColor = this.getBackgroundColor();
   object.ambientColor = this.getAmbientColor();
+  object.shadowColor = this.getShadowColor();
+  object.shadowOffset = this.getShadowOffset();
 
   return object;
 };

@@ -23,6 +23,9 @@ public class TilingMeshStage extends MeshStage {
 
 	private Uniforms mUniforms;
 
+	private Vector2 mShadowOffset;
+	private Color mShadowColor;
+
 	private boolean mShaderProgramNeedsUpdate;
 	private boolean mLightUniformsNeedRefresh;
 
@@ -61,6 +64,9 @@ public class TilingMeshStage extends MeshStage {
 		}
 		mUniforms = new Uniforms();
 
+		setShadowColor(new Color(0.0f, 0.0f, 0.0f, 0.0f));
+		setShadowOffset(new Vector2(0.0f, 0.0f));
+
 		setShaderProgram(shaderProgram);
 		setColorShaderProgram(colorShaderProgram);
 		setPointLightShaderProgram(Shader.createBillboardShaderProgram());
@@ -86,6 +92,7 @@ public class TilingMeshStage extends MeshStage {
 
 		// Render shadows of multi-color objects.
 		if (mShadowShaderProgram != null) {
+			// Set blend function to multiply.
 			Gdx.gl.glBlendFunc(GL20.GL_DST_COLOR, GL20.GL_ZERO);
 			mShadowShaderProgram.begin();
 
@@ -231,6 +238,22 @@ public class TilingMeshStage extends MeshStage {
 
 	public void addColorActor(MeshActor actor) {
 		mColorRoot.addActor(actor);
+	}
+
+	public Color getShadowColor() {
+		return mShadowColor;
+	}
+
+	public void setShadowColor(Color shadowColor) {
+		mShadowColor = shadowColor;
+	}
+
+	public Vector2 getShadowOffset() {
+		return mShadowOffset;
+	}
+
+	public void setShadowOffset(Vector2 shadowOffset) {
+		mShadowOffset = shadowOffset;
 	}
 
 	public SnapshotArray<Light> getLights() {
