@@ -3,12 +3,14 @@ package com.razh.tiling.screens;
 import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -35,6 +37,19 @@ public class MainMenuScreen extends BasicScreen {
 		stage.getSpriteBatch().setColor(Color.CLEAR);
 		setStage(stage);
 		addInputProcessor(stage);
+
+		stage.addListener(new InputListener() {
+			@Override
+			public boolean keyDown(InputEvent event, int keycode) {
+				if (keycode == Keys.BACK ||
+				    keycode == Keys.ESCAPE) {
+					Gdx.app.exit();
+					return true;
+				}
+
+				return false;
+			}
+		});
 
 		mBackgroundStage = new TilingMeshStage();
 		LevelLoader levelLoader = new LevelLoader();
