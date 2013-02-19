@@ -38,12 +38,17 @@ public class TilingMeshStage extends MeshStage {
 	private Vector2 mCameraOffset;
 	private Vector2 mCameraScale = new Vector2();
 
+	private BillboardActor mBillboardActor;
+
 	public TilingMeshStage() {
 		super();
 
 		getCamera().position.z = CAMERA_POSITION_Z;
 		getCamera().far = CAMERA_FAR;
 		mCameraOffset = new Vector2();
+
+		mBillboardActor = new BillboardActor();
+		mBillboardActor.setColor(new Color(Color.RED));
 
 		setScale(1.0f);
 
@@ -78,6 +83,11 @@ public class TilingMeshStage extends MeshStage {
 	@Override
 	public void draw() {
 		getCamera().update();
+
+//		mPointLightShaderProgram.begin();
+//		mPointLightShaderProgram.setUniformMatrix("modelViewProjectionMatrix", getCamera().combined);
+//		mBillboardActor.draw(mPointLightShaderProgram);
+//		mPointLightShaderProgram.end();
 
 		// Render normal objects.
 		if (getShaderProgram() != null) {
@@ -219,6 +229,10 @@ public class TilingMeshStage extends MeshStage {
 			System.out.println("CAMERA: " + getCamera().viewportWidth + ", " + getCamera().viewportHeight);
 			mCameraScale.set(Gdx.graphics.getWidth() / (getCamera().viewportWidth + 2 * getGutterWidth()),
 			                 Gdx.graphics.getHeight() / (getCamera().viewportHeight + 2 * getGutterHeight()));
+
+			mBillboardActor.setPosition(0.5f * scaleWidth, 0.5f * scaleHeight);
+			mBillboardActor.setWidth(scaleWidth);
+			mBillboardActor.setHeight(scaleHeight);
 		}
 
 		mScale = scale;
