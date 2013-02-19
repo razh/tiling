@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -85,17 +86,19 @@ public class TilingMeshStage extends MeshStage {
 
 		// Render shadows of multi-color objects.
 		if (mShadowShaderProgram != null) {
+			Gdx.gl.glBlendFunc(GL20.GL_DST_COLOR, GL20.GL_ZERO);
 			mShadowShaderProgram.begin();
 
 			mShadowShaderProgram.setUniformMatrix("projectionMatrix", getCamera().projection);
 			mShadowShaderProgram.setUniformMatrix("viewMatrix", getCamera().view);
 
 			mShadowShaderProgram.setUniformf("shadowColor", new Color(0.5f, 0.5f, 0.5f, 0.5f));
-			mShadowShaderProgram.setUniformf("shadowOffset", new Vector2(5f, -5f));
+			mShadowShaderProgram.setUniformf("shadowOffset", new Vector2(2.5f, -2.5f));
 
 			mColorRoot.drawShadow(mShadowShaderProgram, getStroke());
 
 			mShadowShaderProgram.end();
+			Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 		}
 
 		// Render multi-color objects.
