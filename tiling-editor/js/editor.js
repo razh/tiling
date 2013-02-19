@@ -388,8 +388,6 @@ Editor.prototype.update = function() {
 
 Editor.prototype.draw = function() {
   this._backgroundCanvas.style.backgroundColor = this.getBackgroundColor().toHexString();
-  // this._backgroundCtx.fillStyle = this.getBackgroundColor().toString();
-  // this._backgroundCtx.fillRect( 0, 0, this.WIDTH, this.HEIGHT );
 
   this._ctx.clearRect( 0, 0, this.WIDTH, this.HEIGHT );
 
@@ -432,7 +430,6 @@ Editor.prototype.transformCanvas = function( ctx ) {
 
 Editor.prototype.drawShadows = function() {
   this._backgroundCtx.clearRect( 0, 0, this.WIDTH, this.HEIGHT );
-  this._backgroundCtx.globalCompositeOperation = 'multiply';
 
   this.transformCanvas( this._backgroundCtx );
 
@@ -445,7 +442,6 @@ Editor.prototype.drawShadows = function() {
   }
 
   this._backgroundCtx.restore();
-  this._backgroundCtx.globalCompositeOperation = 'normal';
 };
 
 Editor.prototype.drawWebGL = function() {
