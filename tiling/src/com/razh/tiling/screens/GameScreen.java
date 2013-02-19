@@ -1,7 +1,6 @@
 package com.razh.tiling.screens;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.razh.tiling.TilingGame;
@@ -16,8 +15,6 @@ public class GameScreen extends BasicScreen {
 
 		setStage(new TilingMeshStage());
 
-		InputMultiplexer inputMultiplexer = new InputMultiplexer();
-
 		DebugInputProcessor debugInputProcessor = new DebugInputProcessor();
 		debugInputProcessor.setStage(getMeshStage());
 		debugInputProcessor.setGame(getGame());
@@ -28,10 +25,8 @@ public class GameScreen extends BasicScreen {
 		gameInputProcessor.setGame(getGame());
 		gameInputProcessor.setPlayer(getGame().getPlayer());
 
-		inputMultiplexer.addProcessor(debugInputProcessor);
-		inputMultiplexer.addProcessor(gameInputProcessor);
-
-		setInputProcessor(inputMultiplexer);
+		addInputProcessor(debugInputProcessor);
+		addInputProcessor(gameInputProcessor);
 	}
 
 	@Override

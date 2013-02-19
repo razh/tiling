@@ -1,9 +1,13 @@
 package com.razh.tiling.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -21,7 +25,19 @@ public class LevelSelectScreen extends BasicScreen {
 
 		Stage stage = new Stage();
 		setStage(stage);
-		setInputProcessor(stage);
+		stage.addListener(new InputListener() {
+			@Override
+			public boolean keyDown(InputEvent event, int keycode) {
+				System.out.println(keycode + ", " + Keys.BACK + ", " + Keys.ESCAPE);
+				if (keycode == Keys.BACK ||
+				    keycode == Keys.ESCAPE) {
+					return true;
+				}
+
+				return false;
+			}
+		});
+		addInputProcessor(stage);
 
 		mContainer = new Table();
 		stage.addActor(mContainer);

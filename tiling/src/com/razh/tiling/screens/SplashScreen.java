@@ -23,7 +23,7 @@ public class SplashScreen extends BasicScreen {
 		super(game);
 
 		setStage(new MeshStage());
-		setInputProcessor(getStage());
+		addInputProcessor(getStage());
 
 		final BillboardActor backgroundActor = new BillboardActor();
 		backgroundActor.setColor(new Color(Color.DARK_GRAY));

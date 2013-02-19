@@ -34,7 +34,7 @@ public class MainMenuScreen extends BasicScreen {
 		Stage stage = new Stage();
 		stage.getSpriteBatch().setColor(Color.CLEAR);
 		setStage(stage);
-		setInputProcessor(stage);
+		addInputProcessor(stage);
 
 		mBackgroundStage = new TilingMeshStage();
 		LevelLoader levelLoader = new LevelLoader();

@@ -48,4 +48,8 @@ public class Carousel extends ScrollPane {
 		return mIndex;
 	}
 
+	public float getSpeed() {
+		return mSpeed;
+	}
+
 }

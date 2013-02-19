@@ -76,6 +76,7 @@ public class TilingGame extends Game {
 		// Input.
 		mInputMultiplexer = new InputMultiplexer();
 		Gdx.input.setInputProcessor(mInputMultiplexer);
+		Gdx.input.setCatchBackKey(true);
 
 		setScreen(getScreens().get("SPLASH"));
 	}
