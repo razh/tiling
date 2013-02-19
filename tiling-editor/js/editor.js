@@ -388,6 +388,8 @@ Editor.prototype.update = function() {
 
 Editor.prototype.draw = function() {
   this._backgroundCanvas.style.backgroundColor = this.getBackgroundColor().toHexString();
+  // this._backgroundCtx.fillStyle = this.getBackgroundColor().toString();
+  // this._backgroundCtx.fillRect( 0, 0, this.WIDTH, this.HEIGHT );
 
   this._ctx.clearRect( 0, 0, this.WIDTH, this.HEIGHT );
 
@@ -404,6 +406,7 @@ Editor.prototype.draw = function() {
   this.drawCameraOverlay();
 
   if ( this.usingWebGL() ) {
+    this.drawShadows();
     this.drawWebGL();
   } else {
     this.drawCanvas();
@@ -423,6 +426,28 @@ Editor.prototype.drawCanvas = function() {
   }
 };
 
+Editor.prototype.drawShadows = function() {
+  this._backgroundCtx.clearRect( 0, 0, this.WIDTH, this.HEIGHT );
+  this._backgroundCtx.globalCompositeOperation = 'multiply';
+
+  this._backgroundCtx.save();
+  this._backgroundCtx.translate( this.getTranslateX(), this.HEIGHT + this.getTranslateY() );
+  this._backgroundCtx.rotate( this.getRotation() );
+  // Coordinates are reversed in the OpenGL game.
+  this._backgroundCtx.scale( 1, -1 );
+
+  var i, n;
+  for ( i = 0, n = this._shapes.length; i < n; i++ ) {
+    this._shapes[i].drawShadow( this._backgroundCtx,
+                                this.getStroke(),
+                                this.getShadowColor(),
+                                this.getShadowOffset() );
+  }
+
+  this._backgroundCtx.restore();
+  this._backgroundCtx.globalCompositeOperation = 'normal';
+};
+
 Editor.prototype.drawWebGL = function() {
   // Update shapes.
   var i, n;
@@ -434,10 +459,6 @@ Editor.prototype.drawWebGL = function() {
   for ( i = 0, n = this._lights.length; i < n; i++ ) {
     this._lights[i].drawWebGL();
   }
-
-  this.getShadowUniforms().shadowColor.value.set( this.getShadowColor().toHex() );
-  this.getShadowUniforms().shadowAlpha.value = this.getShadowColor().getAlpha();
-  this.getShadowUniforms().shadowOffset.value.set( this.getShadowOffsetX(), this.getShadowOffsetY() );
 
   this._renderer.render( this._scene, this._camera );
   this._materialNeedsUpdate = false;
@@ -523,6 +544,8 @@ Editor.prototype.loadPatternInspector = function( pattern ) {
 Editor.prototype.loadLevelInspector = function( level ) {
   this._levelPane.empty();
 
+  var maxDimension = Math.max( this.WIDTH, this.HEIGHT );
+
   Form.createTextForm({
     $id:    this._levelPane,
     object: this,
@@ -537,8 +560,8 @@ Editor.prototype.loadLevelInspector = function( level ) {
     name:   'stage-x',
     getter: 'getStageX',
     setter: 'setStageX',
-    min:    -Math.max( this.WIDTH, this.HEIGHT ),
-    max:    Math.max( this.WIDTH, this.HEIGHT ),
+    min:    -maxDimension,
+    max:    maxDimension,
     step:   0.1,
     digits: 1
   });
@@ -549,8 +572,8 @@ Editor.prototype.loadLevelInspector = function( level ) {
     name:   'stage-y',
     getter: 'getStageY',
     setter: 'setStageY',
-    min:    -Math.max( this.WIDTH, this.HEIGHT ),
-    max:    Math.max( this.WIDTH, this.HEIGHT ),
+    min:    -maxDimension,
+    max:    maxDimension,
     step:   0.1,
     digits: 1
   });
@@ -603,11 +626,11 @@ Editor.prototype.loadLevelInspector = function( level ) {
   Form.createFloatForm({
     $id:    this._levelPane,
     object: this,
-    name:   'shadow-offset-x',
+    name:   'shd-offset-x',
     getter: 'getShadowOffsetX',
     setter: 'setShadowOffsetX',
-    min:    -Math.max( this.WIDTH, this.HEIGHT ),
-    max:    Math.max( this.WIDTH, this.HEIGHT ),
+    min:    -maxDimension,
+    max:    maxDimension,
     step:   0.1,
     digits: 1
   });
@@ -615,11 +638,11 @@ Editor.prototype.loadLevelInspector = function( level ) {
   Form.createFloatForm({
     $id:    this._levelPane,
     object: this,
-    name:   'shadow-offset-y',
+    name:   'shd-offset-y',
     getter: 'getShadowOffsetY',
     setter: 'setShadowOffsetY',
-    min:    -Math.max( this.WIDTH, this.HEIGHT ),
-    max:    Math.max( this.WIDTH, this.HEIGHT ),
+    min:    -maxDimension,
+    max:    maxDimension,
     step:   0.1,
     digits: 1
   });
@@ -883,15 +906,6 @@ Editor.prototype.getAmbientColor = function() {
 
 Editor.prototype.setAmbientColor = function() {
   this.getAmbientColor().set.apply( this.getAmbientColor(), arguments );
-};
-
-// Shadow shader.
-Editor.prototype.getShadowShader = function() {
-  return _shadowShader;
-};
-
-Editor.prototype.getShadowUniforms = function() {
-  return _shadowUniforms;
 };
 
 // Shadow color.

@@ -18,28 +18,17 @@ var Shape = function() {
   // For WebGL.
   this._mesh = new THREE.Mesh(
     new THREE.CubeGeometry( 1, 1, 1 ),
-    new THREE.MeshFaceMaterial([
-      _shadowShader,
-      new THREE.MeshLambertMaterial({
-        color:   new THREE.Color(),
-        shading: THREE.FlatShading
-      })
-    ])
+    new THREE.MeshLambertMaterial({
+      color:   new THREE.Color(),
+      shading: THREE.FlatShading
+    })
   );
   this._mesh.geometry.dynamic = true;
 };
 
 Shape.prototype.update = function( elapsedTime ) {};
 
-Shape.prototype.draw = function( ctx, stroke, altColor ) {
-  stroke = stroke || 0;
-
-  ctx.save();
-  ctx.translate( this.getX(), this.getY() );
-  ctx.rotate( this.getRotation() );
-  ctx.scale( this.getWidth()  - stroke,
-             this.getHeight() - stroke );
-
+Shape.prototype.drawPath = function( ctx ) {
   ctx.beginPath();
 
   var x = this._vertices[ 2 * this._edges[0] ],
@@ -54,12 +43,43 @@ Shape.prototype.draw = function( ctx, stroke, altColor ) {
   }
 
   ctx.closePath();
+};
+
+Shape.prototype.draw = function( ctx, stroke, altColor ) {
+  stroke = stroke || 0;
+
+  ctx.save();
+  ctx.translate( this.getX(), this.getY() );
+  ctx.rotate( this.getRotation() );
+  ctx.scale( this.getWidth()  - stroke,
+             this.getHeight() - stroke );
+
+  this.drawPath( ctx );
 
   if ( !altColor ) {
     ctx.fillStyle = this.getColor().toString();
   } else {
     ctx.fillStyle = this.getAltColor().toString();
   }
+  ctx.fill();
+
+  ctx.restore();
+};
+
+Shape.prototype.drawShadow = function( ctx, stroke, shadowColor, shadowOffset ) {
+  stroke = stroke || 0;
+  shadowColor = shadowColor || new Color( 0, 0, 0, 0 );
+  shadowOffset = shadowOffset || { x: 0, y: 0 };
+
+  ctx.save();
+  ctx.translate( this.getX() + shadowOffset.x, this.getY() + shadowOffset.y );
+  ctx.rotate( this.getRotation() );
+  ctx.scale( this.getWidth() - stroke,
+             this.getHeight() - stroke );
+
+  this.drawPath( ctx );
+
+  ctx.fillStyle = shadowColor.toString();
   ctx.fill();
 
   ctx.restore();
@@ -79,9 +99,9 @@ Shape.prototype.drawWebGL = function( stroke, altColor, materialNeedsUpdate ) {
 
   // Update material.
   if ( !altColor ) {
-    this._mesh.material.materials[1].color.set( this.getColor().toHex() );
+    this._mesh.material.color.set( this.getColor().toHex() );
   } else {
-    this._mesh.material.materials[1].color.set( this.getAltColor().toHex() );
+    this._mesh.material.color.set( this.getAltColor().toHex() );
   }
 
   // Update material when light is added.
