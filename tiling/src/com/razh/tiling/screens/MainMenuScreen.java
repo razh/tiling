@@ -50,7 +50,7 @@ public class MainMenuScreen extends BasicScreen {
 		mStartButton.pad(20.0f);
 		mStartButton.addListener(new ClickListener() {
 			@Override
-			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+			public void clicked(InputEvent event, float x, float y) {
 				getGame().setScreenByName("GAME");
 			}
 		});
@@ -61,7 +61,7 @@ public class MainMenuScreen extends BasicScreen {
 		mLevelButton.pad(20.0f);
 		mLevelButton.addListener(new ClickListener() {
 			@Override
-			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+			public void clicked(InputEvent event, float x, float y) {
 				getGame().setScreenByName("LEVEL_SELECT");
 			}
 		});
@@ -110,7 +110,27 @@ public class MainMenuScreen extends BasicScreen {
 		Gdx.gl20.glDisable(GL20.GL_CULL_FACE);
 
 		getStage().draw();
+	}
 
+	@Override
+	public void show() {
+		super.show();
+
+//		showButton(mStartButton, new ClickListener() {
+//			@Override
+//			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+//				getGame().setScreenByName("GAME");
+//			}
+//		});
+//		showButton(mLevelButton, new ClickListener() {
+//			@Override
+//			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+//				getGame().setScreenByName("LEVEL_SELECT");
+//			}
+//		});
+
+		System.out.println("HELLLO:" + mStartButton.getListeners().size);
+		System.out.println("HELLLO2:" + mLevelButton.getListeners().size);
 	}
 
 	@Override

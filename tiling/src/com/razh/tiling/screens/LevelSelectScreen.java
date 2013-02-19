@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.razh.tiling.TilingGame;
 import com.razh.tiling.ui.Carousel;
 
@@ -31,6 +32,7 @@ public class LevelSelectScreen extends BasicScreen {
 				System.out.println(keycode + ", " + Keys.BACK + ", " + Keys.ESCAPE);
 				if (keycode == Keys.BACK ||
 				    keycode == Keys.ESCAPE) {
+					getGame().setScreenByName("MAIN_MENU");
 					return true;
 				}
 
@@ -55,6 +57,7 @@ public class LevelSelectScreen extends BasicScreen {
 		table.pad(10).defaults().space(40);
 		Table subTable;
 		TextButton button;
+		TextButton testButton = null;
 		for (int i = 0; i < 5; i++) {
 			subTable = new Table();
 			subTable.defaults().space(4);
@@ -64,12 +67,23 @@ public class LevelSelectScreen extends BasicScreen {
 					button.pad(20.0f);
 
 					subTable.add(button);
+
+					if (i == 0 && j == 0 && k == 0) {
+						testButton = button;
+					}
 				}
 				subTable.row();
 			}
 			table.add(subTable);
 			System.out.println(table.getCell(subTable).getColumn() + ", " + table.getCell(subTable).getPrefWidth());
 		}
+
+		testButton.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				System.out.println("BUTTON PRESSED.");
+			}
+		});
 
 		System.out.println(table.getPrefWidth() + "," + table.getPrefHeight());
 		System.out.println(table.defaults().getSpaceLeft() + ", " + table.defaults().getSpaceRight());
