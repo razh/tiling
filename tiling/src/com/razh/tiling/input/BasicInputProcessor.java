@@ -1,9 +1,7 @@
 package com.razh.tiling.input;
 
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.math.Vector2;
 import com.razh.tiling.MeshStage;
 import com.razh.tiling.Player;
 
