@@ -2,7 +2,6 @@ package com.razh.tiling.input;
 
 import com.badlogic.gdx.math.Vector2;
 import com.razh.tiling.MeshActor;
-import com.razh.tiling.TilingMeshStage;
 import com.razh.tiling.logic.TilingEntity;
 
 public class GameInputProcessor extends BasicInputProcessor {

@@ -11,6 +11,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.SnapshotArray;
 import com.razh.tiling.TilingGame.LightingModel;
+import com.razh.tiling.input.DebugInputProcessor;
 
 public class TilingMeshStage extends MeshStage {
 	private float mScale;
@@ -36,7 +37,6 @@ public class TilingMeshStage extends MeshStage {
 
 	// Camera offset for virtual viewport.
 	private Vector2 mCameraOffset;
-	private Vector2 mCameraScale = new Vector2();
 
 	private BillboardActor mBillboardActor;
 
@@ -69,8 +69,8 @@ public class TilingMeshStage extends MeshStage {
 		}
 		mUniforms = new Uniforms();
 
-		setShadowColor(new Color(0.0f, 0.0f, 0.0f, 0.0f));
-		setShadowOffset(new Vector2(0.0f, 0.0f));
+		setShadowColor(new Color());
+		setShadowOffset(new Vector2());
 
 		setShaderProgram(shaderProgram);
 		setColorShaderProgram(colorShaderProgram);
@@ -84,10 +84,12 @@ public class TilingMeshStage extends MeshStage {
 	public void draw() {
 		getCamera().update();
 
-//		mPointLightShaderProgram.begin();
-//		mPointLightShaderProgram.setUniformMatrix("modelViewProjectionMatrix", getCamera().combined);
-//		mBillboardActor.draw(mPointLightShaderProgram);
-//		mPointLightShaderProgram.end();
+		if (TilingGame.DEBUG) {
+			mPointLightShaderProgram.begin();
+			mPointLightShaderProgram.setUniformMatrix("modelViewProjectionMatrix", getCamera().combined);
+			mBillboardActor.draw(mPointLightShaderProgram);
+			mPointLightShaderProgram.end();
+		}
 
 		// Render normal objects.
 		if (getShaderProgram() != null) {
@@ -200,7 +202,6 @@ public class TilingMeshStage extends MeshStage {
 	@Override
 	public Actor hit(float stageX, float stageY, boolean touchable) {
 		Vector2 actorCoords = new Vector2(stageX, stageY).div(getScale()).sub(mCameraOffset);
-//		System.out.println(actorCoords);
 		getRoot().parentToLocalCoordinates(actorCoords);
 		Actor hit = getRoot().hit(actorCoords.x, actorCoords.y, touchable);
 		if (hit == null) {
@@ -225,10 +226,6 @@ public class TilingMeshStage extends MeshStage {
 			// Distance from center of camera position to center of viewport.
 			mCameraOffset.set(0.5f * (Gdx.graphics.getWidth() - TilingGame.WIDTH) / scale,
 			                  0.5f * (Gdx.graphics.getHeight() - TilingGame.HEIGHT) / scale);
-			System.out.println("GUTTER: " + getGutterWidth() + ", " + getGutterHeight());
-			System.out.println("CAMERA: " + getCamera().viewportWidth + ", " + getCamera().viewportHeight);
-			mCameraScale.set(Gdx.graphics.getWidth() / (getCamera().viewportWidth + 2 * getGutterWidth()),
-			                 Gdx.graphics.getHeight() / (getCamera().viewportHeight + 2 * getGutterHeight()));
 
 			mBillboardActor.setPosition(0.5f * scaleWidth, 0.5f * scaleHeight);
 			mBillboardActor.setWidth(scaleWidth);
