@@ -33,7 +33,7 @@ public class GameInputProcessor extends BasicInputProcessor {
 			return false;
 		}
 
-		Vector2 point = screenToStageCoordinates(screenX, screenY);
+		Vector2 point = getStage().screenToStageCoordinates(new Vector2(screenX, screenY));
 
 		MeshActor hit = (MeshActor) getStage().hit(point.x, point.y, true);
 		if (hit != null) {

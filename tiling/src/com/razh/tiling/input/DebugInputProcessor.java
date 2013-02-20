@@ -57,7 +57,7 @@ public class DebugInputProcessor extends GameInputProcessor {
 
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		mPosition.set(screenToStageCoordinates(screenX, screenY));
+		mPosition.set(getStage().screenToStageCoordinates(new Vector2(screenX, screenY)));
 		return false;
 	}
 
@@ -73,7 +73,7 @@ public class DebugInputProcessor extends GameInputProcessor {
 			return false;
 		}
 
-		Vector2 point = screenToStageCoordinates(screenX, screenY);
+		Vector2 point = getStage().screenToStageCoordinates(new Vector2(screenX, screenY));
 		if (1 <= mLightIndex && mLightIndex < stage.getLights().size) {
 			Light light = stage.getLights().get(mLightIndex);
 			if (light instanceof PointLight) {

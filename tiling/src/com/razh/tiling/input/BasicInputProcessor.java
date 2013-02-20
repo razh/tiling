@@ -35,8 +35,4 @@ public abstract class BasicInputProcessor implements InputProcessor {
 	public void setPlayer(Player player) {
 		mPlayer = player;
 	}
-
-	public Vector2 screenToStageCoordinates(int screenX, int screenY) {
-		return new Vector2(screenX, Gdx.graphics.getHeight() - screenY);
-	}
 }

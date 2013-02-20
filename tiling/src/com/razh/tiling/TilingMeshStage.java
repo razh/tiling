@@ -34,9 +34,6 @@ public class TilingMeshStage extends MeshStage {
 	private static final float CAMERA_POSITION_Z = 1000.0f;
 	private static final float CAMERA_FAR = 2000.0f;
 
-	// Camera offset for virtual viewport.
-	private Vector2 mCameraOffset;
-
 	private BillboardActor mBillboardActor;
 
 	public TilingMeshStage() {
@@ -44,7 +41,6 @@ public class TilingMeshStage extends MeshStage {
 
 		getCamera().position.z = CAMERA_POSITION_Z;
 		getCamera().far = CAMERA_FAR;
-		mCameraOffset = new Vector2();
 
 		mBillboardActor = new BillboardActor();
 		mBillboardActor.setColor(new Color(Color.RED));
@@ -200,8 +196,8 @@ public class TilingMeshStage extends MeshStage {
 
 	@Override
 	public Actor hit(float stageX, float stageY, boolean touchable) {
-		Vector2 actorCoords = new Vector2(stageX, stageY).div(getScale()).sub(mCameraOffset);
-		getRoot().parentToLocalCoordinates(actorCoords);
+		Vector2 actorCoords = Vector2.tmp;
+		getRoot().parentToLocalCoordinates(actorCoords.set(stageX, stageY));
 		Actor hit = getRoot().hit(actorCoords.x, actorCoords.y, touchable);
 		if (hit == null) {
 			return getColorRoot().hit(actorCoords.x, actorCoords.y, touchable);
@@ -222,15 +218,6 @@ public class TilingMeshStage extends MeshStage {
 			getCamera().position.set(0.5f * scaleWidth,
 			                         0.5f * scaleHeight,
 			                         CAMERA_POSITION_Z);
-			// Distance from center of camera position to center of viewport.
-			mCameraOffset.set(0.5f * (Gdx.graphics.getWidth() - TilingGame.WIDTH) / scale,
-			                  0.5f * (Gdx.graphics.getHeight() - TilingGame.HEIGHT) / scale);
-
-			System.out.println();
-			System.out.println("CAMERA: " + getCamera().viewportWidth + ", " + getCamera().viewportHeight);
-			System.out.println("GUTTER: " + getGutterWidth() + ", " + getGutterHeight());
-			System.out.println("OFFSET: " + mCameraOffset.x + ", " + mCameraOffset.y);
-			System.out.println();
 
 			mBillboardActor.setPosition(0.5f * scaleWidth, 0.5f * scaleHeight);
 			mBillboardActor.setWidth(scaleWidth);
