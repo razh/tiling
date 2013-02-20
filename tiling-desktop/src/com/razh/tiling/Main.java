@@ -8,8 +8,8 @@ public class Main {
 		LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
 		cfg.title = "tiling";
 		cfg.useGL20 = true;
-		cfg.width = 1920;
-		cfg.height = 360;
+		cfg.width = 1280;
+		cfg.height = 720;
 		cfg.samples = 4;
 		cfg.useCPUSynch = false;
 
