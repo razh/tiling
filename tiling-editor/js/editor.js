@@ -1007,6 +1007,7 @@ Editor.prototype.usingWebGL = function() {
 Editor.prototype.setUsingWebGL = function( webGL ) {
   this._usingWebGL = webGL;
   if ( !webGL ) {
+    this._backgroundCtx.clearRect( 0, 0, this.WIDTH, this.HEIGHT );
     this._renderer.clear();
   }
 };
