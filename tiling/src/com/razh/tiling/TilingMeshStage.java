@@ -36,9 +36,12 @@ public class TilingMeshStage extends MeshStage {
 
 	// Camera offset for virtual viewport.
 	private Vector2 mCameraOffset;
-	private Vector2 mCameraScale = new Vector2();
+	private float mCameraScale;
 
 	private BillboardActor mBillboardActor;
+	private BillboardActor mVertActor;
+	private BillboardActor mHorzActor;
+	public ArrayList<BillboardActor> testActors = new ArrayList();
 
 	public TilingMeshStage() {
 		super();
@@ -49,6 +52,14 @@ public class TilingMeshStage extends MeshStage {
 
 		mBillboardActor = new BillboardActor();
 		mBillboardActor.setColor(new Color(Color.RED));
+		mVertActor = new BillboardActor();
+		mVertActor.setWidth(1.0f);
+		mVertActor.setHeight(200.0f);
+		mVertActor.setColor(new Color(Color.GREEN));
+		mHorzActor = new BillboardActor();
+		mHorzActor.setWidth(200.0f);
+		mHorzActor.setHeight(1.0f);
+		mHorzActor.setColor(new Color(Color.GREEN));
 
 		setScale(1.0f);
 
@@ -84,10 +95,12 @@ public class TilingMeshStage extends MeshStage {
 	public void draw() {
 		getCamera().update();
 
-//		mPointLightShaderProgram.begin();
-//		mPointLightShaderProgram.setUniformMatrix("modelViewProjectionMatrix", getCamera().combined);
-//		mBillboardActor.draw(mPointLightShaderProgram);
-//		mPointLightShaderProgram.end();
+		mPointLightShaderProgram.begin();
+		mPointLightShaderProgram.setUniformMatrix("modelViewProjectionMatrix", getCamera().combined);
+		mBillboardActor.draw(mPointLightShaderProgram);
+		mHorzActor.draw(mPointLightShaderProgram);
+		mVertActor.draw(mPointLightShaderProgram);
+		mPointLightShaderProgram.end();
 
 		// Render normal objects.
 		if (getShaderProgram() != null) {
@@ -150,6 +163,10 @@ public class TilingMeshStage extends MeshStage {
 			}
 			mLights.end();
 
+			for (int i = 0; i < testActors.size(); i++) {
+				testActors.get(i).draw(mPointLightShaderProgram);
+			}
+
 			mPointLightShaderProgram.end();
 		}
 	}
@@ -199,7 +216,8 @@ public class TilingMeshStage extends MeshStage {
 
 	@Override
 	public Actor hit(float stageX, float stageY, boolean touchable) {
-		Vector2 actorCoords = new Vector2(stageX, stageY).div(getScale()).sub(mCameraOffset);
+//		Vector2 actorCoords = new Vector2(stageX, stageY).div(getScale()).sub(mCameraOffset);
+		Vector2 actorCoords = toLocalCoords(new Vector2(stageX, stageY));
 //		System.out.println(actorCoords);
 		getRoot().parentToLocalCoordinates(actorCoords);
 		Actor hit = getRoot().hit(actorCoords.x, actorCoords.y, touchable);
@@ -208,6 +226,16 @@ public class TilingMeshStage extends MeshStage {
 		} else {
 			return hit;
 		}
+	}
+
+	public Vector2 toLocalCoords(Vector2 coords) {
+		Vector2 point = coords.div(getScale()).sub(mCameraOffset).div(mCameraScale);
+
+		Vector3 point3D = new Vector3(point.x, point.y, 0);
+		mVertActor.setPosition(point3D);
+		mHorzActor.setPosition(point3D);
+//		System.out.println(point);
+		return point;
 	}
 
 	public float getScale() {
@@ -225,11 +253,12 @@ public class TilingMeshStage extends MeshStage {
 			// Distance from center of camera position to center of viewport.
 			mCameraOffset.set(0.5f * (Gdx.graphics.getWidth() - TilingGame.WIDTH) / scale,
 			                  0.5f * (Gdx.graphics.getHeight() - TilingGame.HEIGHT) / scale);
+			System.out.println("OFFSET: " + mCameraOffset);
 			System.out.println("GUTTER: " + getGutterWidth() + ", " + getGutterHeight());
 			System.out.println("CAMERA: " + getCamera().viewportWidth + ", " + getCamera().viewportHeight);
-			mCameraScale.set(Gdx.graphics.getWidth() / (getCamera().viewportWidth + 2 * getGutterWidth()),
-			                 Gdx.graphics.getHeight() / (getCamera().viewportHeight + 2 * getGutterHeight()));
-
+			mCameraScale= Math.min(Gdx.graphics.getWidth() / TilingGame.WIDTH,
+			                 Gdx.graphics.getHeight() / TilingGame.HEIGHT);
+			System.out.println("SCALE: " + mCameraScale);
 			mBillboardActor.setPosition(0.5f * scaleWidth, 0.5f * scaleHeight);
 			mBillboardActor.setWidth(scaleWidth);
 			mBillboardActor.setHeight(scaleHeight);

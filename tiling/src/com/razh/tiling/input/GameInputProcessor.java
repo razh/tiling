@@ -1,6 +1,8 @@
 package com.razh.tiling.input;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
+import com.razh.tiling.BillboardActor;
 import com.razh.tiling.MeshActor;
 import com.razh.tiling.TilingMeshStage;
 import com.razh.tiling.logic.TilingEntity;
@@ -45,6 +47,15 @@ public class GameInputProcessor extends BasicInputProcessor {
 
 			mOffset.set(point).sub(hit.getX(), hit.getY());
 		}
+
+		TilingMeshStage stage = (TilingMeshStage) getStage();
+		BillboardActor actor = new BillboardActor();
+		actor.setColor(Color.GREEN);
+		actor.setWidth(3);
+		actor.setHeight(3);
+		point = stage.toLocalCoords(point);
+		actor.setPosition(point.x, point.y, 0);
+		stage.testActors.add(actor);
 
 		return false;
 	}
