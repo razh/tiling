@@ -11,7 +11,6 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.SnapshotArray;
 import com.razh.tiling.TilingGame.LightingModel;
-import com.razh.tiling.input.DebugInputProcessor;
 
 public class TilingMeshStage extends MeshStage {
 	private float mScale;
@@ -226,6 +225,12 @@ public class TilingMeshStage extends MeshStage {
 			// Distance from center of camera position to center of viewport.
 			mCameraOffset.set(0.5f * (Gdx.graphics.getWidth() - TilingGame.WIDTH) / scale,
 			                  0.5f * (Gdx.graphics.getHeight() - TilingGame.HEIGHT) / scale);
+
+			System.out.println();
+			System.out.println("CAMERA: " + getCamera().viewportWidth + ", " + getCamera().viewportHeight);
+			System.out.println("GUTTER: " + getGutterWidth() + ", " + getGutterHeight());
+			System.out.println("OFFSET: " + mCameraOffset.x + ", " + mCameraOffset.y);
+			System.out.println();
 
 			mBillboardActor.setPosition(0.5f * scaleWidth, 0.5f * scaleHeight);
 			mBillboardActor.setWidth(scaleWidth);
