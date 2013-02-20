@@ -8,16 +8,16 @@ import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.razh.tiling.TilingGame;
-import com.razh.tiling.ui.Carousel;
 
 public class LevelSelectScreen extends BasicScreen {
 
-	private Carousel mCarousel;
+	private ScrollPane mScrollPane;
 	private Table mContainer;
 
 	public LevelSelectScreen(TilingGame game) {
@@ -46,8 +46,8 @@ public class LevelSelectScreen extends BasicScreen {
 
 		Table table = new Table();
 
-		mCarousel = new Carousel(table);
-		mContainer.add(mCarousel);
+		mScrollPane = new ScrollPane(table);
+		mContainer.add(mScrollPane);
 
 		Skin skin = new Skin();
 		skin.add("image", new NinePatch(new Texture(Gdx.files.internal("data/gray-50-alpha-50-square.png")), 1, 1, 1, 1));
