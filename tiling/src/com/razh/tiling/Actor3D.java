@@ -58,7 +58,7 @@ public class Actor3D extends Actor {
 	 */
 	public Vector3 vectorTo(Actor3D actor) {
 		return actor.getPosition()
-		     	    .cpy()
+		            .cpy()
 		            .sub(getPosition())
 		            .nor();
 	}
