@@ -77,9 +77,9 @@ public class Geometry {
 		// Three vertices per face. Two faces per side (bipyramid).
 		int numIndices = subdivisions * 6;
 		Mesh mesh = new Mesh(Mesh.VertexDataType.VertexBufferObject,
-                             true, numVertices, numIndices,
-                             VertexAttribute.Position(),
-                             VertexAttribute.Normal());
+		                     true, numVertices, numIndices,
+		                     VertexAttribute.Position(),
+		                     VertexAttribute.Normal());
 
 		// Array of unique vertices, with the top vertex at 0, and bottom vertex at end.
 		float[] shapeVertices = calculateVertices(subdivisions);
@@ -210,11 +210,11 @@ public class Geometry {
 		// Three vertices per face. Two faces per side (bipyramid).
 		int numIndices = subdivisions * 6;
 		Mesh mesh = new Mesh(Mesh.VertexDataType.VertexBufferObject,
-                             true, numVertices, numIndices,
-                             VertexAttribute.Position(),
-                             VertexAttribute.Normal(),
-                             new VertexAttribute(Usage.Generic, 3,
-                                                 ShaderProgram.COLOR_ATTRIBUTE));
+		                     true, numVertices, numIndices,
+		                     VertexAttribute.Position(),
+		                     VertexAttribute.Normal(),
+		                     new VertexAttribute(Usage.Generic, 3,
+		                                         ShaderProgram.COLOR_ATTRIBUTE));
 
 		// Array of unique vertices, with the top vertex at 0, and bottom vertex at end.
 		float[] shapeVertices = calculateVertices(subdivisions);

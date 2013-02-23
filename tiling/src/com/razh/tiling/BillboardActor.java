@@ -29,7 +29,7 @@ public class BillboardActor extends Actor3D {
 		}
 
 		if (Math.abs(x - getX()) <= 0.5f * getWidth() &&
-			Math.abs(y - getY()) <= 0.5f * getHeight()) {
+		    Math.abs(y - getY()) <= 0.5f * getHeight()) {
 			return this;
 		}
 
